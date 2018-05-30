@@ -192,6 +192,45 @@ class HTMLParserTests: XCTestCase {
   }
 
   
+  func CYCLEStestHomePage2() throws { // FIXME
+    let html =
+      """
+      <!-- Our "Homepage"
+           It wraps itself into a reusable Frame component, which does all the
+           top level HTML rendering (html, body tag, stylesheets etc).
+
+           Your can find the definitions of the WEBOBJECT tags in the Main.wod
+           file.
+        -->
+      <WEBOBJECT NAME="Frame">
+        
+        Counter: <wo:str value="$counter" />
+        <wo:a action="incrementCounter">++</a> <!-- bug is here -->
+        
+        <h1>SwiftObjects is not WebObjects</h1>
+        <p>
+          <WEBOBJECT NAME="Body"></WEBOBJECT>
+        </p>
+        
+        <WEBOBJECT NAME="Form" class="ui form segment">
+          <div class="field">
+            <label>Title:</label>
+            <WEBOBJECT NAME="TitleField" class="ui input"></WEBOBJECT>
+          </div>
+
+          <WEBOBJECT NAME="Submit" class="ui blue submit button"></WEBOBJECT>
+        </WEBOBJECT>
+        
+      </WEBOBJECT>
+      """
+    
+    let parser = WOHTMLParser()
+    parser.handler = StaticTestHandler()
+    
+    let result = try parser.parse(html.data(using: .utf8)!)
+    print("result:", result)
+  }
+  
   // MARK: - Support
   
   class StaticTestElement : WOHTMLDynamicElement {
@@ -250,5 +289,6 @@ class HTMLParserTests: XCTestCase {
     ( "testSimpleHashElement",           testSimpleHashElement           ),
     ( "testSimpleHashAttributedElement", testSimpleHashAttributedElement ),
     ( "testHomePage",                    testHomePage                    ),
+    ( "testHomePage2",                   testHomePage2                   ),
   ]
 }

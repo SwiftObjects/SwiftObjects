@@ -211,7 +211,9 @@ open class WOHTMLParser : WOTemplateParser {
     guard ilen > 0 else { return nil } // no content
     
     var s = getString(at: startPos, length: ilen)
-    assert(!s.contains("</WEBOBJECT"))
+    #if false // this is actually valid ;-)
+      assert(!s.contains("</WEBOBJECT"))
+    #endif
     
     if omitComments && containsComment {
       s = stringByRemovingHTMLComments(s)

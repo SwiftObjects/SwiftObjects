@@ -60,7 +60,8 @@ import Runtime
  * It first checks the active WOComponent for the resource manager.
  */
 open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
-                           GoObjectRendererFactory, KeyValueCodingType
+                           GoObjectRendererFactory, KeyValueCodingType,
+                           SmartDescription
 {
   
   public let log : WOLogger = WOPrintLogger(logLevel: .Log)
@@ -73,12 +74,54 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   open var sessionClass      : WOSession.Type? = nil
   open var querySessionClass : WOQuerySession.Type = WOQuerySession.self
   
+  var requestHandlerRegistry = [ String : WORequestHandler ]()
+  open var defaultRequestHandler : WORequestHandler?
+  
   var _name : String? = nil
   open var name : String {
     set { _name = newValue }
     get { return _name ?? UObject.getSimpleName(self) }
   }
   
+  /**
+   * The session store of the application.
+   *
+   * *Important!*: Only call this method in properly locked sections, the
+   * sessionStore ivar is not protected.
+   *
+   * Usually you should only call this in the applications init() method or
+   * constructor.
+   */
+  open var sessionStore : WOSessionStore
+  
+  // TBD: I think this configures how 'expires' is set
+  open var isPageRefreshOnBacktrackEnabled : Bool = true
+
+  /**
+   * Can be overridden by subclasses to configure whether an application should
+   * refuse to accept new session (e.g. when its in shutdown mode).
+   * The method always returns false in the default implementation.
+   */
+  open var refusesNewSessions : Bool { return false }
+  
+  open var defaultSessionTimeOut : TimeInterval {
+    let t = UserDefaults.standard.integer(forKey: "WOSessionTimeOut")
+    return TimeInterval(t > 0 ? t : 3600)
+  }
+  
+  open var resourceManager : WOResourceManager? = nil {
+    didSet {
+      guard let rm = resourceManager else { return }
+      if sessionClass == nil {
+        sessionClass = rm.lookupClass("Session") as? WOSession.Type
+      }
+      if contextClass == nil {
+        contextClass = rm.lookupClass("Context") as? WOContext.Type
+      }
+    }
+  }
+  
+
   public init() {
     self.sessionStore = WOServerSessionStore()
     
@@ -189,8 +232,6 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
 
   // MARK: - Request Handlers
   
-  var requestHandlerRegistry = [ String : WORequestHandler ]()
-  
   /**
    * Returns the WORequestHandler which is responsible for the given request.
    * This retrieves the request handler key from the request. If there is none,
@@ -223,8 +264,6 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   open var registeredRequestHandlerKeys : [ String ] {
     return Array(requestHandlerRegistry.keys)
   }
-  
-  open var defaultRequestHandler : WORequestHandler?
   
   open var directActionRequestHandlerKey : String {
     return properties.string(forKey: "WODirectActionRequestHandlerKey") ?? "wa"
@@ -484,17 +523,6 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   // MARK: - Sessions
   
   /**
-   * Sets the session store of the application.
-   *
-   * *Important!*: Only call this method in properly locked sections, the
-   * sessionStore ivar is not protected.
-   *
-   * Usually you should only call this in the applications init() method or
-   * constructor.
-   */
-  open var sessionStore : WOSessionStore
-  
-  /**
    * Uses the configured WOSessionStore to unarchive a WOSession for the current
    * request(/context).
    * All code should use this method instead of directly dealing with the
@@ -528,18 +556,6 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   }
   
   /**
-   * Can be overridden by subclasses to configure whether an application should
-   * refuse to accept new session (eg when its in shutdown mode).
-   * The method always returns false in the default implementation.
-   */
-  open var refusesNewSessions : Bool { return false }
-  
-  open var defaultSessionTimeOut : TimeInterval {
-    let t = UserDefaults.standard.integer(forKey: "WOSessionTimeOut")
-    return TimeInterval(t > 0 ? t : 3600)
-  }
-  
-  /**
    * This is called by WORequest or our handleRequest() in case a session needs
    * to be created. It calls createSessionForRequest() to instantiate the clean
    * session object. It then registers the session in the context and performs
@@ -569,9 +585,6 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   open func createSession(for request: WORequest) -> WOSession? {
     return (sessionClass ?? WOSession.self).init()
   }
-  
-  // TBD: I think this configures how 'expires' is set
-  open var isPageRefreshOnBacktrackEnabled : Bool = true
   
   
   /**
@@ -621,21 +634,6 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   }
   
   
-  // MARK: - Resource Manager
-  
-  open var resourceManager : WOResourceManager? = nil {
-    didSet {
-      guard let rm = resourceManager else { return }
-      if sessionClass == nil {
-        sessionClass = rm.lookupClass("Session") as? WOSession.Type
-      }
-      if contextClass == nil {
-        contextClass = rm.lookupClass("Context") as? WOContext.Type
-      }
-    }
-  }
-
-  
   // MARK: - KVC
   
   lazy var typeInfo = try? Runtime.typeInfo(of: type(of: self))
@@ -666,6 +664,24 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
     }
     
     return v
+  }
+
+  // MARK: - Description
+  
+  open func appendToDescription(_ ms: inout String) {
+    if let s = _name { ms += " '\(s)'" }
+    
+    ms += " #req=\(requestCounter.load())/\(activeDispatchCount.load())"
+    ms += " rh=\(requestHandlerRegistry.keys.joined(separator:","))"
+    
+    if refusesNewSessions { ms += " REFUSES-NEW" }
+    ms += " timeout=\(defaultSessionTimeOut)s"
+    
+    if let rh = defaultRequestHandler { ms += " def=\(rh)"     }
+    else                              { ms += " no-default-rh" }
+    
+    if let rm = resourceManager { ms += " rm=\(rm)"     }
+    else                        { ms += " no-rm?" }
   }
 }
 

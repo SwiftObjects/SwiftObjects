@@ -621,6 +621,7 @@ open class WOAppContext : WOCoreContextBase, WOContext, ExtraVariables {
     if let v = variableDictionary[k] { return v }
     
     switch k {
+      case "application":           return application
       case "elementID":             return elementID
       case "senderID":              return senderID
       case "savePageRequired":      return savePageRequired

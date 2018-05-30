@@ -1,4 +1,4 @@
-<h2>ZeeQL
+<h2>SwiftObjects
   <img src="http://zeezide.com/img/SoElementIcon.svg"
        align="right" width="128" height="128" />
 </h2>

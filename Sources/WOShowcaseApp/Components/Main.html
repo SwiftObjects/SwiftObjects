@@ -1,8 +1,13 @@
 <WEBOBJECT NAME="Frame">
   
-  <p>
-    TODO: add some content
-  </p>
+  <div class="ui segment">
+    <ul class="ui list">
+      <wo:for list="$demos" item="$demo">
+        <li><wo:hyperlink pageName="$demo" string="$demoTitle" /></li>
+      </wo:for>
+    </ul>
+   </div>
+ 
   <!--
   <h1>SwiftObjects is not WebObjects</h1>
   <p>

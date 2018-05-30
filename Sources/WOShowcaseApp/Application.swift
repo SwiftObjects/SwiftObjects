@@ -20,10 +20,13 @@ final class WOShowcaseApp : WOApplication {
     
     let rm = WODevResourceManager(sourceType: WOShowcaseApp.self,
                                   defaultFramework: "WOShowcaseApp")
-    rm.register(Session.self,
-                Context.self,
-                DirectAction.self,
-                Main.self)
+    rm.register(
+      Session.self,
+      Context.self,
+      DirectAction.self,
+      Main.self,
+      Frame.self
+    )
     
     rm.expose(.init("jQuery.min.js",    jQuery.data_jquery_min_js),
               .init("semantic.min.js",  SemanticUI.data_semantic_min_js),

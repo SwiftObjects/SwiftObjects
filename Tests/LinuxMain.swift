@@ -4,7 +4,6 @@ import XCTest
 @testable import SwiftObjectsTests
 
 XCTMain([
-     testCase(DynamicElementTestCase.allTests),
      testCase(HTMLParserTests.allTests),
      testCase(PListParserTests.allTests),
      testCase(WOContextURLTests.allTests),

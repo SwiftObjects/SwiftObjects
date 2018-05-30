@@ -309,8 +309,8 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
     
     if let ti = typeInfo, let prop = try? ti.property(named: k) {
       var me = self // TBD
-      if let value = value { try prop.set(value: value,        on: &me) }
-      else                 { try prop.set(value: value as Any, on: &me) }
+      if let value = value { try prop.zset(value: value,        on: &me) }
+      else                 { try prop.zset(value: value as Any, on: &me) }
       return
     }
     

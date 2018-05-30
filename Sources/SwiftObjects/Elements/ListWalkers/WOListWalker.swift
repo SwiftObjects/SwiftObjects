@@ -39,6 +39,11 @@ public protocol WOListWalker {
   func walkList(in    context   : WOContext,
                 using operation : WOListWalkerOperation) throws
 
+  
+  func invokeAction(for request  : WORequest,
+                    on  template : WOElement,
+                    in  context  : WOContext) throws -> Any?
+    // this is a little specific, we should have a walk w/ a return value
 }
 
 public extension WOListWalker {

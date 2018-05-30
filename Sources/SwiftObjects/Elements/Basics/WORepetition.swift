@@ -80,8 +80,9 @@ open class WORepetition : WOHTMLDynamicElement {
   }
 
   
-  override
-  open func takeValues(from request: WORequest, in context: WOContext) throws {
+  override open func takeValues(from request: WORequest,
+                                in context: WOContext) throws
+  {
     guard let template = template else { return }
     
     try walker.walkList(in: context) { (_, _, context) in
@@ -89,16 +90,16 @@ open class WORepetition : WOHTMLDynamicElement {
     }
   }
   
-  override
-  open func invokeAction(for request: WORequest, in context: WOContext) throws
-            -> Any?
+  override open func invokeAction(for request: WORequest,
+                                  in context: WOContext) throws -> Any?
   {
-    // FIXME
-    return try template?.invokeAction(for: request, in: context)
+    guard let template = template else { return nil }
+    return try walker.invokeAction(for: request, on: template, in: context)
   }
   
-  override
-  open func append(to response: WOResponse, in context: WOContext) throws {
+  override open func append(to response: WOResponse,
+                            in context: WOContext) throws
+  {
     // Note: we still walk if there is no template
     let template = self.template
     let op : WOListWalker.WOListWalkerOperation

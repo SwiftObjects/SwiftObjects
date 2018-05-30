@@ -130,6 +130,7 @@ open class WODirectAction : WOAction, SmartDescription,
       var me = self // TBD
       if let value = value { try prop.set(value: value,        on: &me) }
       else                 { try prop.set(value: value as Any, on: &me) }
+      return
     }
     
     variableDictionary[k] = value

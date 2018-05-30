@@ -234,6 +234,21 @@ public extension WOContext {
     return urlWithRequestHandlerKey(application.directActionRequestHandlerKey,
                                     path: name, query: qs)
   }
+  
+  /**
+   * Generates a URL for the given direct action.
+   *
+   * Important: this does *not* embed a session id! Session ids or query
+   * session parameters are added to the queryDict by the respective
+   * WODynamicElement class (usually WOLinkGenerator).
+   *
+   * @param _name      - a direct action name, eg "Main/default"
+   * @return a URL
+   */
+  public func directActionURLForActionNamed(_ name: String) -> String {
+    return urlWithRequestHandlerKey(application.directActionRequestHandlerKey,
+                                    path: name, query: nil)
+  }
 
   
   /**
@@ -612,6 +627,7 @@ open class WOAppContext : WOCoreContextBase, WOContext, ExtraVariables {
       var me = self // TBD
       if let value = value { try prop.set(value: value,        on: &me) }
       else                 { try prop.set(value: value as Any, on: &me) }
+      return
     }
     
     variableDictionary[k] = value

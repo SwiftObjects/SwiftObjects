@@ -1,7 +1,9 @@
 language:  generic
 
 notifications:
-    slack: nozeio:LIFY1Jtkx0FRcLq3u1WliHRZ
+  slack:
+    rooms:
+      - apacheexpress:9z2IfvxZfENp0TFmiYCgyUKz
 
 matrix:
     include:
@@ -14,7 +16,7 @@ matrix:
           env:  SWIFT_SNAPSHOT_NAME="https://swift.org/builds/swift-4.1-release/ubuntu1404/swift-4.1-RELEASE/swift-4.1-RELEASE-ubuntu14.04.tar.gz"
           sudo: required
         - os:   osx
-          osx_image: xcode9
+          osx_image: xcode9.2
         - os:   osx
           osx_image: xcode9.3
 

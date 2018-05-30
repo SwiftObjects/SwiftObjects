@@ -18,8 +18,8 @@ public enum WOAssociationFactory {
     guard !path.isEmpty else { return nil }
     
     return path.contains(".")
-               ? WOKeyAssociation(path)
-               : WOKeyPathAssociation(path)
+               ? WOKeyPathAssociation(path)
+               : WOKeyAssociation(path)
   }
   
   public static func associationWithValue<T>(_ v: T) -> WOAssociation {

@@ -1,0 +1,52 @@
+//
+//  Main.wod
+//  MyShop1
+//
+//  Created by Helge Hess on 29.05.18.
+//  Copyright © 2018 ZeeZide GmbH. All rights reserved.
+//
+//
+// The .wod file is not strictly required in SwiftObjects. The bindings can
+// also be directly attached to the elements in the .html template.
+// But if you want, you can separate them out.
+//
+// The format is the element name, followed by its class (consider it the
+// "UIView" being used, in here either a WODynamicElement or a WOComponent),
+// and then a basic "old-style" properly list.
+
+Frame: Frame {
+    title = title; // this binds the `title` ivar of the component
+}
+
+Form: WOForm {
+    // if you want, you can assign the form an `action`. Like:
+    //
+    //   action = myAction;
+    //
+    // If the form is submitted, the action will be called.
+    // In Swift, remember that you have to explicitly expose those (see awake).
+}
+
+TitleField: WOTextField {
+    value = title; // note how we also bind the title here!
+      // a special thing in WebObjects is, that this is bidirectional and
+      // also gets *filled* automatically when a form is submitted.
+
+    // in this sample the "class" is set in the HTML, we can also move it
+    // in here.
+}
+
+Submit: WOSubmitButton {
+    // again, if you'd want, you could assign an `action` to the button.
+    // By default, when no action was found, SwiftObjects just stays on
+    // the same page.
+}
+
+Body: WOString { // just a static string
+    value = "Proactively initiate diverse action items whereas inexpensive
+             bandwidth. Distinctively disseminate e-business content rather than
+             fully researched core competencies. Efficiently provide access to
+             compelling core competencies through multimedia based results.
+             Distinctively cultivate maintainable collaboration and idea-sharing
+             via sticky scenarios.";
+}

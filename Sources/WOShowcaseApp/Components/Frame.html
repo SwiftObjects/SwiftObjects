@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title><wo:str value="$context.application.name" /></title>
+    <wo:stylesheet filename="semantic.min.css" />
+  </head>
+  
+  <body style="padding: 1em;">
+    <nav class="ui inverted blue menu">
+      <h3 class="header item">
+        <wo:str value="$context.application.name" />
+      </h3>
+      
+      <a class="active item">Tab 1</a>
+      <a class="item">Tab 2</a>
+      <a class="item">Tab 3</a>
+      <span class="floated right item">
+        Signed in as:
+        <a href="#">Donald Duck</a>
+      </span>
+    </nav>
+    
+    <#WOComponentContent />    
+  </body>
+</html>

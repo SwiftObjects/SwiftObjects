@@ -30,7 +30,13 @@ let package = Package(
                  from: "1.7.0"),
         .package(url: "https://github.com/onmyway133/SwiftHash.git",
                  from: "2.0.1"),
-        runtimeLib
+        runtimeLib,
+        
+        // just for the showcase
+        .package(url: "https://github.com/SwiftWebResources/SemanticUI-Swift.git",
+                 from: "2.3.1"),
+        .package(url: "https://github.com/SwiftWebResources/jQuery-Swift.git",
+                 from: "3.3.1"),
     ],
 
     targets: [
@@ -45,5 +51,12 @@ let package = Package(
                 ]),
         .testTarget(name: "SwiftObjectsTests",
                     dependencies: [ "SwiftObjects" ]),
+
+        .target(name: "WOShowcaseApp",
+                dependencies: [
+                  "SwiftObjects",
+                  "SemanticUI",
+                  "jQuery"
+                ]),
     ]
 )

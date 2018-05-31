@@ -8,6 +8,16 @@
 
 import Foundation
 
+/**
+ * Represents a constant value.
+ *
+ * For example:
+ *
+ *     <wo:str value="Hello World" />
+ *
+ * Will result in a WOValueAssociation<String> with the constant value
+ * "Hello World".
+ */
 public class WOValueAssociation<Element> : WOAssociation, SmartDescription {
   
   public let value : Element
@@ -16,7 +26,7 @@ public class WOValueAssociation<Element> : WOAssociation, SmartDescription {
     self.value = value
   }
   
-  public var isValueConstant : Bool { return false }
+  public var isValueConstant : Bool { return true }
   public var isValueSettable : Bool { return false }
   
   public func value(in component: Any?) -> Any? {

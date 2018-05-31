@@ -7,8 +7,6 @@
 //
 
 /**
- * WOAssociation
- *
  * Associations define how
  * dynamic elements (stateless, non-WOComponent template elements) pull and
  * push their 'bindings'.

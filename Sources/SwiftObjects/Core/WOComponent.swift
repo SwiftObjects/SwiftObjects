@@ -376,7 +376,7 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
   }
   
   open func defaultAction() -> WOComponent? {
-    return pageWithName("Main")
+    return self
   }
   
   enum WOComponentError : Swift.Error {

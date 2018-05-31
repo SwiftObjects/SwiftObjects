@@ -22,7 +22,7 @@ open class WODirectActionLinkGenerator : WOLinkGenerator {
   override public init?(associations: inout Bindings) {
     let action  = associations.removeValue(forKey: "action")
     actionClass = associations.removeValue(forKey: "actionClass")
-      ?? WOLinkGenerator.defaultActionClass
+               ?? WOLinkGenerator.defaultActionClass
     
     directActionName = associations.removeValue(forKey: "directActionName")
                     ?? action

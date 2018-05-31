@@ -24,8 +24,14 @@ final class WOShowcaseApp : WOApplication {
       Session.self,
       Context.self,
       DirectAction.self,
+      
       Main.self,
-      Frame.self
+      Frame.self,
+      DynamicElementSample.self,
+      ComponentBindingInfo.self,
+      
+      DemoWOString.self,
+      DemoWOHyperlink.self
     )
     
     rm.expose(.init("jQuery.min.js",    jQuery.data_jquery_min_js),

@@ -59,6 +59,18 @@ class WOStringTests: DynamicElementTestCase {
     XCTAssertEqual(response.contentString, "Hello<br />World<br />")
   }
 
+  func testPatternValue() throws {
+    let string = "%(hello)s %(world)s"
+    var bindings : [ String : WOAssociation ] = [
+      "%value" : WOAssociationFactory.associationWithValue(string)
+    ]
+    let e = WOString(name: "MyString", bindings: &bindings, template: nil)
+    XCTAssert(bindings.isEmpty, "element did not consume all bindings")
+    
+    try e.append(to: response, in: context)
+    XCTAssertEqual(response.contentString, "Hello World")
+  }
+  
   // MARK: - Linux
   
   static var allTests = [

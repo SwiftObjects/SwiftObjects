@@ -80,7 +80,7 @@ open class WODynamicElement : WOElement, SmartDescription {
       //      always a pattern or not? (better not?!)
       if key.hasPrefix("%") {
         let nk = String(key[key.index(after: key.startIndex)..<key.endIndex])
-        let fv = KeyValueStringFormatter.format(v, patObject)
+        let fv = KeyValueStringFormatter.format(v, object: patObject)
         try response.appendAttribute(nk, fv)
       }
       else {

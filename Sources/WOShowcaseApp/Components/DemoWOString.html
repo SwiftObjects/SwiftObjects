@@ -1,10 +1,67 @@
 <wo:Frame>
-  TODO: add demo
   
-  <div class="ui segment">
-    <pre><code class="swift">
-      let a = 42
-    </code></pre>
-  </div>
+  <wo:ComponentBindingInfo code="$bindingInfo" />
+  
+  <!-- Fixme let DynamicElementSample do the rendering -->
 
+  <wo:DynamicElementSample title="Static Content"
+     code="&lt;wo:str value=&quot;Hello World&quot; /&gt;"
+  >
+    <wo:str value="Hello World" />
+  </wo:DynamicElementSample>
+
+  <wo:DynamicElementSample title="Dynamic Content"
+     code="&lt;wo:str value=&quot;$hello&quot; /&gt; on &lt;wo:str value=&quot;$now&quot; /&gt;"
+  >
+    <wo:str value="$hello" /> on <wo:str value="$now" />
+  </wo:DynamicElementSample>
+
+  <wo:DynamicElementSample title="Dynamic Pattern Content"
+     code="&lt;wo:str %value=&quot;%(hello)s on %(now)s&quot; /&gt;"
+  >
+    <wo:str %value="%(hello)s on %(now)s" />
+  </wo:DynamicElementSample>
+
+<!--
+ /**
+ * Just a plain, dynamic string. The 'value' can be an arbitrary object which is
+ * then formatted using a Formatter.
+ *
+ * Sample:
+ *
+ *    ComponentName: WOString {
+ *        value = name;
+ *    }
+ *
+ * Renders:
+ *   The element renders the given value, possibly after applying conversions.
+ *
+ * Bindings:
+ * ```
+ *   value          [in] - object
+ *   valueWhenEmpty [in] - object
+ *   escapeHTML     [in] - boolean (set to false to avoid HTML escaping)
+ *   insertBR       [in] - boolean (replace newlines with &lt;br/&gt; tags)
+ *   %value         [in] - string (pattern in %(keypath)s syntax)
+ *   prefix         [in] - string (prefix for non-empty value)
+ *   suffix         [in] - string (suffix for non-empty value)</pre>
+ * Bindings (WOFormatter):<pre>
+ *   calformat      [in] - a dateformat   (returns java.util.Calendar)
+ *   dateformat     [in] - a dateformat   (returns java.util.Date)
+ *   lenient        [in] - bool, only in combination with cal/dateformat!
+ *   numberformat   [in] - a numberformat (NumberFormat.getInstance())
+ *   currencyformat [in] - a numberformat (NumberFormat.getCurrencyInstance())
+ *   percentformat  [in] - a numberformat (NumberFormat.getPercentInstance())
+ *   intformat      [in] - a numberformat (NumberFormat.getIntegerInstance())
+ *   formatterClass [in] - Class or class name of a formatter to use
+ *   formatter      [in] - java.text.Format used to format the value or the
+ *                         format for the formatterClass
+ * ```
+ *
+ * If additional bindings are given, the text will get embedded into a tag
+ * (defaults to 'span' if no other 'elementName' binding is given).
+ *
+ * Note: the tag is only rendered if there is content.
+ */
+-->
 </wo:Frame>

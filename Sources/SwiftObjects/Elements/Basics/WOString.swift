@@ -107,7 +107,7 @@ open class WOString : WOHTMLDynamicElement {
       
       if let valuePattern = valuePattern {
         if let pat = valuePattern.stringValue(in: cursor) {
-          v = KeyValueStringFormatter.format(pat, v)
+          v = KeyValueStringFormatter.format(pat, object: v)
         }
         else {
           v = nil
@@ -116,7 +116,7 @@ open class WOString : WOHTMLDynamicElement {
     }
     else if let valuePattern = valuePattern {
       if let pat = valuePattern.stringValue(in: cursor) {
-        v = KeyValueStringFormatter.format(pat, cursor)
+        v = KeyValueStringFormatter.format(pat, object: cursor)
       }
       else {
         v = nil

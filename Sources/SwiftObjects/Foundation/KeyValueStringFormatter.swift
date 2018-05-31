@@ -21,11 +21,11 @@ import Foundation
  *
  * Inefficient, crappy implementation, but worx ;-)
  */
-final class KeyValueStringFormatter : Formatter {
+final class KeyValueStringFormatter : Formatter, SmartDescription {
   
   let format      : String
   let requiresAll : Bool
-  
+
   init(format: String, requiresAll: Bool = false) {
     self.format      = format
     self.requiresAll = requiresAll
@@ -177,6 +177,11 @@ final class KeyValueStringFormatter : Formatter {
     }
     
     return s
+  }
+
+  func appendToDescription(_ ms: inout String) {
+    ms += " format=\(format)"
+    if requiresAll { ms += " requires-all" }
   }
 
 

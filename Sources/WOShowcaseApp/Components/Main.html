@@ -3,7 +3,11 @@
   <div class="ui segment">
     <ul class="ui list">
       <wo:for list="$demos" item="$demo">
-        <li><wo:hyperlink pageName="$demo" string="$demoTitle" /></li>
+        <!--
+          <li><wo:hyperlink pageName="$demo" string="$demoTitle" /></li>
+          -->
+        <li><wo:hyperlink actionClass="$demo" action="default"
+                          string="$demoTitle" /></li>
       </wo:for>
     </ul>
    </div>

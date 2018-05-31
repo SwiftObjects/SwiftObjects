@@ -401,7 +401,8 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
                          in  context : WOContext) throws -> Any?
   {
     assert(isAwake, "component not awake?")
-    return try template?.invokeAction(for: request, in: context)
+    let result = try template?.invokeAction(for: request, in: context)
+    return result
   }
 
   open func append(to response: WOResponse, in context: WOContext) throws {
@@ -654,7 +655,8 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * @return a WOElement to be used as the template
    */
   func templateWithName(_ name: String) -> WOElement? {
-    guard let rm = resourceManager else {
+    guard let rm = resourceManager
+                ?? context?.application.resourceManager else {
       log.warn("missing resourcemanager to lookup template:", name)
       return nil
     }

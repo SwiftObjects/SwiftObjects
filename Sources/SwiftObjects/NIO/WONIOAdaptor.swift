@@ -39,10 +39,11 @@ open class WONIOAdaptor {
     self.application    = application
     self.configuration  = configuration
     
+    // Maybe we should even overcommit
     self.eventLoopGroup = configuration.eventLoopGroup
-                       ?? MultiThreadedEventLoopGroup(numThreads: numCores / 2)
+         ?? MultiThreadedEventLoopGroup(numberOfThreads: 1)
     self.workerGroup    = configuration.eventLoopGroup
-                       ?? MultiThreadedEventLoopGroup(numThreads: numCores / 2)
+         ?? MultiThreadedEventLoopGroup(numberOfThreads: numCores - 1)
     self.logger         = configuration.logger
   }
   

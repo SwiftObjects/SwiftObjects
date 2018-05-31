@@ -121,16 +121,40 @@ open class WOHTMLParser : WOTemplateParser {
   
   // MARK: - Parsing
   
+  var position : ( line : Int, column : Int ) {
+    var line   = 1
+    var lastNL = 0
+    for i in 0..<idx {
+      if buffer[i] == 10 { line += 1; lastNL = i }
+    }
+    return ( line, idx - lastNL )
+  }
+  
   func parseElement() throws -> WOElement? {
     guard idx < buffer.count else { return nil }
     
     // TBD: we do not raise but rather expose parse errors to the page. FIXME.
     
     if isHashTag      { return try parseInlineElement() }
-    if isHashCloseTag { log.error("unexpected hash close tag (</#...>)") }
+    if isWOTag        { return try parseWOElement() }
     
-    if isWOTag      { return try parseWOElement() }
-    if isWOCloseTag { log.error("unexpected WEBOBJECT close tag") }
+    if isHashCloseTag {
+      let start = idx
+      _ = consumeHashCloseTag()
+      assert(idx > start, "did not consume close tag??")
+      let s = getString(at: start, length: idx - start)
+      log.error("unexpected hash close tag (</#...>):", s, position)
+      return WOStaticHTMLElement(s.htmlEscaped)
+    }
+    
+    if isWOCloseTag {
+      let start = idx
+      _ = consumeWOCloseTag()
+      assert(idx > start, "did not consume close tag??")
+      let s = getString(at: start, length: idx - start)
+      log.error("unexpected WEBOBJECT close tag:", s, position)
+      return WOStaticHTMLElement(s.htmlEscaped)
+    }
     
     return try parseRawContent()
   }
@@ -305,32 +329,37 @@ open class WOHTMLParser : WOTemplateParser {
     }
     
     guard foundEndTag || isAutoClose else {
-      log.error("did not find close tag (</wo:\(name)>)")
+      log.error("did not find close tag (</wo:\(name)>)", position)
       return nil
     }
     
     if !isAutoClose {
-      /* skip close tag ('</wo:name>') */
-      guard isHashCloseTag else {
-        assert(isHashCloseTag, "invalid parser state \(name)")
-        log.error("invalid parser state:", name)
-        return nil
-      }
-      
-      if buffer[idx + 2] == C.hash {
-        idx += 3 // skip `</#`
-      }
-      else if buffer[idx + 2] == C.lower_w {
-        idx += 5 // skip `</wo:`
-      }
-      
-      while idx < buffer.count && buffer[idx] != C.gt { idx += 1 }
-      if idx < buffer.count {
-        idx += 1 // skip `>`
-      }
+      _ = consumeHashCloseTag(name)
     }
 
     return element
+  }
+  
+  func consumeHashCloseTag(_ name: String? = nil) -> Bool {
+    /* skip close tag ('</wo:name>') */
+    guard isHashCloseTag else {
+      assert(isHashCloseTag, "invalid parser state \(name ?? "-")")
+      log.error("invalid parser state:", name ?? "-")
+      return false
+    }
+    
+    if buffer[idx + 2] == C.hash {
+      idx += 3 // skip `</#`
+    }
+    else if buffer[idx + 2] == C.lower_w {
+      idx += 5 // skip `</wo:`
+    }
+    
+    while idx < buffer.count && buffer[idx] != C.gt { idx += 1 }
+    if idx < buffer.count {
+      idx += 1 // skip `>`
+    }
+    return true
   }
   
   func parseWOElement() throws -> WOElement? {
@@ -373,15 +402,21 @@ open class WOHTMLParser : WOTemplateParser {
     }
 
     guard foundEndTag else {
-      log.error("did not find close tag (</WEBOBJECT>) (\(idx))")
+      log.error("did not find close tag (</WEBOBJECT>)", position)
       return nil
     }
     
+    _ = consumeWOCloseTag(name)
+    
+    return element
+  }
+  
+  func consumeWOCloseTag(_ name: String? = nil) -> Bool {
     /* skip close tag ('</WEBOBJECT>') */
     guard isWOCloseTag else {
-      assert(isWOCloseTag, "invalid parser state \(name)")
-      log.error("invalid parser state:", name)
-      return nil
+      assert(isWOCloseTag, "invalid parser state \(name ?? "-")")
+      log.error("invalid parser state:", name ?? "-")
+      return false
     }
     idx += 11; // skip '</WEBOBJECT'
     
@@ -389,8 +424,7 @@ open class WOHTMLParser : WOTemplateParser {
     if idx < buffer.count {
       idx += 1 // skip `>`
     }
-    
-    return element
+    return true
   }
   
   /**

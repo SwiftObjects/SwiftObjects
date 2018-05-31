@@ -41,6 +41,20 @@ public protocol WOComponentDefinition {
    */
   func load(using type: String, at url: URL, definitionsAt defURL: URL?,
             using resourceManager: WOResourceManager) throws
+
+  /**
+   * This is called by instantiateComponent() to instantiate the faults of the
+   * child components.
+   *
+   * @param _rm       - the resource manager used for child's resource lookups
+   * @param _template - the template which contains the child infos
+   * @param _ctx      - the context to instantiate the components in
+   * @return a Map of WOComponentReference names and their associated component
+   */
+  func instantiateChildComponents(from template: WOTemplate,
+                                  in   context: WOContext,
+                                  using resourceManager: WOResourceManager)
+       -> [ String : WOComponent ]
 }
 
 open class WODefaultComponentDefinition : WOComponentDefinition,
@@ -89,9 +103,9 @@ open class WODefaultComponentDefinition : WOComponentDefinition,
       // TBD: We push the RM to the children, but NOT to the component. Thats
       //      kinda weird? We push the RM to the children to preserve the
       //      lookup context (eg framework local resource lookup).
-      let childComponents = instantiateChildComponents(from: template,
-                                                       in: context,
-                                                       using: resourceManager)
+      let childComponents = instantiateChildComponents(from  : template,
+                                                       in    : context,
+                                                       using : resourceManager)
       component.subcomponents = childComponents
       component.template      = template
     }
@@ -102,19 +116,10 @@ open class WODefaultComponentDefinition : WOComponentDefinition,
     return component
   }
   
-  /**
-   * This is called by instantiateComponent() to instantiate the faults of the
-   * child components.
-   *
-   * @param _rm       - the resource manager used for child's resource lookups
-   * @param _template - the template which contains the child infos
-   * @param _ctx      - the context to instantiate the components in
-   * @return a Map of WOComponentReference names and their associated component
-   */
-  func instantiateChildComponents(from template: WOTemplate,
-                                  in   context: WOContext,
-                                  using resourceManager: WOResourceManager)
-       -> [ String : WOComponent ]
+  public func instantiateChildComponents(from template: WOTemplate,
+                                         in   context: WOContext,
+                                         using resourceManager: WOResourceManager)
+              -> [ String : WOComponent ]
   {
     let childInfos = template.subcomponentInfos
     var childComponents = [ String : WOComponent ]()

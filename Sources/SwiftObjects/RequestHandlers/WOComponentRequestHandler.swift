@@ -92,22 +92,70 @@ open class WOComponentRequestHandler : WORequestHandler {
       return response
     }
     
-    let newPage : WOComponent
+    var newPage : WOComponent
     
     if let page = actionResult as? WOComponent {
       newPage = page
-      context.page = newPage
     }
     else {
       newPage = page
-      if actionResult != nil {
-        log.warn("Unexpected page request result:", actionResult)
+      if let actionResult = actionResult {
+        log.warn("Unexpected page request result:",
+                 actionResult, type(of: actionResult))
       }
     }
-    
+
+    newPage = prepareNewComponent(newPage, in: context) ?? page
+    context.page = newPage
+    newPage.ensureAwake(in: context)
+
     try ctxApp.append(to: response, in: context)
 
     return context.response
+  }
+  
+  func prepareNewComponent(_ page: WOComponent, in context: WOContext)
+       -> WOComponent?
+  {
+    // OK, this is a little tricky. If the user created the page manually
+    // (directly allocated the component object via say `let page = Main()`),
+    // the component won't be fully setup yet. I.e. the child components are
+    // not registered. It won't have a context, etc.
+    guard page.context == nil else { return page }
+    
+    // this mirrors instantiateComponent(using:in:)
+    guard let newPage = page.initWithContext(context) else {
+      log.error("could not init component:", page)
+      return nil
+    }
+    
+    if newPage._template == nil {
+      guard let rm = context.rootResourceManager
+                  ?? context.application.resourceManager else
+      {
+        log.error("did not find resource manager to load template")
+        return newPage
+      }
+      
+      let langs = context.languages
+      guard let cdef = rm._definitionForComponent(newPage.name,
+                                                  languages: langs,
+                                                  using: rm) else
+      {
+        log.trace("  found no cdef for component:", newPage.name, self)
+        return newPage
+      }
+      
+      if let template = cdef.template {
+        let childComponents = cdef.instantiateChildComponents(from  : template,
+                                                              in    : context,
+                                                              using : rm)
+        newPage.subcomponents = childComponents
+        newPage.template      = template
+      }
+    }
+    
+    return newPage
   }
 
   open func sessionID(from request: WORequest) -> String? {

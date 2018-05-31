@@ -305,7 +305,8 @@ public extension WOResourceManager { // default implementation
     
     guard let cdef = definitionForComponent(name,
                                             languages: languages,
-                                            using: resourceManager) else {
+                                            using: resourceManager) else
+    {
       return nil
     }
     

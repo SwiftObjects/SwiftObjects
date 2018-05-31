@@ -1,0 +1,17 @@
+<?xml version="1.0"?> 
+
+<wo class="WOStylesheet"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+    ns="http://www.opengroupware.org/go"
+>
+  <name value="WOStylesheet" ns="http://www.opengroupware.org/go"/>
+
+  <bindings class="WOLinkGenerator"/>
+  <binding name="cssResource"/>
+  <binding name="cssFile"/>
+  <binding name="cssString"/>
+  <binding name="hideInComment" defaults="YES/NO"/>
+  <binding name="escapeHTML" defaults="YES/NO"/>
+
+</wo>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?> 
+
+<wo class="WOImage"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOImage" ns="http://www.opengroupware.org/go"/>
+  <name value="image"   ns="http://www.opengroupware.org/go"/>
+
+  <bindings class="WOLinkGenerator"/>
+  <binding name="src"/>
+  <binding name="disabled" defaults="YES/NO"/>
+  <binding name="disableOnMissingLink" defaults="YES/NO"/>
+</wo>

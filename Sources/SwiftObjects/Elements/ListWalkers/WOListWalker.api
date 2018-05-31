@@ -1,0 +1,35 @@
+<?xml version="1.0"?> 
+
+<!-- subclasses NSObject -->
+<wo class="WOListWalker"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <binding name="list" settable="YES"/>
+  <binding name="count" settable="YES"/>
+  <binding name="item" settable="YES"/>
+  <binding name="index" settable="YES"/>
+  <binding name="index1" settable="YES"/>
+  <binding name="startIndex" settable="YES"/>
+  <binding name="identifier"/>
+  <binding name="sublist" settable="YES"/>
+  <binding name="isEven" settable="YES"/>
+  <binding name="isFirst" settable="YES"/>
+  <binding name="isLast" settable="YES"/>
+  <binding name="filter"/>
+  <binding name="sort"/>
+  
+  <!-- TODO: check and extend validation rules -->
+  <validation message="exactly one of &apos;count&apos; or &apos;list&apos; must be bound">
+    <count test="!=1">
+      <bound name="list"/>
+      <bound name="count"/>
+    </count>
+  </validation>
+
+  <validation message="&apos;item&apos; must be bound when &apos;list&apos; is bound">
+    <and>
+      <bound name="list"/>
+      <unbound name="item"/>
+    </and>
+  </validation>
+</wo>

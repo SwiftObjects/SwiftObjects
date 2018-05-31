@@ -1,0 +1,14 @@
+<?xml version="1.0"?> 
+
+<wo class="WORepetition"
+    superclass="WODynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WORepetition" ns="http://www.opengroupware.org/go"/>
+  <name value="for" ns="http://www.opengroupware.org/go"/>
+
+  <bindings class="WOListWalker"/>
+
+  <binding name="separator"/>
+  <binding name="elementName"/>
+</wo>

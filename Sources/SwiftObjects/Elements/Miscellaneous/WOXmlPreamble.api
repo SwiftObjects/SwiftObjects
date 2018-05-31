@@ -1,0 +1,12 @@
+<?xml version="1.0"?> 
+
+<wo class="Unknown"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+    ns="http://www.opengroupware.org/go"
+>
+  <name value="WOXmlPreamble" ns="http://www.opengroupware.org/go"/>
+  <binding name="version" defaults="(1.0)"/>
+  <binding name="encoding" defaults="(utf-8)"/>
+  <binding name="standalone" defaults="YES/NO"/>
+</wo>

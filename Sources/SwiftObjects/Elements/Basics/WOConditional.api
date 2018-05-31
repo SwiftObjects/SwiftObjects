@@ -1,0 +1,15 @@
+<?xml version="1.0"?> 
+
+<wo class="WOConditional"
+    superclass="WODynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOConditional" ns="http://www.opengroupware.org/go"/>
+  <name value="if" ns="http://www.opengroupware.org/go"/>
+
+  <binding name="condition" required="YES"/>
+  <binding name="value" />
+  <binding name="negate" defaults="YES/NO"/>
+  <binding name="qualifier" />
+  <binding name="match" />
+</wo>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?> 
+
+<wo class="WOGenericContainer"
+    superclass="WOGenericElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOGenericContainer" ns="http://www.opengroupware.org/go"/>
+</wo>

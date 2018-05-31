@@ -1,0 +1,13 @@
+<?xml version="1.0"?> 
+
+<wo class="WOParam"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+    ns="http://www.opengroupware.org/go"
+>
+  <name value="WOParam" ns="http://www.opengroupware.org/go"/>
+  <name value="param"   ns="http://www.opengroupware.org/go"/>
+
+  <binding name="name"/>
+  <binding name="value"/>
+</wo>

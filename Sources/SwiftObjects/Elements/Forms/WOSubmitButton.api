@@ -1,0 +1,19 @@
+<?xml version="1.0"?> 
+
+<wo class="WOSubmitButton"
+    superclass="WOInput"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOSubmitButton" ns="http://www.opengroupware.org/go"/>
+  <name value="submit" ns="http://www.opengroupware.org/go"/>
+
+  <binding name="action" defaults="Actions"/>
+  <binding name="pageName" defaults="Page Names"/>
+
+  <validation message="either one of &apos;action&apos; or &apos;pageName&apos; must be bound">
+    <count test="!=1">
+      <bound name="action"/>
+      <bound name="pageName"/>
+    </count>
+  </validation>
+</wo>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?> 
+
+<wo class="WOHyperlink"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOHyperlink" ns="http://www.opengroupware.org/go"/>
+  <name value="hyperlink"   ns="http://www.opengroupware.org/go"/>
+
+  <bindings class="WOLinkGenerator"/>
+  <binding name="string" />
+  <binding name="target" />
+  <binding name="disabled" defaults="YES/NO"/>
+  <binding name="disabledOnMissingLink" defaults="YES/NO"/>
+</wo>

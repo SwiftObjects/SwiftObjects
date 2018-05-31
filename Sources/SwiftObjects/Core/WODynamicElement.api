@@ -1,0 +1,17 @@
+<?xml version="1.0"?> 
+
+<!-- subclasses "WOElement", which is purely abstract -->
+<wo class="WODynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <binding name="otherTagString" />
+  
+  <!-- the following "bindings" are special functionality provided elsewhere
+       but are added here for reference
+  -->
+  <!-- any element may have this -->
+  <binding name="id"  />
+  <!-- these are provided by the template parser... -->
+  <binding name="if" defaults="YES/NO"/>
+  <binding name="ifnot" defaults="YES/NO"/>
+</wo>

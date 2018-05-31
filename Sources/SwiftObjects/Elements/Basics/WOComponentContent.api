@@ -1,0 +1,12 @@
+<?xml version="1.0"?> 
+
+<wo class="WOComponentContent"
+    superclass="WODynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+    ns="http://www.opengroupware.org/go"
+>
+  <name value="WOComponentContent" ns="http://www.opengroupware.org/go"/>
+  <name value="component-content"  ns="http://www.opengroupware.org/go"/>
+
+  <binding name="fragmentID"/>
+</wo>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?> 
+
+<wo class="WOCheckBox"
+    superclass="WOInput"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOCheckBox" ns="http://www.opengroupware.org/go"/>
+  <name value="checkbox"   ns="http://www.opengroupware.org/go"/>
+
+  <binding name="selection" settable="YES"/>
+  <binding name="checked" settable="YES" defaults="YES/NO"/>
+  <binding name="safeGuard" defaults="YES/NO"/>
+
+  <validation message="exactly one of &apos;checked&apos; or &apos;value&apos; must be bound">
+    <count test="!=1">
+      <bound name="checked"/>
+      <bound name="value"/>
+    </count>
+  </validation>
+
+  <validation message="if either &apos;selection&apos; or &apos;value&apos; is bound, then both must be bound">
+    <and>
+      <or>
+        <bound name="selection"/>
+        <bound name="value"/>
+      </or>
+      <count test="&lt;2">
+        <bound name="selection"/>
+        <bound name="value"/>
+      </count>
+    </and>
+  </validation>
+</wo>

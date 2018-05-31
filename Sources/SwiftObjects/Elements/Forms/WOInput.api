@@ -1,0 +1,35 @@
+<?xml version="1.0"?> 
+
+<wo class="WOInput"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <binding name="name"/>
+  <binding name="value"/>
+  <binding name="readValue"/>
+  <binding name="writeValue"/>
+  <binding name="disabled" defaults="YES/NO"/>
+  <binding name="idname"/>
+
+  <validation message="either value or readValue and/or writeValue may be bound">
+    <and>
+      <bound name="value"/>
+      <bound name="readValue"/>
+      <bound name="writeValue"/>
+    </and>
+  </validation>
+
+  <validation message="either &apos;id&apos; or &apos;idname&apos; must be bound">
+    <and>
+      <bound name="id"/>
+      <bound name="idname"/>
+    </and>
+  </validation>
+
+  <validation message="either &apos;name&apos; or &apos;idname&apos; must be bound">
+    <and>
+      <bound name="name"/>
+      <bound name="idname"/>
+    </and>
+  </validation>
+</wo>

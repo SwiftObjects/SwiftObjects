@@ -1,0 +1,13 @@
+<?xml version="1.0"?> 
+
+<wo class="WOText"
+    superclass="WOInput"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOText"   ns="http://www.opengroupware.org/go"/>
+  <name value="text"     ns="http://www.opengroupware.org/go"/>
+  <name value="textarea" ns="http://www.opengroupware.org/go"/>
+
+  <binding name="rows"/>
+  <binding name="cols"/>
+</wo>

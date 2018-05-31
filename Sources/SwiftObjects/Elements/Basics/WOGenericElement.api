@@ -1,0 +1,10 @@
+<?xml version="1.0"?> 
+
+<wo class="WOGenericElement"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOGenericElement" ns="http://www.opengroupware.org/go"/>
+  <binding name="elementName"/>
+  <binding name="omitTags" defaults="YES/NO" />
+</wo>

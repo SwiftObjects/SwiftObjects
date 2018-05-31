@@ -1,0 +1,8 @@
+<?xml version="1.0"?> 
+
+<wo class="WOHTMLDynamicElement"
+    superclass="WODynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+    <name value="WOCheckBox" ns="http://www.opengroupware.org/go"/>
+</wo>

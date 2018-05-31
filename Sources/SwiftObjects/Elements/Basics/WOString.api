@@ -1,0 +1,33 @@
+<?xml version="1.0"?> 
+
+<wo class="WOString"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOString" ns="http://www.opengroupware.org/go"/>
+  <name value="get"      ns="http://www.opengroupware.org/go"/>
+  <name value="str"      ns="http://www.opengroupware.org/go"/>
+  <name value="string"   ns="http://www.skyrix.com/od/binding"/>
+
+  <bindings class="WOFormatter"/>
+  <binding name="value"/>
+  <binding name="%value"/>
+  <binding name="valueWhenEmpty" />
+  <binding name="escapeHTML" defaults="YES/NO"/>
+  <binding name="insertBR" defaults="YES/NO"/>
+  <binding name="prefix"/>
+  <binding name="suffix"/>
+
+  <validation message="either &apos;value&apos; or &apos;%value&apos; must be bound">
+    <and>
+      <bound name="value"/>
+      <bound name="%value"/>
+    </and>
+  </validation>
+  <validation message="either &apos;value&apos; or &apos;%value&apos; must be bound">
+    <and>
+      <unbound name="value"/>
+      <unbound name="%value"/>
+    </and>
+  </validation>
+</wo>

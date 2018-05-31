@@ -1,0 +1,14 @@
+<?xml version="1.0"?> 
+
+<wo class="WOTextField"
+    superclass="WOInput"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOTextField" ns="http://www.opengroupware.org/go"/>
+  <name value="textfield"   ns="http://www.opengroupware.org/go"/>
+
+  <bindings class="WOFormatter"/>
+  <binding name="readonly" defaults="YES/NO"/>
+  <binding name="size"/>
+  <binding name="trim" defaults="YES/NO"/>
+</wo>

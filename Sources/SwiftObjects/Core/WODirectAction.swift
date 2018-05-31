@@ -140,7 +140,10 @@ open class WODirectAction : WOAction, SmartDescription,
     if let v = variableDictionary[k] { return v }
     
     if let a = exposedActions[k] {
-      do { return try a() }
+      do {
+        let result = try a()
+        return result
+      }
       catch { // FIXME
         log.error("KVC action failed:", k, "error:", error)
         return nil

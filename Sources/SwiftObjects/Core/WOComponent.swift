@@ -409,6 +409,7 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
     try template?.append(to: response, in: context)
     if isStateless { reset() }
   }
+  
   open func walkTemplate(using walker : WOElementWalker,
                          in   context : WOContext) throws
   {
@@ -419,6 +420,7 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
     if isStateless { reset() }
   }
 
+  
   // MARK: - Component Synchronization
   
   /**
@@ -735,7 +737,10 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
     if let v = variableDictionary[k] { return v }
     
     if let a = exposedActions[k] {
-      do { return try a() }
+      do {
+        let actionResult = try a()
+        return actionResult
+      }
       catch { // FIXME
         log.error("KVC action failed:", k, "error:", error)
         return nil

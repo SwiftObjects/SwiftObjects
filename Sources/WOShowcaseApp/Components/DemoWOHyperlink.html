@@ -1,10 +1,27 @@
 <wo:Frame>
-  TODO: add demo
   
+  <wo:ComponentBindingInfo code="$bindingInfo" />
+  
+  <!-- Fixme let DynamicElementSample do the rendering -->
+
   <div class="ui segment">
-    <pre><code class="swift">
-      let a = 42
-    </code></pre>
+    <h3>Demo: Change Counter</h3>
+    
+    <div class="ui segment"><pre><code class="swift"
+      >&lt;wo:hyperlink action="$increment" >Increment!&lt;/wo:hyperlink> ✭
+&lt;wo:hyperlink action="$decrement" >Decrement!&lt;/wo:hyperlink> ✭
+&lt;wo:hyperlink action="$double"    >Double!&lt;/wo:hyperlink></code></pre></div>
+    
+    <div class="ui segment">
+      counter value: <wo:str value="$counter" />
+    </div>
+
+    Actions:
+    <div class="ui segment render-result">
+      <wo:hyperlink action="$increment" >Increment!</wo:hyperlink> ✭
+      <wo:hyperlink action="$decrement" >Decrement!</wo:hyperlink> ✭
+      <wo:hyperlink action="$double"    >Double!</wo:hyperlink>
+    </div>
   </div>
-  
+
 </wo:Frame>

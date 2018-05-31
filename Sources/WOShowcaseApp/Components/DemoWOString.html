@@ -22,6 +22,12 @@
     <wo:str %value="%(hello)s on %(now)s" />
   </wo:DynamicElementSample>
 
+
+  <wo:DynamicElementSample title="Date Formatter"
+     code="&lt;wo:str value=&quot;$now&quot; dateformat=&quot;MMM dd,yyyy&quot; /&gt;"
+  >
+    <wo:str value="$now" dateformat="MMM dd,yyyy" />
+  </wo:DynamicElementSample>
 <!--
  /**
  * Just a plain, dynamic string. The 'value' can be an arbitrary object which is

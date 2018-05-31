@@ -12,7 +12,7 @@ final class DemoWOString : WOComponent {
   
   let fourtyTwo = 42
   let pi        = 3.1415
-  let hello     = "Hello World"
+  var hello     = "Hello World"
   let now       = Date()
   let empty     = ""
 
@@ -24,4 +24,5 @@ final class DemoWOString : WOComponent {
   let now       = Date()
   let empty     = ""
   """.trimmingCharacters(in: .whitespacesAndNewlines)
+
 }

@@ -23,18 +23,26 @@ final class DemoWOHyperlink : WOComponent {
     expose(increment, as: "increment")
     expose(decrement, as: "decrement")
     expose(doDouble,  as: "double")
+    expose(jumpToStringSample, as: "jumpToStringSample")
   }
   
-  func increment() -> Any {
+  func increment() -> WOComponent? {
     counter += 1
-    return self
+    return nil
   }
-  func decrement() -> Any {
+  func decrement() -> WOComponent? {
     counter -= 1
-    return self
+    return nil
   }
-  func doDouble() -> Any {
+  func doDouble() -> WOComponent? {
     counter *= 2
-    return self
+    return nil
+  }
+  
+  func jumpToStringSample() -> WOComponent? {
+    // This is a little like a UIViewController transition.
+    let newPage = DemoWOString()
+    newPage.hello = "HELLO WORLD" // we can pass over values
+    return newPage
   }
 }

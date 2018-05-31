@@ -27,7 +27,7 @@ let package = Package(
 
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git",
-                 from: "1.7.0"),
+                 from: "1.8.0"),
         .package(url: "https://github.com/onmyway133/SwiftHash.git",
                  from: "2.0.1"),
         runtimeLib,

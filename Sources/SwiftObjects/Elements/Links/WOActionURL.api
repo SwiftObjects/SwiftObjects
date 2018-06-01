@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<wo class="WOActionURL"
+    superclass="WODynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOActionURL" ns="http://www.opengroupware.org/go"/>
+
+  <bindings class="WOLinkGenerator"/>
+
+  <!-- TODO: extend -->
+  <validation message="either one of &apos;action&apos;, or &apos;pageName&apos; may be bound, or either or both of &apos;actionClass&apos; and &apos;directActionName&apos; may be bound">
+    <count test="!=1">
+      <bound name="action"/>
+      <bound name="pageName"/>
+      <or>
+        <bound name="actionClass"/>
+        <bound name="directActionName"/>
+      </or>
+    </count>
+  </validation>
+</wo>

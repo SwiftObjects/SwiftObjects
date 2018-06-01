@@ -1,0 +1,54 @@
+<wo:Frame>
+  
+  <wo:ComponentBindingInfo code="$bindingInfo" />
+  
+  <pre><wo:str value="$store.cows" /></pre>
+  
+  <div class="ui segment">
+    <h3>Demo: Simple Repetition</h3>
+    
+    <div class="ui segment"><pre><code class="swift"
+      >&lt;ol class=&quot;ui list&quot;&gt;
+  &lt;wo:for list=&quot;$store.cows&quot; item=&quot;$cow&quot;&gt;
+    &lt;li&gt;&lt;wo:str value=&quot;$cow.name&quot; /&gt;&lt;/li&gt;
+  &lt;/wo:for&gt;
+&lt;/ol&gt;</code></pre></div>
+    
+    Renders:
+    <div class="ui segment render-result">
+      <ol class="ui list">
+        <wo:for list="$store.cows" item="$cow">
+          <li><wo:str value="$cow.name" /></li>
+        </wo:for>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="ui segment">
+    <h3>Demo: Repetition with Action</h3>
+    
+    <div class="ui segment"><pre><code class="swift"
+      >&lt;ol class=&quot;ui list&quot;&gt;
+  &lt;wo:for list=&quot;$store.cows&quot; item=&quot;$cow&quot;&gt;
+    &lt;wo:li .selected=&quot;$isCowSelected&quot;&gt;
+      &lt;wo:hyperlink action=&quot;$showCow&quot; value=&quot;$cow.name&quot; /&gt;
+    &lt;/wo:li&gt;
+  &lt;/wo:for&gt;
+&lt;/ol&gt;</code></pre></div>
+    
+    Renders:
+    <div class="ui segment render-result">
+      <ol class="ui list">
+        <wo:for list="$store.cows" item="$cow">
+          <wo:li .selected="$isCowSelected"
+            ><wo:hyperlink action="$showCow" value="$cow.name" /></wo:li>
+        </wo:for>
+      </ol>
+      <pre><wo:str value="$selectedCow.name" /></pre>
+      <wo:div class="ui segment" if="$selectedCow">
+        <pre><wo:str value="$selectedCow.body" /></pre>
+      </wo:div>
+    </div>
+  </div>
+
+</wo:Frame>

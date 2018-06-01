@@ -57,6 +57,8 @@ public extension MutableKeyValueCodingType {
   }
 }
 
+import Runtime // just for takeValueForKey
+
 public struct KeyValueCoding {
   
   public enum Error : Swift.Error {
@@ -125,8 +127,21 @@ public struct KeyValueCoding {
         try target.setValue(nil)
       }
     }
-    else {
+      // try using Runtime
+    else if let o        = o,
+            let typeInfo = try? Runtime.typeInfo(of: type(of: o)),
+            let prop     = try? typeInfo.property(named: k)
+    {
+      assert(typeInfo.kind == .class, "you can only use KVC on classes")
+      var me = o // TBD: this actually fails doing the right thing on structs ...
+      if let value = v { try prop.zset(value: value,    on: &me) }
+      else             { try prop.zset(value: v as Any, on: &me) }
+    }
+    else if let _ = o {
       throw Error.CannotTakeValueForKey(k)
+    }
+    else {
+      // nil messaging :-)
     }
   }
 

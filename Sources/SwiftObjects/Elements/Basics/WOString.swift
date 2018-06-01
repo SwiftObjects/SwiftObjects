@@ -151,8 +151,9 @@ open class WOString : WOHTMLDynamicElement {
     }
   }
 
-  override
-  open func append(to response: WOResponse, in context: WOContext) throws {
+  override open func append(to response: WOResponse,
+                            in context: WOContext) throws
+  {
     // method is pretty long, maybe we want to split it up
     guard !context.isRenderingDisabled else { return }
     

@@ -53,4 +53,51 @@
     </div>
   </div>
 
+  <div class="ui segment">
+    <h3>Demo: Repetition with Reusable Components</h3>
+    
+    <div class="ui segment"><pre><code class="swift"
+      >&lt;div class=&quot;ui link cards&quot;&gt;
+  &lt;wo:for list=&quot;$store.cows&quot; item=&quot;$cow&quot;&gt;
+    &lt;wo:SemanticCard image=&quot;$cow.image&quot;
+                     title=&quot;$cow.image&quot;
+                     tags=&quot;Cool Cows&quot;
+                     body=&quot;$cow.name&quot;
+                     countFriends=&quot;$countFriends&quot;
+                     /&gt;
+  &lt;/wo:for&gt;
+&lt;/div&gt;</code></pre></div>
+    
+    Renders:
+    <div class="ui segment render-result">
+      <div class="ui link cards">
+        <wo:for list="$store.cows" item="$cow">
+          <wo:SemanticCard image="$cow.image"
+                           title="$cow.image"
+                           tags="Cool Cows"
+                           body="$cow.name"
+                           countFriends="$cow.friendCount"
+                           />
+        </wo:for>
+      </div>
+    </div>
+  </div>
+
+<!-- TODO
+  <div class="ui segment">
+    <h3>Demo: Repetition with Reusable Components</h3>
+    
+    <div class="ui segment"><pre><code class="swift"
+      ></code></pre></div>
+    
+    Renders:
+    <div class="ui segment render-result">
+      <div class="ui link cards">
+        <wo:for list="$store.cows" item="$cow">
+          <wo:CowCard cow="$cow" onClick="$showCow" />
+        </wo:for>
+      </div>
+    </div>
+  </div>
+ -->
 </wo:Frame>

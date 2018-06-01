@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="image">
+    <img src="http://zeezide.com/img/SquareCows/<wo:str value="$image" />">
+  </div>
+  <div class="content">
+    <div class="header"><wo:str value="$title" /></div>
+    <wo:div class="meta" if="$tags">
+      <a><wo:str value="$tags" /></a>
+    </wo:div>
+    <wo:div class="description" if="$body"><wo:str value="$body" /></wo:div>
+  </div>
+  <div class="extra content">
+    <wo:span class="right floated" if="$date">
+      Joined in <wo:str value="$date" dateformat="yyyy" />
+    </wo:span>
+    <span>
+      <!-- <i class="user icon"></i> --> <!-- need to fix resources -->
+      <wo:str value="$countFriends" /> Friends
+    </span>
+  </div>
+</div>

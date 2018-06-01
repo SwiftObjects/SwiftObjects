@@ -6,7 +6,7 @@
 //  Copyright © 2018 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.CharacterSet
 
 /**
  * Create HTML form textfields.

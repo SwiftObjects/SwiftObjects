@@ -6,8 +6,6 @@
 //  Copyright © 2018 ZeeZide. All rights reserved.
 //
 
-import Foundation
-
 /**
  * This object is used to capture errors found during form processing. For
  * example if the user entered a number in a date field. The WODateFormatter

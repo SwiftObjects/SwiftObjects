@@ -6,8 +6,6 @@
 //  Copyright © 2018 ZeeZide. All rights reserved.
 //
 
-import Foundation
-
 /**
  * Create HTML form textfields which Safari renders as
  * search type textfields.

@@ -6,8 +6,6 @@
 //  Copyright © 2018 ZeeZide. All rights reserved.
 //
 
-import Foundation
-
 /**
  * Generates an HTML form submit button.
  *

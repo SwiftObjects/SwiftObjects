@@ -27,24 +27,11 @@ extension Runtime.PropertyInfo {
     // Note: Optionals are a little lame here due to 4.0 support
     
     if let ct = type as? RuntimeCoercion.Type {
-      return try ct.init(runtimeValue: value)
+      return try ct.coerce(runtimeValue: value)
     }
     
-    switch type {
-      
-      case is Optional<String>.Type:
-        return coerceToOptionalString(value: value) as Any
-
-      case is Optional<Int>.Type:
-        return coerceToOptionalInt(value: value) as Any
-      
-      case is Optional<Bool>.Type:
-        return (UObject.boolValue(value) as Bool?) as Any
-
-      default:
-       throw CoercionError.invalidType(got: Swift.type(of: value),
-                                       expected: type)
-    }
+    throw CoercionError.invalidType(got: Swift.type(of: value),
+                                    expected: type)
   }
   
   func coerceToString(value: Any?) -> String {
@@ -52,8 +39,88 @@ extension Runtime.PropertyInfo {
     if let s = value as? Optional<String> { return s ?? "" }
     return String(describing: value)
   }
+  enum CoercionError : Swift.Error {
+    case invalidType(got: Any.Type, expected: Any.Type)
+  }
+}
 
-  func coerceToOptionalString(value: Any?) -> String? {
+protocol RuntimeCoercion {
+  
+  static func coerce(runtimeValue v: Any?) throws -> Self
+  
+}
+
+extension String : RuntimeCoercion {
+
+  static func coerce(runtimeValue v: Any?) throws -> String {
+    if      let s = v as? String           { return s }
+    else if let s = v as? Optional<String> { return s ?? "" }
+    else if let s = v as? Optional<Int>    {
+      if let s = s { return String(s) }
+      else         { return  "" }
+    }
+    else if let s = v as? Optional<Bool>    {
+      if let s = s { return s ? "true" : "false" }
+      else         { return "" }
+    }
+    else { return String(describing: v) }
+  }
+
+}
+
+extension Int : RuntimeCoercion {
+  
+  static func coerce(runtimeValue v: Any?) throws -> Int {
+    if      let s = v as? Int              { return s }
+    else if let s = v as? Optional<Int>    { return s ?? 0 }
+    else if let s = v as? String           { return Int(s) ?? 0 }
+    else if let s = v as? Optional<String> {
+      if let s = s { return Int(s) ?? 0 }
+      else         { return 0 }
+    }
+    else if let s = v as? Bool             { return s ? 1 : 0 }
+    else if let s = v as? Optional<Bool>   { return (s ?? false) ? 1 : 0 }
+    else { return 0 } // TBD: throw?
+  }
+  
+}
+
+extension Bool : RuntimeCoercion {
+  
+  static func coerce(runtimeValue v: Any?) throws -> Bool {
+    return UObject.boolValue(v)
+  }
+}
+
+extension Optional : RuntimeCoercion {
+  
+  static func coerce(runtimeValue v: Any?) throws -> Optional<Wrapped> {
+    guard let v = v else { return Optional<Wrapped>.none }
+    
+    if let wv = v as? Wrapped {
+      return Optional.some(wv)
+    }
+    
+    // TODO: on 4.1 do Conditional Conformance?
+    switch self {
+      case is Optional<String>.Type:
+        return coerceToOptionalString(value: v) as! Optional<Wrapped>
+      
+      case is Optional<Int>.Type:
+        return coerceToOptionalInt(value: v) as! Optional<Wrapped>
+      
+      case is Optional<Bool>.Type:
+        return (UObject.boolValue(v) as Bool?) as! Optional<Wrapped>
+      
+      default:
+        throw Runtime.PropertyInfo
+                .CoercionError.invalidType(got: Swift.type(of: v),
+                                           expected: self)
+    }
+
+  }
+
+  static func coerceToOptionalString(value: Any?) -> String? {
     if let s = value as? String           { return s }
     if let s = value as? Optional<String> { return s }
     if let s = value as? Optional<Int>    {
@@ -67,7 +134,7 @@ extension Runtime.PropertyInfo {
     return String(describing: value)
   }
   
-  func coerceToOptionalInt(value: Any?) -> Int? {
+  static func coerceToOptionalInt(value: Any?) -> Int? {
     if let s = value as? Int              { return s }
     if let s = value as? Optional<Int>    { return s }
     if let s = value as? String           { return Int(s) }
@@ -83,55 +150,4 @@ extension Runtime.PropertyInfo {
     return nil // TBD: throw?
   }
 
-  enum CoercionError : Swift.Error {
-    case invalidType(got: Any.Type, expected: Any.Type)
-  }
-}
-
-protocol RuntimeCoercion {
-  
-  init(runtimeValue v: Any?) throws
-  
-}
-
-extension String : RuntimeCoercion {
-
-  init(runtimeValue v: Any?) throws {
-    if      let s = v as? String           { self = s }
-    else if let s = v as? Optional<String> { self = s ?? "" }
-    else if let s = v as? Optional<Int>    {
-      if let s = s { self = String(s) }
-      else         { self = "" }
-    }
-    else if let s = v as? Optional<Bool>    {
-      if let s = s { self = s ? "true" : "false" }
-      else         { self = "" }
-    }
-    else { self = String(describing: v) }
-  }
-
-}
-
-extension Int : RuntimeCoercion {
-  
-  init(runtimeValue v: Any?) throws {
-    if      let s = v as? Int              { self = s }
-    else if let s = v as? Optional<Int>    { self = s ?? 0 }
-    else if let s = v as? String           { self = Int(s) ?? 0 }
-    else if let s = v as? Optional<String> {
-      if let s = s { self = Int(s) ?? 0 }
-      else         { self = 0 }
-    }
-    else if let s = v as? Bool             { self = s ? 1 : 0 }
-    else if let s = v as? Optional<Bool>   { self = (s ?? false) ? 1 : 0 }
-    else { self = 0 } // TBD: throw?
-  }
-  
-}
-
-extension Bool : RuntimeCoercion {
-  
-  init(runtimeValue v: Any?) throws {
-    self = UObject.boolValue(v)
-  }
 }

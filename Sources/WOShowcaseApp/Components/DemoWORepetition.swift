@@ -25,12 +25,20 @@ final class DemoWORepetition : WOComponent {
       
         // Use this to expose your methods
         expose(showCowAction, as: "showCow")
+        expose(editAction,    as: "edit")
     }
     
     func showCowAction() -> Any? {
         selectedCow = cow // the cursor will point to the active cow!
         log.log("selected cow:", cow as Any?)
         return nil // nil means: stay on page, you can also return a new!
+    }
+  
+    func editAction() -> Any? {
+        guard let cow = selectedCow else { return nil } // TODO: error
+        let editor = DemoWOForm()
+        editor.cow = cow
+        return editor
     }
   
     var isCowSelected : Bool { return selectedCow === cow }

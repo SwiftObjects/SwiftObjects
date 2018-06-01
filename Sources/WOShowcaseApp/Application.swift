@@ -32,7 +32,8 @@ final class WOShowcaseApp : WOApplication {
       
       DemoWOString.self,
       DemoWOHyperlink.self,
-      DemoWORepetition.self
+      DemoWORepetition.self,
+      DemoWOForm.self
     )
     
     rm.expose(.init("jQuery.min.js",    jQuery.data_jquery_min_js),

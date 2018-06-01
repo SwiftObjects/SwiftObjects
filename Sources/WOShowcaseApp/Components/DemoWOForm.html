@@ -1,0 +1,58 @@
+<wo:Frame>
+  
+  <wo:ComponentBindingInfo code="$bindingInfo" />
+  
+  <pre><wo:str value="$cow" /></pre>
+  
+  <wo:div class="ui segment" if="$context.errorReport">
+    <pre><wo:str value="$context.errorReport" /></pre>
+  </wo:div>
+  
+  <wo:div class="ui negative message" if="$error">
+    <div class="header"><wo:str value="$error" /></div>
+    <p>Please correct your cow and resubmit!</p>
+  </wo:div>
+  
+  <div class="ui segment">
+    <h3>Demo: Edit Cow Form</h3>
+    
+    <div class="ui segment"><pre><code class="swift"
+      >&lt;wo:form action=&quot;$save&quot; class=&quot;ui form&quot;&gt;
+  &lt;div class=&quot;field&quot;&gt;
+    &lt;label&gt;Name&lt;/label&gt;
+    &lt;wo:textfield name=&quot;name&quot; value=&quot;$cow.name&quot; placeholder=&quot;Name&quot; /&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;field&quot;&gt;
+    &lt;label&gt;Body&lt;/label&gt;
+    &lt;wo:text value=&quot;$cow.body&quot; placeholder=&quot;ASCII Art&quot; /&gt;
+  &lt;/div&gt;
+  
+  &lt;wo:submit class=&quot;ui button&quot; tabindex=&quot;0&quot; value=&quot;Create&quot;
+             if=&quot;$isNew&quot; /&gt;
+  &lt;wo:submit class=&quot;ui button&quot; tabindex=&quot;0&quot; value=&quot;Save&quot;
+             ifnot=&quot;$isNew&quot; /&gt;
+&lt;/wo:form&gt;
+</code></pre></div>
+    
+    Renders:
+    <div class="ui segment render-result">
+      
+      <wo:form action="$save" class="ui form">
+        <div class="field">
+          <label>Name</label>
+          <wo:textfield name="name" value="$cow.name" placeholder="Name" />
+        </div>
+        <div class="field">
+          <label>Body</label>
+          <wo:text value="$cow.body" placeholder="ASCII Art" />
+        </div>
+        
+        <wo:submit class="ui button" tabindex="0" value="Create"
+                   if="$isNew" />
+        <wo:submit class="ui button" tabindex="0" value="Save"
+                   ifnot="$isNew" />
+      </wo:form>
+      
+    </div>
+  </div>
+</wo:Frame>

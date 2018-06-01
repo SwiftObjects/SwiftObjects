@@ -47,6 +47,8 @@
       <pre><wo:str value="$selectedCow.name" /></pre>
       <wo:div class="ui segment" if="$selectedCow">
         <pre><wo:str value="$selectedCow.body" /></pre>
+        <wo:hyperlink class="ui button" tabindex="0"
+                      action="$edit" string="Edit" />
       </wo:div>
     </div>
   </div>

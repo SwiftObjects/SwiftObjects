@@ -664,12 +664,15 @@ open class WOAppContext : WOCoreContextBase, WOContext, ExtraVariables {
     guard let ti = typeInfo, let prop = try? ti.property(named: k) else {
       return handleQueryWithUnboundKey(k)
     }
-    guard let v = try? prop.get(from: self) else {
-      log.error("Failed to get KVC property:", k)
+    do {
+      // if this is an optional, we wrap it again
+      let v = try prop.zget(from: self)
+      return v
+    }
+    catch {
+      log.error("Failed to get KVC property:", k, error)
       return nil
     }
-    
-    return v
   }
 
   

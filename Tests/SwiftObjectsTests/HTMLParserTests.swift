@@ -302,7 +302,7 @@ class HTMLParserTests: XCTestCase {
       print("WO:", gc)
       
       XCTAssertNotNil(gc.template, "lacks a template")
-      XCTAssertNil(gc.coreAttributes, "has core attrs? \(gc.coreAttributes)")
+      XCTAssertNil(gc.coreAttributes, "has core attrs?")
       XCTAssertNil(gc.extra, "no extra attrs?")
       if let t = gc.template {
         XCTAssert(t is WOString, "contents is not a WOString?")

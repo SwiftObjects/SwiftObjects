@@ -17,16 +17,14 @@ public enum UObject {
   
   public static func boolValue(_ v: Any?) -> Bool {
     guard let v = v else { return false }
-
-    if let b = v as? Bool { return b }
-    if let i = v as? Int  { return i != 0 } // test number
-
-    if let s = v as? String { return boolValue(s) }
     
+    if let vv = v as? UObjectBoolValue {
+      return vv.swiftObjectsBoolValue
+    }
+
     // TODO: collections etc etc, this is really unswifty in the first place
     //       and should be approached differently ;-)
-    
-    return false
+    return true
   }
   
   public static func boolValue(_ v: String?) -> Bool {
@@ -56,5 +54,36 @@ public enum UObject {
   public static func intValue(_ v: String?) -> Int {
     guard let v = v else { return 0 }
     return Int(v) ?? 0
+  }
+}
+
+protocol UObjectBoolValue {
+  var swiftObjectsBoolValue : Bool { get }
+}
+
+extension Bool : UObjectBoolValue {
+  var swiftObjectsBoolValue : Bool { return self }
+}
+extension Int : UObjectBoolValue {
+  var swiftObjectsBoolValue : Bool { return self != 0 }
+}
+extension String : UObjectBoolValue {
+  var swiftObjectsBoolValue : Bool { return UObject.boolValue(self) }
+}
+
+extension Array : UObjectBoolValue {
+  var swiftObjectsBoolValue : Bool { return !isEmpty }
+}
+extension Set : UObjectBoolValue {
+  var swiftObjectsBoolValue : Bool { return !isEmpty }
+}
+
+extension Optional : UObjectBoolValue {
+  // TODO: conditional conformance etc
+  var swiftObjectsBoolValue : Bool {
+    switch self {
+      case .none: return false
+      case .some(let v): return UObject.boolValue(v)
+    }
   }
 }

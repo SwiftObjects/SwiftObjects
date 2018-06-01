@@ -8,7 +8,45 @@
 import Foundation
 import Runtime
 
+fileprivate protocol OptionalProtocol {
+  func isSome() -> Bool
+  func unwrap() -> Any
+}
+
+extension Optional : OptionalProtocol {
+  func isSome() -> Bool {
+    switch self {
+      case .none: return false
+      case .some: return true
+    }
+  }
+  func unwrap() -> Any {
+    switch self {
+      case .none: preconditionFailure("trying to unwrap nil")
+      case .some(let unwrapped): return unwrapped
+    }
+  }
+}
+
 extension Runtime.PropertyInfo {
+
+  public func zget(from object: Any) throws -> Any? {
+    /*
+       1> let s : String? = "Hello"
+       s: String? = "Hello"
+       2> let a : Any = s
+       a: Any = { .. }
+       3> let o = a as Any?
+       o: Any? = some { .. }
+       4> print("o: \(o)")
+       o: Optional(Optional("Hello"))
+    */
+    // There MUST be a way to do this simpler :-)
+    let v = try get(from: object)
+    guard let ov = v as? OptionalProtocol else { return v }
+    guard ov.isSome() else { return nil }
+    return ov.unwrap()
+  }
 
   /// Do type coercion
   public func zset<TObject>(value: Any, on object: inout TObject) throws {

@@ -34,4 +34,3 @@ class WOGenericElementTests: DynamicElementTestCase {
     ( "testLIWithClass", testLIWithClass ),
   ]
 }
-

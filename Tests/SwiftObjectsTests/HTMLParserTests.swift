@@ -254,6 +254,65 @@ class HTMLParserTests: XCTestCase {
     }
   }
   
+  func testConditionalWOElement() throws {
+    let parser     = WOHTMLParser()
+    parser.handler = TestWrapperBuilderHandler()
+    
+    let html = """
+               <ul>
+                 <wo:li if="$isSelected"><wo:str value="10" /></wo:li>
+               </ul>
+               """
+    let result = try parser.parse(html.data(using: .utf8)!)
+    print("result:", result)
+    
+    XCTAssertEqual(result.count, 3)
+    guard result.count >= 3 else { return }
+    
+    let prefix = result[0]
+    let wo     = result[1]
+    let suffix = result[2]
+    XCTAssert(prefix is WOStaticHTMLElement)
+    XCTAssert(suffix is WOStaticHTMLElement)
+    XCTAssert(wo     is WOConditional)
+    
+    if let s = prefix as? WOStaticHTMLElement {
+      XCTAssert(s.string.hasPrefix("<ul>"))
+    }
+    if let s = suffix as? WOStaticHTMLElement {
+      XCTAssert(s.string.hasSuffix("</ul>"))
+    }
+
+    guard let c = wo as? WOConditional else { return }
+    print("Conditional:", c)
+    print("  Condition:", c.condition)
+    
+    XCTAssert(c.condition is WOConditional.WOCheckCondition)
+    if let c = c.condition as? WOConditional.WOCheckCondition {
+      XCTAssertFalse(c.doNegate)
+      XCTAssert(c.condition is WOKeyAssociation)
+      if let a = c.condition as? WOKeyAssociation {
+        XCTAssertEqual(a.key, "isSelected")
+      }
+    }
+    
+    XCTAssertNotNil(c.template, "lacks a template")    
+    if let t = c.template {
+      guard let gc = t as? WOGenericContainer else { return }
+      print("WO:", gc)
+      
+      XCTAssertNotNil(gc.template, "lacks a template")
+      XCTAssertNil(gc.coreAttributes, "has core attrs? \(gc.coreAttributes)")
+      XCTAssertNil(gc.extra, "no extra attrs?")
+      if let t = gc.template {
+        XCTAssert(t is WOString, "contents is not a WOString?")
+      }
+      if let ca = gc.coreAttributes {
+        print("  CORE:", ca)
+      }
+    }
+  }
+  
 
   
   // MARK: - Support
@@ -321,5 +380,6 @@ class HTMLParserTests: XCTestCase {
     ( "testHomePage",                    testHomePage                    ),
     ( "testHomePageWithUnclosedTag",     testHomePageWithUnclosedTag     ),
     ( "testGenericWOElement",            testGenericWOElement            ),
+    ( "testConditionalWOElement",        testConditionalWOElement        ),
   ]
 }

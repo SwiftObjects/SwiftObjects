@@ -7,6 +7,8 @@
 
 import Foundation
 
+// A map which maps short tag names like `<wo:for>` to their full name,
+// like `WORepetition`. Also: HTML tags to `WOGenericElement`/`Container`.
 let WOTagAliases : [ String : String ] = [
   "a"          : "WOHyperlink",
   "if"         : "WOConditional",

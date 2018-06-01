@@ -211,6 +211,51 @@ class HTMLParserTests: XCTestCase {
     print("result:", result)
   }
   
+  func testGenericWOElement() throws {
+    let parser     = WOHTMLParser()
+    parser.handler = TestWrapperBuilderHandler()
+    
+    let html = """
+               <ul>
+                 <#li .selected="isSelected"><wo:str value="10" /></#li>
+               </ul>
+               """
+    let result = try parser.parse(html.data(using: .utf8)!)
+    print("result:", result)
+    
+    XCTAssertEqual(result.count, 3)
+    guard result.count >= 3 else { return }
+    
+    let prefix = result[0]
+    let wo     = result[1]
+    let suffix = result[2]
+    XCTAssert(prefix is WOStaticHTMLElement)
+    XCTAssert(suffix is WOStaticHTMLElement)
+    XCTAssert(wo     is WOGenericContainer)
+    
+    if let s = prefix as? WOStaticHTMLElement {
+      XCTAssert(s.string.hasPrefix("<ul>"))
+    }
+    if let s = suffix as? WOStaticHTMLElement {
+      XCTAssert(s.string.hasSuffix("</ul>"))
+    }
+    
+    guard let gc = wo as? WOGenericContainer else { return }
+    print("WO:", gc)
+    
+    XCTAssertNotNil(gc.template, "lacks a template")
+    XCTAssertNotNil(gc.coreAttributes, "no core attrs?")
+    XCTAssertNil(gc.extra, "no extra attrs?")
+    if let t = gc.template {
+      XCTAssert(t is WOString, "contents is not a WOString?")
+    }
+    if let ca = gc.coreAttributes {
+      print("  CORE:", ca)
+    }
+  }
+  
+
+  
   // MARK: - Support
   
   class StaticTestElement : WOHTMLDynamicElement {
@@ -250,13 +295,18 @@ class HTMLParserTests: XCTestCase {
   }
   
   class StaticTestHandler : WOTemplateParserHandler {
-    public func parser(_ parser: WOTemplateParser, dynamicElementFor name: String,
-                       attributes: [ String : String ], children: [ WOElement ])
+    public func parser(_ parser: WOTemplateParser,
+                       dynamicElementFor name: String,
+                       attributes: [ String : String ],
+                       children: [ WOElement ])
                 -> WOElement?
     {
       return StaticTestElement(name: name, attributes: attributes,
                                children: children)
     }
+  }
+  
+  class TestWrapperBuilderHandler : WOWrapperTemplateBuilder {
   }
   
 
@@ -270,5 +320,6 @@ class HTMLParserTests: XCTestCase {
     ( "testSimpleHashAttributedElement", testSimpleHashAttributedElement ),
     ( "testHomePage",                    testHomePage                    ),
     ( "testHomePageWithUnclosedTag",     testHomePageWithUnclosedTag     ),
+    ( "testGenericWOElement",            testGenericWOElement            ),
   ]
 }

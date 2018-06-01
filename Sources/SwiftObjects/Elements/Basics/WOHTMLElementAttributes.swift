@@ -64,11 +64,13 @@ open class WOHTMLElementAttributes : WODynamicElement {
         if dynStyles == nil { dynStyles = [ String : WOAssociation ]() }
         let key1 = key[key.index(after: key.startIndex)..<key.endIndex]
         dynStyles![String(key1)] = assoc
+        bindings.removeValue(forKey: key)
       }
       else if c0 == WOHTMLElementAttributes.classPrefix {
         if dynClasses == nil { dynClasses = [ String : WOAssociation ]() }
         let key1 = key[key.index(after: key.startIndex)..<key.endIndex]
         dynClasses![String(key1)] = assoc
+        bindings.removeValue(forKey: key)
       }
     }
     
@@ -361,5 +363,12 @@ open class WOHTMLElementAttributes : WODynamicElement {
       "style", style,
       "class", clazz
     )
+    
+    for ( key, assoc ) in dynStyles ?? [:] {
+      WODynamicElement.appendBindingToDescription(&ms, "!" + key, assoc)
+    }
+    for ( key, assoc ) in dynClasses ?? [:] {
+      WODynamicElement.appendBindingToDescription(&ms, "." + key, assoc)
+    }
   }
 }

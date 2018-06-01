@@ -63,6 +63,8 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
                                       WODParserHandler, WOTemplateParserHandler
 {
   
+  // A map which maps short tag names like `<wo:for>` to their full name,
+  // like `WORepetition`. Also: HTML tags to `WOGenericElement`/`Container`.
   let elementNameAliasMap = WOTagAliases
   
   var wodEntries      : [ String : WODParser.Entry ]? = nil
@@ -202,9 +204,16 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
     var bindings : Bindings
     let cname    : String?
 
+    func lookupDynamicElementClass(_ name: String) -> WODynamicElement.Type? {
+      if let rm = resourceManager {
+        return rm.lookupDynamicElementClass(name)
+      }
+      return WOElementNames[name]
+    }
+
     if let entry = wodEntries?[name] {
       // if nil, most likely a WOComponent
-      cls = resourceManager?.lookupDynamicElementClass(entry.componentClassName)
+      cls = lookupDynamicElementClass(entry.componentClassName)
       cname = cls != nil ? nil : entry.componentClassName
       
       if entry.bindings.isEmpty {
@@ -225,7 +234,7 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
        * class, it checks for aliases and HTML tags (generic elements).
        */
       bindings = buildBindings(for: attributes)
-      cls      = resourceManager?.lookupDynamicElementClass(name)
+      cls      = lookupDynamicElementClass(name)
       cname    = nil
       
       var addElementName = false
@@ -233,7 +242,7 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
         /* Could not resolve tagname as a WODynamicElement class, check for
          * aliases and dynamic HTML tags, like
          *
-         *   <wo:li var:style="current" var:+style="isCurrent" />
+         *     <wo:li var:style="current" var:+style="isCurrent" />
          *
          * Note: we only check for dynamic element classes! The _name could
          *       still be the name of a WOComponent class!
@@ -251,14 +260,14 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
           }
         }
         else if let nname = elementNameAliasMap[name] {
-          cls = resourceManager?.lookupDynamicElementClass(nname)
+          cls = lookupDynamicElementClass(nname)
           if let cls = cls {
             addElementName = cls is WOGenericElement.Type
           }
           else {
             resourceManager?.log.error("could not resolve name alias class",
                                        name, nname)
-            return WOStaticHTMLElement("[Missing element: \(name)]")
+            return WOStaticHTMLElement("[Missing element: \(name) => \(nname)]")
           }
         }
         // else: probably a WOComponent,.

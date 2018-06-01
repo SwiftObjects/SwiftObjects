@@ -75,9 +75,11 @@ open class WOGenericElement : WOHTMLDynamicElement {
   let extraAttributePlusConditions  : Bindings?
   let extraAttributeMinusConditions : Bindings?
   
+  let log : WOLogger = WOPrintLogger.shared
+  
   required
   public init(name: String, bindings: inout Bindings, template: WOElement?) {
-    tagName  = bindings.removeValue(forKey: "tagName")
+    tagName  = bindings.removeValue(forKey: "elementName")
     omitTags = bindings.removeValue(forKey: "omitTags")
     
     coreAttributes =
@@ -90,6 +92,10 @@ open class WOGenericElement : WOHTMLDynamicElement {
       WOGenericElement.extractAttributeConditions(from: &bindings, with: "-")
     
     super.init(name: name, bindings: &bindings, template: template)
+    
+    if tagName == nil {
+      log.warn("generic element has no `elementName`:", self)
+    }
   }
   
   static func extractAttributeConditions(from bindings : inout Bindings,

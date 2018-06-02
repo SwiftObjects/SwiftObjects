@@ -22,6 +22,57 @@ Nor is it optimized, or fast at all, to the contrary.
 > Contributions and suggestions on how to make things Swift'ier are very 
 > welcome!
 
+## Blog
+
+This is part of a blog entry, called:
+[An Introduction to WebObjects, in Swift](http://www.alwaysrightinstitute.com/wo-intro/).
+
+## Install
+
+<a href="https://swiftxcode.github.io" target="extlink"><img src="http://zeezide.com/img/SwiftXcodePkgIcon.svg"
+     align="right" width="86" height="86" style="padding: 0 0 0.5em 0.5em;" /></a>
+We use [Homebrew](https://brew.sh) to install the SwiftObjects
+development environment.
+To install the
+[swift xcode](https://swiftxcode.github.io)
+[SwiftObjects image](https://github.com/SwiftXcode/SwiftObjects_XcodeImage)
+image, simply run those commands:
+```shell
+brew install swiftxcode/swiftxcode/swift-xcode-wo
+swift xcode link-templates
+```
+
+That will take a moment to install and compile, but then we are ready to go!
+
+## Create a new WOApp
+
+Within Xcode, create a new project (⌘-Shift-N),
+go to the "macOS" section and select the "WOApplication"
+template, very much at the bottom of the inspector
+(pro tip: type "wo" in the filter field at the upper right):
+
+<center><img src=
+  "http://www.alwaysrightinstitute.com/images/swiftobjects/01-so-create-project-1.png" 
+  /></center>
+
+Give your project a name, say "HelloWOrld" create it somewhere, and you should
+end up with something like this:
+
+<center><img src=
+  "http://www.alwaysrightinstitute.com/images/swiftobjects/05-so-create-project-5.png" 
+  /></center>
+  
+Press the Play/Run button to build and start the application. Open your
+favorite browser and navigate to
+[http://localhost:1337/](http://localhost:1337/):
+
+<center><img src=
+  "http://www.alwaysrightinstitute.com/images/swiftobjects/21-main-page.png" 
+  /></center>
+
+Yay. History is up and running!
+
+
 
 ### Who
 

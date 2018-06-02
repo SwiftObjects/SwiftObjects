@@ -6,7 +6,7 @@
 ![Swift4](https://img.shields.io/badge/swift-4-blue.svg)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![tuxOS](https://img.shields.io/badge/os-tuxOS-green.svg?style=flat)
-![Travis](https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=develop)
+![Travis](https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=master)
 
 Work in progress, stay tuned.
 

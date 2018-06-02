@@ -1,0 +1,20 @@
+<?xml version="1.0"?> 
+
+<wo class="WOBody"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOBody" ns="http://www.opengroupware.org/go"/>
+
+  <binding name="filename" defaults="Resources"/>
+  <binding name="framework" defaults="Frameworks"/>
+  <binding name="src"/>
+  <binding name="value"/>
+
+  <validation message="&apos;filename&apos; must be bound when &apos;framework&apos; is bound">
+    <and>
+      <bound name="framework"/>
+      <unbound name="filename"/>
+    </and>
+  </validation>
+</wo>

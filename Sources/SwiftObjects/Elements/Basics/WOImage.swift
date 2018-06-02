@@ -93,4 +93,3 @@ open class WOImage : WOHTMLDynamicElement {
     )
   }
 }
-

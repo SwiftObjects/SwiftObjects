@@ -17,6 +17,7 @@ class DemoWOForm : WOComponent {
     """
     let store = CowStore.shared
     var cow   : Cow
+    var error : String?
     """
     
     var isNew : Bool {

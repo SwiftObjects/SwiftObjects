@@ -43,6 +43,12 @@
           <wo:textfield name="name" value="$cow.name" placeholder="Name" />
         </div>
         <div class="field">
+          <label>Photo</label>
+          <wo:popup name="image" selection="$cow.image"
+                    list="$store.availableImages"
+                    class="ui fluid search dropdown" />
+        </div>
+        <div class="field">
           <label>Body</label>
           <wo:text value="$cow.body" placeholder="ASCII Art" />
         </div>

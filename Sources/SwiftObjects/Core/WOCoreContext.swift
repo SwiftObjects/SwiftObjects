@@ -49,9 +49,9 @@ public protocol WOCoreContext : class, SmartDescription {
 
   var contextID   : String     { get }
 
-  var xmlStyleEmptyElements   : Bool { get }
-  var generateEmptyAttributes : Bool { get }
-  var closeAllElements        : Bool { get }
+  var xmlStyleEmptyElements   : Bool { get set }
+  var generateEmptyAttributes : Bool { get set }
+  var closeAllElements        : Bool { get set }
 
   /**
    * Returns whether elements are allowed to collapse close tags, eg:
@@ -59,7 +59,7 @@ public protocol WOCoreContext : class, SmartDescription {
    *
    * You should only enable this for XML output.
    */
-  var generateXMLStyleEmptyElements : Bool { get }
+  var generateXMLStyleEmptyElements : Bool { get set }
 }
 
 open class WOCoreContextBase : WOCoreContext {

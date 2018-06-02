@@ -6,8 +6,6 @@
 //  Copyright © 2018 ZeeZide. All rights reserved.
 //
 
-import Foundation
-
 /**
  * Used to generate the `<?xml?>` preamble and to configure
  * proper content coders for the used response.
@@ -35,26 +33,52 @@ public class WOXmlPreamble : WOHTMLDynamicElement {
   let version    : WOAssociation
   let encoding   : WOAssociation
   let standalone : WOAssociation?
+  let template   : WOElement?
   
   required
   public init(name: String, bindings: inout Bindings, template: WOElement?) {
-    version  = bindings.removeValue(forKey: "version")
-            ?? WOXmlPreamble.versionAssoc
-    encoding = bindings.removeValue(forKey: "encoding")
-            ?? WOXmlPreamble.encodingAssoc
+    version    = bindings.removeValue(forKey: "version")
+              ?? WOXmlPreamble.versionAssoc
+    encoding   = bindings.removeValue(forKey: "encoding")
+              ?? WOXmlPreamble.encodingAssoc
     standalone = bindings.removeValue(forKey: "standalone")
+    
+    self.template = template
 
     super.init(name: name, bindings: &bindings, template: template)
   }
   
-  /* response generation */
+  
+  override open func takeValues(from request: WORequest,
+                                in context: WOContext) throws
+  {
+    try template?.takeValues(from: request, in: context)
+  }
+  
+  override open func invokeAction(for request : WORequest,
+                                  in  context : WOContext) throws -> Any?
+  {
+    return try template?.invokeAction(for: request, in: context)
+  }
+  
+  override open func walkTemplate(using walker : WOElementWalker,
+                                  in   context : WOContext) throws
+  {
+    try template?.walkTemplate(using: walker, in: context)
+  }
+
+  
+  // MARK: - Response Generation
   
   override
   open func append(to response: WOResponse, in context: WOContext) throws {
     // TODO:
-    //_r.setTextCoder(NSXmlEntityTextCoder.sharedCoder,
-    //                NSHtmlAttributeEntityTextCoder.sharedCoder);
-    guard !context.isRenderingDisabled else { return }
+    // response.setTextCoder(NSXmlEntityTextCoder.sharedCoder,
+    //                       NSHtmlAttributeEntityTextCoder.sharedCoder);
+    guard !context.isRenderingDisabled else {
+      try template?.append(to: response, in: context)
+      return
+    }
     
     let cursor = context.cursor
     
@@ -77,5 +101,7 @@ public class WOXmlPreamble : WOHTMLDynamicElement {
     try appendExtraAttributes(to: response, in: context)
     try response.appendContentCharacter("?")
     try response.appendBeginTagEnd()
+    
+    try template?.append(to: response, in: context)
   }
 }

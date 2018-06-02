@@ -8,8 +8,6 @@
 ![tuxOS](https://img.shields.io/badge/os-tuxOS-green.svg?style=flat)
 ![Travis](https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=develop)
 
-Work in progress, stay tuned.
-
 A **very important** first note:
 This is a **demo** and an experiment to see whether and how the WebObjects API
 might work in Swift.

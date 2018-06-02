@@ -318,14 +318,14 @@ open class WOPopUpButton : WOInput {
         #if true // oh man, no proper equal in Swift :-) BAD BAD BAD
           if byVal {
             if let s = sel { // so bad, so wrong
-              isSelected = vs == ((s as? String) ?? String(describing: s))
+              isSelected = UObject.isEqual(vs, s)
             }
             else {
               isSelected = false // wrong, selection could be nil and match
             }
           }
           else { // OMG
-            isSelected = String(describing: sel) == String(describing: object)
+            isSelected = UObject.isEqual(sel, object)
           }
         #else
           if sel == (byVal ? v : object) { // Note: also matches null==null

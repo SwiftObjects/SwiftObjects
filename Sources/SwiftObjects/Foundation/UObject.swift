@@ -62,6 +62,28 @@ public enum UObject {
     guard let v = v else { return 0 }
     return Int(v) ?? 0
   }
+  
+  public static func isEqual(_ lhs: Any?, _ rhs: Any?) -> Bool {
+    // oh man, no proper equal in Swift :-) BAD BAD BAD BAD BAD BAD
+    // TODO: in ZeeQL we at least have a protocol for this
+    if lhs == nil && rhs == nil { return true  }
+    if lhs != nil || rhs != nil { return false }
+    guard let lhs = lhs, let rhs = rhs else { return false }
+    
+    if let lhs = lhs as? Int, let rhs = rhs as? Int {
+      return lhs == rhs
+    }
+    else if let lhs = lhs as? String, let rhs = rhs as? String {
+      return lhs == rhs
+    }
+
+    if type(of: lhs) != type(of: rhs) { return false }
+    
+    // This is so so bad I'm feeling sick typing this
+    let lhss = UObject.stringValue(lhs)
+    let rhss = UObject.stringValue(rhs)
+    return lhss == rhss
+  }
 }
 
 protocol UObjectBoolValue {

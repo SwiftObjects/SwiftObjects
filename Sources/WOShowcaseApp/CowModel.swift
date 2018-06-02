@@ -5,8 +5,6 @@
 //  Created by Helge Hess on 01.06.18.
 //
 
-import Foundation
-
 final class Cow {
   
   // Those are optional because we use empty cows during the create phase
@@ -52,7 +50,7 @@ final class CowStore {
   
   static let shared = CowStore()
 
-  var cows : [ Cow ] = [
+  var cows = [
     // Generated directly from within Xcode using CodeCows:
     //   https://itunes.apple.com/us/app/codecows/id1176112058
     // Also available as an SPM package:

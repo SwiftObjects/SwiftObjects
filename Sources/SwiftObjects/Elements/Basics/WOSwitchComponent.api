@@ -1,0 +1,10 @@
+<?xml version="1.0"?> 
+
+<wo class="WOSwitchComponent"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOSwitchComponent" ns="http://www.opengroupware.org/go"/>
+
+  <binding name="WOComponentName" required="YES"/>
+</wo>

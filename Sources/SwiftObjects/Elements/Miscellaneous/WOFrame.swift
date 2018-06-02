@@ -1,43 +1,46 @@
 //
-//  WOBody.swift
+//  WOFrame.swift
 //  SwiftObjects
 //
 //  Created by Helge Hess on 02.06.18.
 //
 
 /**
- * Can be used to generate a `<body>` tag with a dynamic background image.
+ * Can be used to generate a `<frame>` tag with a dynamic content URL.
  *
  * Sample:
  * ```
- *   Body: WOBody {
- *     src = "/images/mybackground.gif";
+ *   Frame: WOFrame {
+ *     actionClass      = "LeftMenu";
+ *     directActionName = "default";
  *   }
  * ```
  *
- * Renders:
+ * Renders:<pre>
  * ```
- *   <body background="/images/mybackground.gif">
- *     [sub-template]
- *   </body>
+ *   <frame src="/App/x/LeftMenu/default">[sub-template]</frame>
  * ```
  *
  * Bindings:
  * ```
- *   filename  [in] - string
- *   framework [in] - string
- *   src       [in] - string
- *   value     [in] - byte array?
+ *   name             [in] - string
+ *   href             [in] - string
+ *   directActionName [in] - string
+ *   actionClass      [in] - string
+ *   pageName         [in] - string
+ *   action           [in] - action
  * ```
  */
-open class WOBody : WOHTMLDynamicElement {
+open class WOFrame : WOHTMLDynamicElement {
   
+  let name     : WOAssociation?
   let link     : WOLinkGenerator?
   let template : WOElement?
   
   required
   public init(name: String, bindings: inout Bindings, template: WOElement?) {
-    link = WOLinkGenerator.resourceLinkGenerator(keyedOn: "src", for: &bindings)
+    self.name     = bindings.removeValue(forKey: "name")
+    self.link     = WOLinkGenerator.linkGenerator(for: &bindings)
     self.template = template
     super.init(name: name, bindings: &bindings, template: template)
   }
@@ -45,6 +48,7 @@ open class WOBody : WOHTMLDynamicElement {
   override open func takeValues(from request: WORequest,
                                 in context: WOContext) throws
   {
+    try link?.takeValues(from: request, in: context)
     try template?.takeValues(from: request, in: context)
   }
   
@@ -59,6 +63,11 @@ open class WOBody : WOHTMLDynamicElement {
   {
     try template?.walkTemplate(using: walker, in: context)
   }
+  
+  
+  // MARK: - Rendering
+
+  open var frameTag : String { return "frame" }
 
   override
   open func append(to response: WOResponse, in context: WOContext) throws {
@@ -66,17 +75,25 @@ open class WOBody : WOHTMLDynamicElement {
       try template?.append(to: response, in: context)
       return
     }
-
-    try response.appendBeginTag("body")
-    if let url = link?.fullHref(in: context) {
-      try response.appendAttribute("background", url)
+    
+    let tag = frameTag
+    
+    try response.appendBeginTag(tag)
+    
+    if let s = name?.stringValue(in: context.cursor) {
+      try response.appendAttribute("name", s)
     }
+    
+    if let url = link?.fullHref(in: context) {
+      try response.appendAttribute("src", url)
+    }
+    
     try appendExtraAttributes(to: response, in: context)
     try response.appendBeginTagEnd()
     
     try template?.append(to: response, in: context)
     
-    try response.appendEndTag("body")
+    try response.appendEndTag(tag)
   }
   
   
@@ -84,6 +101,8 @@ open class WOBody : WOHTMLDynamicElement {
   
   override open func appendToDescription(_ ms: inout String) {
     super.appendToDescription(&ms)
+    
+    WODynamicElement.appendBindingToDescription(&ms, "name", name)
     
     if let link = link { ms += " src=\(link)" }
   }

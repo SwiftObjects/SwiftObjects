@@ -1,0 +1,11 @@
+<?xml version="1.0"?> 
+
+<wo class="WOFrame"
+    superclass="WOHTMLDynamicElement"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOFrame" ns="http://www.opengroupware.org/go"/>
+
+  <bindings class="WOLinkGenerator"/>
+  <binding name="name"/>
+</wo>

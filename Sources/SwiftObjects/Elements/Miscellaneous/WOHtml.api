@@ -1,0 +1,15 @@
+<?xml version="1.0"?> 
+
+<wo class="WOHtml"
+    superclass="WOHTMLDynamicComponent"
+    xmlns="http://www.opengroupware.org/go/api"
+    ns="http://www.opengroupware.org/go"
+>
+  <binding name="doctype" defaults="(html5, strict, strict-xhtml11, strict-xhtml10, strict-xhtml, strict-html, trans, trans-xhtml, trans-html, quirk)"/>
+  <!--<binding name="type" defaults="(html5, strict, strict-xhtml11, strict-xhtml10, strict-xhtml, strict-html, trans, trans-xhtml, trans-html, quirk)"/>-->
+  <binding name="language" defaults="(en,de)"/>
+  <!--<binding name="lang"/>-->
+  <binding name="namespace"/>
+  <!--<binding name="ns"/>-->
+  <!--<binding name="xmlns"/>-->
+</wo>

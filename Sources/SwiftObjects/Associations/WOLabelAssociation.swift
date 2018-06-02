@@ -89,21 +89,21 @@ open class WOLabelAssocation : WOAssociation, SmartDescription {
     let lKey : String? = {
       if !isKeyKeyPath { return key }
       let v = KeyValueCoding.value(forKey: key, inObject: cursor)
-      return (v as? String) ?? String(describing: v)
+      return UObject.stringValue(v)
     }()
     
     let lTable : String? = {
       guard let table = table else { return nil }
       if !isTableKeyPath { return table }
       let v = KeyValueCoding.value(forKey: table, inObject: cursor)
-      return (v as? String) ?? String(describing: v)
+      return UObject.stringValue(v)
     }()
     
     let lValue : String? = {
       guard let value = defaultValue else { return nil }
       if !isValueKeyPath { return value }
       let v = KeyValueCoding.value(forKey: value, inObject: cursor)
-      return (v as? String) ?? String(describing: v)
+      return UObject.stringValue(v)
     }()
     
     guard let rKey = lKey else {

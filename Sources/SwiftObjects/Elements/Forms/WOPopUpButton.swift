@@ -356,7 +356,7 @@ open class WOPopUpButton : WOInput {
               return formatter.string(for: object, in: context)
             }
             else {
-              return (object as? String) ?? String(describing: object)
+              return UObject.stringValue(object)
             }
           }
         }()
@@ -439,7 +439,7 @@ open class WOPopUpButton : WOInput {
         else { object = nil }
 
         /* the value is what we detected */
-        vs = (sel as? String) ?? String(describing: sel)
+        vs = UObject.stringValue(sel)
       }
       else {
         /* This means the 'selection' binding was set, but not the
@@ -453,7 +453,7 @@ open class WOPopUpButton : WOInput {
         let v : Any?
         if let readValue = readValue {
           v  = readValue.value(in: cursor)
-          if let v = v { vs = (v as? String) ?? String(describing: v) }
+          if let v = v { vs = UObject.stringValue(v) }
           else         { vs = nil }
         }
         else {
@@ -469,7 +469,7 @@ open class WOPopUpButton : WOInput {
         displayV = string.stringValue(in: cursor)
       }
       else if let object = object {
-        displayV = (object as? String) ?? String(describing: object)
+        displayV = UObject.stringValue(object)
       }
       else if let vs = vs { /* just the value */
         displayV = vs

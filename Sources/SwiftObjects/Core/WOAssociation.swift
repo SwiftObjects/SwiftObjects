@@ -131,6 +131,6 @@ public extension WOAssociation {
   }
   func stringValue(in component: Any?) -> String? {
     guard let v = value(in: component) else { return nil }
-    return (v as? String) ?? String(describing: v)
+    return UObject.stringValue(v)
   }
 }

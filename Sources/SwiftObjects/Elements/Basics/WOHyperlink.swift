@@ -123,7 +123,7 @@ open class WOHyperlink : WOHTMLDynamicElement {
     }
     else if let v = v {
       oldId = lid
-      lid = (v as? String) ?? String(describing: v)
+      lid = UObject.stringValue(v)
     }
     
     var result : Any?
@@ -175,7 +175,7 @@ open class WOHyperlink : WOHTMLDynamicElement {
       }
       else if let v = v {
         oldId = context.elementID
-        lid = (v as? String) ?? String(describing: v)
+        lid = UObject.stringValue(v)
         context.elementID = lid!
       }
       

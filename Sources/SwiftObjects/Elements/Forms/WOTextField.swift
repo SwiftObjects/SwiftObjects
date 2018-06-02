@@ -89,7 +89,7 @@ open class WOTextField : WOInput {
     if !(value is String) && formatter == nil { return value }
     
     let s : String = {
-      let s = (v as? String) ?? String(describing: v)
+      let s = UObject.stringValue(v)
       let doTrim = trim?.boolValue(in: context.cursor) ?? false
       return doTrim ? s.trimmingCharacters(in: CharacterSet.whitespaces) : s
     }()
@@ -100,7 +100,7 @@ open class WOTextField : WOInput {
   open func formValue(for value: Any?, in context: WOContext) -> String? {
     guard let formatter = formatter else {
       guard let value = value else { return nil }
-      return (value as? String) ?? String(describing: value)
+      return UObject.stringValue(value)
     }
     return formatter.string(for: value, in: context)
   }

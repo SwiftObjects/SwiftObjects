@@ -140,7 +140,7 @@ open class WOForm : WOHTMLDynamicElement {
     }
     else if let v = v {
       oldId = lid
-      lid   = (v as? String) ?? String(describing: v)
+      lid   = UObject.stringValue(v)
     }
     
     /* push an WOErrorReport object to the WOContext */
@@ -232,7 +232,7 @@ open class WOForm : WOHTMLDynamicElement {
       }
       else if let v = v { /* explicit ID was assigned */
         oldId = lid
-        lid   = (v as? String) ?? String(describing: v)
+        lid   = UObject.stringValue(v)
       }
 
       if lid == context.senderID {

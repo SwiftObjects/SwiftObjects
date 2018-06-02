@@ -37,6 +37,13 @@ public enum UObject {
         return true
     }
   }
+  
+  public static func stringValue(_ v: Any?) -> String {
+    guard let v = v else { return "<nil>" }
+    if let s = v as? String { return s }
+    if let b = v as? Bool   { return b ? "true" : "false" }
+    return String(describing: v)
+  }
 
   public static func intValue(_ v: Any?) -> Int {
     guard let v = v else { return 0 }

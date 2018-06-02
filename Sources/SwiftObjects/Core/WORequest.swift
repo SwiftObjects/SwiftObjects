@@ -152,7 +152,7 @@ open class WORequest : WOMessage {
 
   open func stringFormValue(for key: String) -> String? {
     guard let fv = formValue(for: key) else { return nil }
-    return (fv as? String) ?? String(describing: fv)
+    return UObject.stringValue(fv)
   }
   
   func parseFormValues() -> [ String : [ Any ] ] {

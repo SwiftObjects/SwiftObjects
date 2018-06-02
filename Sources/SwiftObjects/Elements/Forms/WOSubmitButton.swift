@@ -90,7 +90,7 @@ open class WOSubmitButton : WOInput {
     
     if v is Bool {} /* in this mode we just expose the ID in HTML */
     else if let v = v {
-      lid = (v as? String) ?? String(describing: v)
+      lid = UObject.stringValue(v)
     }
     
     let result : Any? = {

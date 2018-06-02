@@ -64,7 +64,7 @@ open class WOText : WOInput {
   
   open func formValue(for value: Any?, in context: WOContext) -> String? {
     guard let value = value else { return nil }
-    return (value as? String) ?? String(describing: value)
+    return UObject.stringValue(value)
   }
 
   override

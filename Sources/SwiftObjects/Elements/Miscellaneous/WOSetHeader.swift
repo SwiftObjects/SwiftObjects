@@ -63,7 +63,7 @@ open class WOSetHeader : WOHTMLDynamicElement {
       guard let value = value else { return nil }
       let ov = value.value(in: cursor)
       // TODO: format Date/Calendar as HTTP
-      return (ov as? String) ?? String(describing: ov)
+      return UObject.stringValue(ov)
     }()
     
     let lObject : WOMessage? = {

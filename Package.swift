@@ -10,12 +10,12 @@ import PackageDescription
 
 #if swift(>=4.1)
     let runtimeLib : PackageDescription.Package.Dependency =
-                     .package(url: "https://github.com/wickwirew/Runtime.git",
-                              from: "0.7.1")
+                     .package(url: "https://github.com/SwiftObjects/Runtime.git",
+                              from: "41.0.0")
 #else
     let runtimeLib : PackageDescription.Package.Dependency =
-                     .package(url: "https://github.com/wickwirew/Runtime.git",
-                              .branch("swift-4"))
+                     .package(url: "https://github.com/SwiftObjects/Runtime.git",
+                              from: "40.0.0")
 #endif
 
 let package = Package(

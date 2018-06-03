@@ -157,9 +157,8 @@ open class WOTextField : WOInput {
       try response.appendAttribute("value", sv)
     }
     
-    if let size = size {
-      let i = size.intValue(in: cursor)
-      if i > 0 { try response.appendAttribute("size", i) }
+    if let i = size?.intValue(in: cursor), i > 0 {
+      try response.appendAttribute("size", i)
     }
     
     if disabled?.boolValue(in: cursor) ?? false {

@@ -41,6 +41,7 @@ let WOFormElementNames   : [ String : WODynamicElement.Type ] = [
   "WOPopUpButton"        : WOPopUpButton.self,
   "WORadioButton"        : WORadioButton.self,
   "WOPasswordField"      : WOPasswordField.self,
+  "WOBrowser"            : WOBrowser.self,
 ]
 
 let WOLinkElementNames   : [ String : WODynamicElement.Type ] = [

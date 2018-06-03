@@ -1,0 +1,23 @@
+<?xml version="1.0"?> 
+
+<wo class="WOBrowser"
+    superclass="WOPopUpButton"
+    xmlns="http://www.opengroupware.org/go/api"
+>
+  <name value="WOBrowser" ns="http://www.opengroupware.org/go"/>
+  <name value="browser"   ns="http://www.opengroupware.org/go"/>
+
+  <binding name="multiple" defaults="YES/NO"/>
+  <binding name="size" />
+
+  <!-- WO4.5, not implemented in Go
+  <binding name="selectedValues" />
+  -->
+
+  <validation message="&apos;list&apos; must not be a constant">
+    <and>
+      <bound name="list"/>
+      <ungettable name="list"/>
+    </and>
+  </validation>
+</wo>

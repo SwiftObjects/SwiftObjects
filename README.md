@@ -6,7 +6,7 @@
 ![Swift4](https://img.shields.io/badge/swift-4-blue.svg)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![tuxOS](https://img.shields.io/badge/os-tuxOS-green.svg?style=flat)
-![Travis](https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=develop)
+<a href="https://travis-ci.org/SwiftObjects/SwiftObjects"><img src="https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=develop" /></a>
 
 A **very important** first note:
 This is a **demo** and an experiment to see whether and how the WebObjects API
@@ -76,7 +76,8 @@ Yay. History is up and running!
 
 **SwiftObjects** is brought to you by
 [ZeeZide](http://zeezide.de).
-We like feedback, GitHub stars, cool contract work,
+We like feedback, GitHub stars, 
+cool [contract work](http://zeezide.com/en/services/services.html),
 presumably any form of praise you can think of.
 
 There is a channel on the [Noze.io Slack](http://slack.noze.io).

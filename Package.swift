@@ -27,16 +27,16 @@ let package = Package(
 
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git",
-                 from: "1.8.0"),
+                 from: "1.9.2"),
         .package(url: "https://github.com/onmyway133/SwiftHash.git",
                  from: "2.0.1"),
         runtimeLib,
         
         // just for the showcase
         .package(url: "https://github.com/SwiftWebResources/SemanticUI-Swift.git",
-                 from: "2.3.1"),
+                 from: "2.3.3"),
         .package(url: "https://github.com/SwiftWebResources/jQuery-Swift.git",
-                 from: "3.3.1"),
+                 from: "3.3.2"),
     ],
 
     targets: [

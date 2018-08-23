@@ -66,16 +66,16 @@ open class WOCoreContextBase : WOCoreContext {
 
   open var log         : WOLogger { return application.log }
 
-  open let application : WOApplication
-  open let request     : WORequest
-  open var response    : WOResponse
+  public let application : WOApplication
+  public let request     : WORequest
+  open   var response    : WOResponse
   
-  open let contextID   : String
+  public let contextID   : String
   
-  open var xmlStyleEmptyElements   = false // do not generate <a/> but <a></a>
-  open var generateEmptyAttributes = false // generate selected=selected
-  open var closeAllElements        = true  // generate <br /> instead of <br>
-  open var generateXMLStyleEmptyElements = false
+  open   var xmlStyleEmptyElements   = false // do not generate <a/> but <a></a>
+  open   var generateEmptyAttributes = false // generate selected=selected
+  open   var closeAllElements        = true  // generate <br /> instead of <br>
+  open   var generateXMLStyleEmptyElements = false
   
   private static var ctxIdCounter = Atomic(value: 0)
 

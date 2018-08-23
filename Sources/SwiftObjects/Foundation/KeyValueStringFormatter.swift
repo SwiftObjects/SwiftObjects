@@ -56,7 +56,7 @@ final class KeyValueStringFormatter : Formatter, SmartDescription {
   // MARK: - Implementation
 
   override
-  open func string(for obj: Any?) -> String? {
+  public func string(for obj: Any?) -> String? {
     guard format.contains("%") else { return format }
     
     let valuesHandler : KeyValueStringFormatterValueHandler

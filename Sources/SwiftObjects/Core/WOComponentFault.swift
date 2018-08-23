@@ -20,7 +20,7 @@ final class WOComponentFault : WOComponent {
     super.init()
   }
   
-  override open var name : String {
+  override public var name : String {
     set { cfName = newValue }
     get { return cfName ?? "ERROR:FaultWithoutName" }
   }
@@ -79,19 +79,20 @@ final class WOComponentFault : WOComponent {
   
   // MARK: Override some methods which should never be called on a fault
 
-  override open func performActionNamed(_ name: String) -> Any? {
+  override public func performActionNamed(_ name: String) -> Any? {
     log.error("called performActionNamed('\(name)') on WOComponentFault!")
     return nil
   }
   
   override
-  open func takeValues(from request: WORequest, in context: WOContext) throws {
+  public func takeValues(from request: WORequest, in context: WOContext) throws
+  {
     // TODO: throw
     log.error("called \(#function) on WOComponentFault!")
   }
   
-  override open func invokeAction(for request : WORequest,
-                                  in  context : WOContext) throws -> Any?
+  override public func invokeAction(for request : WORequest,
+                                    in  context : WOContext) throws -> Any?
   {
     // TODO: throw
     log.error("called \(#function) on WOComponentFault!")
@@ -99,12 +100,12 @@ final class WOComponentFault : WOComponent {
   }
   
   override
-  open func append(to response: WOResponse, in context: WOContext) throws {
+  public func append(to response: WOResponse, in context: WOContext) throws {
     // TODO: throw
     log.error("called \(#function) on WOComponentFault!")
   }
-  override open func walkTemplate(using walker : WOElementWalker,
-                                  in   context : WOContext) throws
+  override public func walkTemplate(using walker : WOElementWalker,
+                                    in   context : WOContext) throws
   {
     // TODO: throw
     log.error("called \(#function) on WOComponentFault!")
@@ -113,7 +114,7 @@ final class WOComponentFault : WOComponent {
   
   // MARK: - Description
   
-  override open func appendToDescription(_ ms: inout String) {
+  override public func appendToDescription(_ ms: inout String) {
     super.appendToDescription(&ms)
     
     if let n = cfName { ms += " fault=\(n)" }

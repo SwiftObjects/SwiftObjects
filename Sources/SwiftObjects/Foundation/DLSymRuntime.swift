@@ -39,18 +39,25 @@ func SOGetPackageName<T>(_ type: T.Type, default: String = "") -> String {
   
   guard info.dli_sname != nil else { return `default` }
   
-  assert(UnsafePointer(strstr(info.dli_sname, "_T")) == info.dli_sname,
-         "package name does not begin with: " +
-         "_T (\(String(cString: info.dli_sname))")
-  var p = info.dli_sname!.advanced(by: 2) // skip _T
-  
-  let   len = Int(atoi(p))
-  while isdigit(Int32(p.pointee)) != 0 { p += 1 }
-  
-  return p.withMemoryRebound(to: UInt8.self, capacity: len) { p in
-    let data = UnsafeBufferPointer(start: p, count: len)
-    return String(decoding: data, as: UTF8.self)
-  }
+  // Swift 4.2 fails on this: $S13WOShowcaseAppAACN
+  #if swift(>=4.1.50)
+    print("Swift 4.2 cannot lookup package name yet, symbol:",
+          String(cString: info.dli_sname))
+    return `default`
+  #else
+    assert(UnsafePointer(strstr(info.dli_sname, "_T")) == info.dli_sname,
+           "package name does not begin with: " +
+           "_T (\(String(cString: info.dli_sname))")
+    var p = info.dli_sname!.advanced(by: 2) // skip _T
+    
+    let   len = Int(atoi(p))
+    while isdigit(Int32(p.pointee)) != 0 { p += 1 }
+    
+    return p.withMemoryRebound(to: UInt8.self, capacity: len) { p in
+      let data = UnsafeBufferPointer(start: p, count: len)
+      return String(decoding: data, as: UTF8.self)
+    }
+  #endif
 }
 
 func SOGetClassByName(_ name: String, _ module: String) -> AnyClass? {

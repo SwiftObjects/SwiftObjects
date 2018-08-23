@@ -1,16 +1,18 @@
 //
-//  WOPopUpButton.swift
+//  WOBrowser.swift
 //  SwiftObjects
 //
-//  Created by Helge Hess on 01.06.18.
+//  Created by Helge Hess on 03.06.18.
 //
 
 /**
- * Create HTML form single-selection popups.
+ * Create HTML form single or multi-selection 'select' elements. This is very
+ * similiar to WOPopUpButton. The difference is that it does not create a popup
+ * but a select-list.
  *
  * Sample:
  * ```
- * Country: WOPopUpButton {
+ * Country: WOBrowser {
  *   name      = "country";
  *   list      = ( "UK", "US", "Germany" );
  *   item      = item;
@@ -21,7 +23,7 @@
  * ```
  *   <select name="country">
  *     <option value="UK">UK</option>
- *     <option value="US" selected>US</option>
+ *     <option value="US" selected&gt;US</option>
  *     <option value="Germany">Germany</option>
  *     [sub-template]
  *   </select>
@@ -40,8 +42,10 @@
  * ```
  *   list              [in]  - List
  *   item              [out] - object
- *   selection         [out] - object
+ *   selection         [out] - object or List of objects (multiple)
+ *   size              [in]  - int (number of slots in UI element)
  *   string            [in]  - String
+ *   multiple          [in]  - boolean (whether multi-selection is allowed)
  *   noSelectionString [in]  - String
  *   selectedValue     [out] - String
  *   escapeHTML        [in]  - boolean
@@ -56,59 +60,44 @@
  *   .key   [in]  - 'class' parameters (eg <input class="selected">)
  * ```
  */
-open class WOPopUpButton : WOInput {
-  
-  static let WONoSelectionString = "WONoSelectionString"
+open class WOBrowser : WOPopUpButton {
 
-  let list              : WOAssociation?
-  let item              : WOAssociation?
-  let selection         : WOAssociation?
-  let string            : WOAssociation?
-  let noSelectionString : WOAssociation?
-  let selectedValue     : WOAssociation?
-  let escapeHTML        : WOAssociation?
-  let itemGroup         : WOAssociation?
-  let formatter         : WOFormatter?
-  let template          : WOElement?
+  let size     : WOAssociation?
+  let multiple : WOAssociation?
 
   required
   public init(name: String, bindings: inout Bindings, template: WOElement?) {
-    list               = bindings.removeValue(forKey: "list")
-    item               = bindings.removeValue(forKey: "item")
-    selection          = bindings.removeValue(forKey: "selection")
-    string             = bindings.removeValue(forKey: "string")
-    noSelectionString  = bindings.removeValue(forKey: "noSelectionString")
-    selectedValue      = bindings.removeValue(forKey: "selectedValue")
-    escapeHTML         = bindings.removeValue(forKey: "escapeHTML")
-    itemGroup          = bindings.removeValue(forKey: "itemGroup")
-    
-    formatter = WOFormatterFactory.formatter(for: &bindings)
-    
-    self.template = template
-    
+    size     = bindings.removeValue(forKey: "size")
+    multiple = bindings.removeValue(forKey: "multiple")
     super.init(name: name, bindings: &bindings, template: template)
   }
 
   override
   open func takeValues(from request: WORequest, in context: WOContext) throws {
     let cursor = context.cursor
-    
+
     if let a = disabled, a.boolValue(in: cursor) { return }
     
     let formName = elementName(in: context)
-    
-    guard let formValue = request.stringFormValue(for: formName) else {
+    guard let formValues = request.formValues(for: formName) else {
+      /* nothing changed, or not in submitted form */
+
       /* We need to return here and NOT reset the selection. This is because the
        * page might have been invoked w/o a form POST! If we do not, this
        * resets the selection.
        *
        * TODO: check whether HTML forms MUST submit an empty form value for
-       *       popups.
+       *       browsers.
        */
-      return;
+      return
     }
-
-    let isNoSelection = formValue == WOPopUpButton.WONoSelectionString
+    
+    let isNoSelection : Bool = {
+      if formValues.isEmpty    { return true }
+      if formValues.count != 1 { return false }
+      return UObject.stringValue(formValues[0])
+          == WOPopUpButton.WONoSelectionString
+    }()
     
     let objects : WOListWalkable.AnyCollectionIteratorInfo?
     if let list = list {
@@ -118,66 +107,104 @@ open class WOPopUpButton : WOInput {
       objects = nil
     }
     
-    var object : Any? = nil
-    
-    if let _ = writeValue {
-      /* has a 'value' binding, walk list to find object */
-      if let ( _, iterator ) = objects {
-        let item : WOAssociation? = {
-          guard let item = self.item else { return nil }
-          return item.isValueSettableInComponent(cursor) ? item : nil
-        }()
+    let selectedObjects : [ Any ] = try {
+      guard let objects = objects else { return [] }
+      if isNoSelection { return [] }
+      
+      let item : WOAssociation? = {
+        guard let item = self.item else { return nil }
+        return item.isValueSettableInComponent(cursor) ? item : nil
+      }()
+
+      var selectedObjects = [ Any ]()
+      if let _ = writeValue {
+        /* has a 'value' binding, walk list to find matching objects */
         
-        for lItem in iterator {
+        // Note: we compare the string representation of the values, this
+        //       is less error prone
+        let formValueSet = Set(formValues.map(UObject.stringValue))
+        
+        selectedObjects.reserveCapacity(formValues.count)
+        for lItem in objects.iterator {
           try item?.setValue(lItem, in: cursor)
           
-          let cv = readValue?.stringValue(in: cursor)
-          if cv == formValue {
-            object = lItem
-            break
-          }
+          guard let cv = readValue?.stringValue(in: cursor) else { continue }
+          if formValueSet.contains(cv) { selectedObjects.append(lItem) }
         }
       }
-    }
-    else if !isNoSelection {
-      /* an index binding? */
-      let idx = Int(formValue) ?? -1 // hmmm
-      if let ( count, iterator ) = objects {
-        if idx < 0 || idx >= count {
-          context.log.error("popup value out of range:", idx, count, objects)
-          object = nil
-        }
-        else {
-          var p = 0
-          for lItem in iterator { // sigh
-            if p == idx {
-              object = lItem
-              break
-            }
-            p += 1
+      else {
+        /* an index binding? */
+        var indices = Set<Int>()
+        indices.reserveCapacity(formValues.count)
+        for formValue in formValues {
+          let idx = UObject.intValue(formValue)
+          if idx < 0 || idx >= objects.count {
+            context.log.error("browser value out of range:", idx, objects.count)
+          }
+          else {
+            indices.insert(idx)
           }
         }
+        
+        selectedObjects.reserveCapacity(indices.count)
+        var p = 0
+        for lItem in objects.iterator { // sigh
+          if indices.remove(p) != nil {
+            selectedObjects.append(lItem)
+            guard !indices.isEmpty else { break }
+          }
+          p += 1
+        }
+      }
+      return selectedObjects
+    }()
+    
+    
+    // Push selected value (or values)
+    
+    if let selectedValue = selectedValue,
+       selectedValue.isValueSettableInComponent(cursor)
+    {
+      if isNoSelection {
+        try selectedValue.setValue(nil, in: cursor)
+      }
+      else if let a = multiple, a.boolValue(in: cursor) {
+        try selectedValue.setValue(formValues, in: cursor)
+      }
+      else if !formValues.isEmpty {
+        try selectedValue.setValue(formValues[0], in: cursor)
+      }
+      else {
+        try selectedValue.setValue(nil, in: cursor)
       }
     }
-    else {
-      context.log.warn("popup has no form value, value binding or selection:",
-                       self, formValue)
+    
+    // Process selection
+    
+    if let selection = selection,
+       selection.isValueSettableInComponent(cursor)
+    {
+      if isNoSelection {
+        try selection.setValue(nil, in: cursor)
+      }
+      else if let a = multiple, a.boolValue(in: cursor) {
+        try selection.setValue(selectedObjects, in: cursor)
+      }
+      else if !formValues.isEmpty {
+        try selection.setValue(selectedObjects[0], in: cursor)
+      }
+      else {
+        try selection.setValue(nil, in: cursor)
+      }
     }
-
-    /* push selected value */
     
-    try selectedValue?.setValue(isNoSelection ? nil : formValue, in: cursor)
+    // reset item to avoid dangling references
     
-    /* process selection */
-    
-    if let a = selection, a.isValueSettableInComponent(cursor) {
-      try a.setValue(object, in: cursor)
+    if let item = item, item.isValueSettableInComponent(cursor) {
+      try item.setValue(nil, in: cursor)
     }
-
-    /* reset item to avoid dangling references */
-    try item?.setValue(nil, in: cursor)
   }
-  
+
   
   override open func append(to response: WOResponse,
                             in context: WOContext) throws
@@ -199,37 +226,43 @@ open class WOPopUpButton : WOInput {
     
     if let a = disabled, a.boolValue(in: cursor) {
       try response.appendAttribute("disabled",
-          context.generateEmptyAttributes ? nil : "disabled")
+                     context.generateEmptyAttributes ? nil : "disabled")
     }
-  
+
+    if let i = size?.intValue(in: cursor), i > 0 {
+      try response.appendAttribute("size", i)
+    }
+    
+    if let a = multiple, a.boolValue(in: cursor) {
+      try response.appendAttribute("multiple",
+                     context.generateEmptyAttributes ? nil : "multiple")
+    }
+
     try coreAttributes?.append(to: response, in: context)
     try appendExtraAttributes(to: response, in: context)
     
     try response.appendBeginTagEnd()
   
-    /* content */
-  
     try appendOptions(to: response, in: context)
   
     try template?.append(to: response, in: context)
 
-    /* close tag */
-  
     try response.appendEndTag("select")
   }
   
-  open func appendOptions(to response: WOResponse,
-                          in context: WOContext) throws
+  override open func appendOptions(to response: WOResponse,
+                                   in context: WOContext) throws
   {
     guard !context.isRenderingDisabled else { return }
 
     let cursor          = context.cursor
     let escapesHTML     = escapeHTML?.boolValue(in: cursor) ?? true
     let hasSettableItem = item?.isValueSettableInComponent(cursor) ?? false
-    
+    let isMultiple      = multiple?.boolValue(in: cursor) ?? false
+
     /* determine selected object */
     
-    var byVal = false
+    var byVal = false /* true if the 'selectedValue' binding is used */
     var sel   : Any? = nil
     
     if selection == nil {
@@ -313,7 +346,36 @@ open class WOPopUpButton : WOInput {
         /* determine selection (compare against value or item) */
         
         var isSelected : Bool
-        #if true // oh man, no proper equal in Swift :-) BAD BAD BAD
+        if isMultiple {
+          if let sel = sel { // this is so so bad.
+            isSelected = byVal
+                       ? UList.contains(sel,
+                                        v ?? WOPopUpButton.WONoSelectionString)
+                       : UList.contains(sel, object)
+          }
+          else {
+            isSelected = false
+          }
+          
+          /*
+          if (sel == null)
+            isSelected = false;
+          else if (selCollection != null && byVal)
+            isSelected = selCollection.contains(v);
+          else if (selCollection != null && !byVal)
+            isSelected = selCollection.contains(object);
+          else if (selArray != null && byVal)
+            isSelected = UList.contains(selArray, v);
+          else if (selArray != null && !byVal)
+            isSelected = UList.contains(selArray, object);
+          else
+            isSelected = false;
+           */
+          // TODO: port me
+          assert(false, "multiple is not implemented yet")
+          isSelected = false
+        }
+        else {
           if byVal {
             if let s = sel { // so bad, so wrong
               isSelected = UObject.isEqual(vs, s)
@@ -325,17 +387,7 @@ open class WOPopUpButton : WOInput {
           else { // OMG
             isSelected = UObject.isEqual(sel, object)
           }
-        #else
-          if sel == (byVal ? v : object) { // Note: also matches null==null
-            isSelected = true
-          }
-          else if sel == nil || (byVal ? v : object) == nil {
-            isSelected = false
-          }
-          else {
-            isSelected = sel == (byVal ? v : object)
-          }
-        #endif
+        }
         
         /* display string */
   
@@ -497,7 +549,6 @@ open class WOPopUpButton : WOInput {
       try? item?.setValue(nil /* reset */, in: cursor)
     }
   }
-
   
   // MARK: - Description
   
@@ -505,14 +556,8 @@ open class WOPopUpButton : WOInput {
     super.appendToDescription(&ms)
     
     WODynamicElement.appendBindingsToDescription(&ms,
-      "list",              list,
-      "item",              item,
-      "selection",         selection,
-      "string",            string,
-      "noSelectionString", noSelectionString,
-      "selectedValue",     selectedValue,
-      "escapeHTML",        escapeHTML,
-      "itemGroup",         itemGroup
+      "multiple", multiple,
+      "size",     size
     )
   }
 }

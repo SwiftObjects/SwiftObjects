@@ -453,8 +453,8 @@ public extension WOResourceManager { // Convenience
 
 open class WOResourceManagerBase : WOResourceManager, SmartDescription {
   
-  open let lock = Foundation.NSLock()
-  open let log  : WOLogger = WOPrintLogger.shared
+  public let lock = Foundation.NSLock()
+  public let log  : WOLogger = WOPrintLogger.shared
   
   public init() {}
   

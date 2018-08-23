@@ -10,8 +10,8 @@ open class WOResponse : WOMessage, WOActionResults {
   
   // TODO: enableStreaming() (implement in NIO subclass)
 
-  open var status = 200
-  open let request : WORequest?
+  open   var status  = 200
+  public let request : WORequest?
   
   public init(request: WORequest? = nil) {
     self.request = request

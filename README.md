@@ -6,7 +6,7 @@
 ![Swift4.2](https://img.shields.io/badge/swift-4.2-blue.svg)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![tuxOS](https://img.shields.io/badge/os-tuxOS-green.svg?style=flat)
-<a href="https://travis-ci.org/SwiftObjects/SwiftObjects"><img src="https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=master" /></a>
+<a href="https://travis-ci.org/SwiftObjects/SwiftObjects"><img src="https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=develop" /></a>
 
 A **very important** first note:
 This is a **demo** and an experiment to see whether and how the WebObjects API

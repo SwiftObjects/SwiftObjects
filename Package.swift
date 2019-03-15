@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.2
 //
 //  Package.swift
 //  SwiftObjects
@@ -8,7 +8,11 @@
 //
 import PackageDescription
 
-#if swift(>=4.1)
+#if swift(>=4.2)
+    let runtimeLib : PackageDescription.Package.Dependency =
+                     .package(url: "https://github.com/wickwirew/Runtime.git",
+                              from: "1.1.0")
+#elseif swift(>=4.1)
     let runtimeLib : PackageDescription.Package.Dependency =
                      .package(url: "https://github.com/SwiftObjects/Runtime.git",
                               from: "41.0.0")
@@ -27,9 +31,9 @@ let package = Package(
 
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git",
-                 from: "1.9.2"),
+                 from: "1.13.2"),
         .package(url: "https://github.com/onmyway133/SwiftHash.git",
-                 from: "2.0.1"),
+                 from: "2.0.2"),
         runtimeLib,
         
         // just for the showcase

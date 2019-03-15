@@ -22,6 +22,6 @@ install:
 
 script:
     - export PATH="$HOME/usr/bin:$PATH"
-    - swift build -c release
+#    - swift build -c release
     - swift build -c debug
 

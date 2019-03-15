@@ -3,7 +3,7 @@
        align="right" width="128" height="128" />
 </h2>
 
-![Swift4](https://img.shields.io/badge/swift-4-blue.svg)
+![Swift4.2](https://img.shields.io/badge/swift-4.2-blue.svg)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![tuxOS](https://img.shields.io/badge/os-tuxOS-green.svg?style=flat)
 <a href="https://travis-ci.org/SwiftObjects/SwiftObjects"><img src="https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=master" /></a>
@@ -26,6 +26,9 @@ This is part of a blog entry, called:
 [An Introduction to WebObjects, in Swift](http://www.alwaysrightinstitute.com/wo-intro/).
 
 ## Install
+
+Note: Setup to work with Swift 4.2, can be changed manually to 4.1, but 5-alpha
+      doesn't work yet.
 
 <a href="https://swiftxcode.github.io" target="extlink"><img src="http://zeezide.com/img/SwiftXcodePkgIcon.svg"
      align="right" width="86" height="86" style="padding: 0 0 0.5em 0.5em;" /></a>

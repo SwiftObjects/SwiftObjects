@@ -3,9 +3,12 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.URL
+import struct Foundation.CharacterSet
+import struct Foundation.Data
 
 /**
  * This parser parses "old-style" .wo templates. It does *not* process

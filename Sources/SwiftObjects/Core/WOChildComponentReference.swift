@@ -3,9 +3,8 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 20.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
-
-import Foundation
 
 /**
  * This element is used to represent child components in template structures.

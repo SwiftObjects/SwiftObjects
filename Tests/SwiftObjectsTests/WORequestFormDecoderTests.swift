@@ -3,9 +3,9 @@
 //  SwiftObjectsTests
 //
 //  Created by Helge Hess on 28.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
 import XCTest
 @testable import SwiftObjects
 

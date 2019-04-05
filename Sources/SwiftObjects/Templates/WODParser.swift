@@ -3,9 +3,10 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 18.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.Data
 
 /**
  * Parse .wod files (WebObject definitions).

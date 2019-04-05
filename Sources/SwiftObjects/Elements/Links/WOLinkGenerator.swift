@@ -3,10 +3,10 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.CharacterSet
 
 /**
  * This is a helper class to generate URLs for hyperlinks, forms and such. It

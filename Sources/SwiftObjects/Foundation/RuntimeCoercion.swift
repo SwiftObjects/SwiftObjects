@@ -3,9 +3,9 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 30.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
 import Runtime
 
 fileprivate protocol OptionalProtocol {

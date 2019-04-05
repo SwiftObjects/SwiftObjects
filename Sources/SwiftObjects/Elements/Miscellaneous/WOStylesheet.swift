@@ -3,10 +3,10 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 15.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.URL
 
 /**
  * Generate a style tag containing CSS code or a link tag.

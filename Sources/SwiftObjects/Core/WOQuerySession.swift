@@ -3,10 +3,8 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
-
-import Foundation
 
 /**
  * This object represents objects which got unarchived from the form values,

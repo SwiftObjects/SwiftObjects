@@ -3,9 +3,9 @@
 //  WOShowcaseApp
 //
 //  Created by Helge Hess on 31.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
 import SwiftObjects
 
 final class DemoWOHyperlink : WOComponent {

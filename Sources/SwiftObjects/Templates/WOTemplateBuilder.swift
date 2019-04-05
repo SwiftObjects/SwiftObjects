@@ -3,9 +3,10 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.URL
 
 /**
  * Protocol for objects which take a template file and build a

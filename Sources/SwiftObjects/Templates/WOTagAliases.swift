@@ -3,9 +3,8 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
-
-import Foundation
 
 // A map which maps short tag names like `<wo:for>` to their full name,
 // like `WORepetition`. Also: HTML tags to `WOGenericElement`/`Container`.

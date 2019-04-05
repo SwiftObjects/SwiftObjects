@@ -3,10 +3,8 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
-
-import Foundation
 
 /**
  * Parameter value for applets.

@@ -3,9 +3,10 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 21.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.URL
 
 /**
  * This class is used for delivering static resource files, like images or

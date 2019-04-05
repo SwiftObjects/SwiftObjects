@@ -70,10 +70,17 @@ open class WOHTMLParser : WOTemplateParser {
     let len = data.count
     guard len > 0 else { return [] }
     
-    return try data.withUnsafeBytes() {
-      ( ptr : UnsafePointer<UInt8> ) -> [ WOElement ] in
-      return try parse(UnsafeBufferPointer(start: ptr, count: len), at: url)
-    }
+    #if swift(>=5)
+      return try data.withUnsafeBytes() {
+        ( ptr : UnsafeRawBufferPointer ) -> [ WOElement ] in
+        return try parse(ptr.bindMemory(to: UInt8.self), at: url)
+      }
+    #else
+      return try data.withUnsafeBytes() {
+        ( ptr : UnsafePointer<UInt8> ) -> [ WOElement ] in
+        return try parse(UnsafeBufferPointer(start: ptr, count: len), at: url)
+      }
+    #endif
   }
   
   open func parse(_ data: UnsafeBufferPointer<UInt8>, at url: URL? = nil) throws

@@ -63,10 +63,17 @@ open class PropertyListParser {
     let len = data.count
     guard len > 0 else { return nil }
     
-    return try data.withUnsafeBytes() {
-      ( ptr : UnsafePointer<UInt8> ) -> Any? in
-      try parse(UnsafeBufferPointer(start: ptr, count: len))
-    }
+    #if swift(>=5)
+      return try data.withUnsafeBytes {
+        ( ptr : UnsafeRawBufferPointer ) -> Any? in
+        try parse(ptr.bindMemory(to: UInt8.self))
+      }
+    #else
+      return try data.withUnsafeBytes() {
+        ( ptr : UnsafePointer<UInt8> ) -> Any? in
+        try parse(UnsafeBufferPointer(start: ptr, count: len))
+      }
+    #endif
   }
   
   open func parse(_ data: UnsafeBufferPointer<UInt8>) throws -> Any? {

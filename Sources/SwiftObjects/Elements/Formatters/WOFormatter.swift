@@ -110,8 +110,7 @@ public extension WOFormatter {
     #endif
   }
   
-  public func editingString(for o: Any?, in context: WOContext) -> String? {
+  func editingString(for o: Any?, in context: WOContext) -> String? {
     return string(for: o, in: context)
   }
-
 }

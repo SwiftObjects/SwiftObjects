@@ -210,7 +210,7 @@ open class WOString : WOHTMLDynamicElement {
   }
   
   /**
-   * Rewrites \n characters to <br /> tags. Note: the result must not be
+   * Rewrites `\n` characters to `<br />` tags. Note: the result must not be
    * escaped in subsequent processing.
    *
    * @param _s        - String to rewrite
@@ -223,7 +223,15 @@ open class WOString : WOHTMLDynamicElement {
     /* Note: we can't use replace() because we need to escape the individual
      *       parts.
      */
-    #if swift(>=4.1)
+    #if swift(>=5) // 4.2 really?
+      if doEscape {
+        return s.components(separatedBy: "\n")
+                .map { $0.htmlEscaped }.joined(separator: tag)
+      }
+      else {
+        return s.replacingOccurrences(of: "\n", with: tag)
+      }
+    #elseif swift(>=4.1)
       if doEscape {
         return s.lazy.split(separator: "\n", omittingEmptySubsequences: false)
                      .map { $0.htmlEscaped }

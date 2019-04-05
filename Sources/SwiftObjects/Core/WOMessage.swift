@@ -3,10 +3,11 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.Data
+import class  Foundation.XMLDocument
 import NIOHTTP1 // This ties it to NIO, happy to remove this ;-)
 
 /**
@@ -339,19 +340,16 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
   }
 }
 
-extension String {
+fileprivate let escapeMap : [ Character : String ] = [
+  "<" : "&lt;", ">": "&gt;", "&": "&amp;", "\"": "&quot;"
+]
+extension Character {
   var htmlEscaped : String {
-    let escapeMap : [ Character : String ] = [
-      "<" : "&lt;", ">": "&gt;", "&": "&amp;", "\"": "&quot;"
-    ]
-    return map { escapeMap[$0] ?? String($0) }.reduce("", +)
+    return escapeMap[self] ?? "\(self)"
   }
 }
-extension Substring {
+extension StringProtocol {
   var htmlEscaped : String {
-    let escapeMap : [ Character : String ] = [
-      "<" : "&lt;", ">": "&gt;", "&": "&amp;", "\"": "&quot;"
-    ]
     return map { escapeMap[$0] ?? String($0) }.reduce("", +)
   }
 }

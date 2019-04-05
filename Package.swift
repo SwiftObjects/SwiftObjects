@@ -8,18 +8,24 @@
 //
 import PackageDescription
 
-#if swift(>=4.2)
-    let runtimeLib : PackageDescription.Package.Dependency =
-                     .package(url: "https://github.com/wickwirew/Runtime.git",
-                              from: "1.1.0")
+#if swift(>=4.1.50)
+  #if compiler(>=5.0)
+    let runtimeLib: PackageDescription.Package.Dependency =
+                    .package(url: "https://github.com/wickwirew/Runtime.git",
+                             .branch("swift5"))
+  #else // 4.2
+    let runtimeLib: PackageDescription.Package.Dependency =
+                    .package(url: "https://github.com/wickwirew/Runtime.git",
+                             from: "1.1.0")
+  #endif
 #elseif swift(>=4.1)
-    let runtimeLib : PackageDescription.Package.Dependency =
-                     .package(url: "https://github.com/SwiftObjects/Runtime.git",
-                              from: "41.0.0")
-#else
-    let runtimeLib : PackageDescription.Package.Dependency =
-                     .package(url: "https://github.com/SwiftObjects/Runtime.git",
-                              from: "40.0.0")
+    let runtimeLib: PackageDescription.Package.Dependency =
+                    .package(url: "https://github.com/SwiftObjects/Runtime.git",
+                             from: "41.0.0")
+#else // ooold
+    let runtimeLib: PackageDescription.Package.Dependency =
+                    .package(url: "https://github.com/SwiftObjects/Runtime.git",
+                             from: "40.0.0")
 #endif
 
 let package = Package(

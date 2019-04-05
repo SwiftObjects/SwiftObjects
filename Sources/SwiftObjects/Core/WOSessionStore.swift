@@ -3,10 +3,10 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.TimeInterval
 
 /**
  * Superclass for "session stores". A WOSessionStore manages the WOSession
@@ -45,14 +45,14 @@ public extension WOSessionStore {
     set { /* noop */ }
   }
 
-  public func checkOutSession(for id: String, from request: WORequest)
+  func checkOutSession(for id: String, from request: WORequest)
                 -> WOSession?
   {
     // FIXME: REMOVE ME, port me
     return restoreSession(for: id, from: request)
   }
   
-  public func checkInSession(of context: WOContext) {
+  func checkInSession(of context: WOContext) {
     // FIXME: REMOVE ME, port me
     saveSession(in: context)
   }

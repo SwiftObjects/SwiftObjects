@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 import Runtime
@@ -144,13 +144,11 @@ public protocol WOContext : WOCoreContext, WOLifecycle,
 
 public extension WOContext {
   
-  public func enterComponent(_ component: WOComponent) {
+  func enterComponent(_ component: WOComponent) {
     enterComponent(component, content: nil)
   }
 
-  public var cursor : Any? {
-    return component
-  }
+  var cursor : Any? { return component }
   
 }
 
@@ -159,17 +157,16 @@ public extension WOContext {
 
 public extension WOContext {
 
-  public var hasErrorReport : Bool { return errorReport != nil }
+  var hasErrorReport : Bool { return errorReport != nil }
   
   /**
    * Composes a URL suitable for use with the given request handler.
    *
    * Important: this does *not* add any query parameters (like wosid).
    */
-  public func urlWithRequestHandlerKey(_ key: String,
-                                       path: String? = nil,
-                                       query: String? = nil)
-              -> String
+  func urlWithRequestHandlerKey(_ key : String,
+                                path  : String? = nil,
+                                query : String? = nil) -> String
   {
     var sb = ""
     
@@ -200,7 +197,7 @@ public extension WOContext {
    *
    * This method calls urlWithRequestHandlerKey to perform the final assembly.
    */
-  public func componentActionURL() -> String? {
+  func componentActionURL() -> String? {
     /*
      * This makes the request handler save the page in the session at the
      * end of the request (only necessary if the page generates URLs which
@@ -225,7 +222,6 @@ public extension WOContext {
    * @param _queryDict - set of query parameters to be included in the URL
    * @return a URL
    */
-  public
   func directActionURLForActionNamed(_ name: String,
                                      with queryDictionary: [ String : Any? ]?)
             -> String
@@ -245,7 +241,7 @@ public extension WOContext {
    * @param _name      - a direct action name, eg "Main/default"
    * @return a URL
    */
-  public func directActionURLForActionNamed(_ name: String) -> String {
+  func directActionURLForActionNamed(_ name: String) -> String {
     return urlWithRequestHandlerKey(application.directActionRequestHandlerKey,
                                     path: name, query: nil)
   }
@@ -262,7 +258,6 @@ public extension WOContext {
    * @param _incQuerySession - whether to include the query session
    * @return a URL pointing to the direct action
    */
-  public
   func directActionURLForActionNamed(_ name: String,
                                      with queryDictionary : [ String : Any? ]?,
                                      addSessionID         : Bool = false,
@@ -301,11 +296,11 @@ public extension WOContext {
 
 public extension WOContext {
   
-  public func appendElementIDComponent(_ id: String) {
+  func appendElementIDComponent(_ id: String) {
     if !elementID.isEmpty { elementID += "." }
     elementID += id
   }
-  public func appendElementIDComponent(_ id: Int) {
+  func appendElementIDComponent(_ id: Int) {
     if !elementID.isEmpty { elementID += "." }
     elementID += String(id)
   }
@@ -317,7 +312,7 @@ public extension WOContext {
    *     ""        => "0"
    *
    */
-  public func appendZeroElementIDComponent() {
+  func appendZeroElementIDComponent() {
     if elementID.isEmpty { elementID +=  "0" }
     else                 { elementID += ".0" }
   }
@@ -329,7 +324,7 @@ public extension WOContext {
    *     "2"       => "3"
    *
    */
-  public func incrementLastElementIDComponent(by value: Int = 1) {
+  func incrementLastElementIDComponent(by value: Int = 1) {
     if let r = elementID.range(of: ".", options: .backwards) {
       let prefix = elementID[elementID.startIndex..<r.upperBound]
       let num    = elementID[r.upperBound..<elementID.endIndex]
@@ -349,7 +344,7 @@ public extension WOContext {
    *     "2"       => ""
    *
    */
-  public func deleteLastElementIDComponent() {
+  func deleteLastElementIDComponent() {
     if let r = elementID.range(of: ".", options: .backwards) {
       elementID = String(elementID[elementID.startIndex..<r.lowerBound])
     }
@@ -361,7 +356,7 @@ public extension WOContext {
   /**
    * Completely clears the element-id (to the empty string "").
    */
-  public func deleteAllElementIDComponents() {
+  func deleteAllElementIDComponents() {
     elementID.removeAll()
   }
 }

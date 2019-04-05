@@ -41,18 +41,18 @@ public protocol WORequestHandler {
 
 public extension WORequestHandler {
 
-  public func autocreateSession(in context: WOContext) -> Bool {
+  func autocreateSession(in context: WOContext) -> Bool {
     return false
   }
 
-  public func sessionID(from request: WORequest) -> String? {
+  func sessionID(from request: WORequest) -> String? {
     return request.sessionID
   }
 
-  public var restoreSessionsUsingIDs : Bool { return true }
-  public var doesRejectFavicon       : Bool { return true }
+  var restoreSessionsUsingIDs : Bool { return true }
+  var doesRejectFavicon       : Bool { return true }
 
-  public func handleRequest(_ request: WORequest) throws -> WOResponse? {
+  func handleRequest(_ request: WORequest) throws -> WOResponse? {
     guard !doesRejectFavicon || request.uri != "/favicon.ico" else {
       return nil
     }

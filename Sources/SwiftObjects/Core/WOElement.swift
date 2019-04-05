@@ -3,10 +3,8 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
-
-import Foundation
 
 public protocol WOResponder { // TODO: better name for this
   
@@ -145,18 +143,14 @@ public protocol WOElement : class, WOResponder {
 
 public extension WOElement {
   
-  public
   func takeValues(from request: WORequest, in context: WOContext) throws {}
   
-  public
   func invokeAction(for request: WORequest, in ctx: WOContext) throws -> Any? {
     return nil
   }
   
-  public
   func append(to response: WOResponse, in context: WOContext) throws {}
   
-  public
-  func walkTemplate(using walker: WOElementWalker, in context: WOContext) throws {}
-
+  func walkTemplate(using walker: WOElementWalker, in context: WOContext)
+         throws {}
 }

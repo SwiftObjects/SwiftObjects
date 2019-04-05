@@ -27,21 +27,18 @@ public protocol WOTemplateParserHandler : class {
 
 public extension WOTemplateParserHandler { // default imp
   
-  public
-  func parser(_ parser: WOTemplateParser, willParseHTMLData: Data) -> Bool
-  {
+  func parser(_ parser: WOTemplateParser, willParseHTMLData: Data) -> Bool {
     return true
   }
   
-  public func parser(_ parser: WOTemplateParser, finishedParsingHTMLData: Data,
-                     with elements : [ WOElement ]) {}
+  func parser(_ parser: WOTemplateParser, finishedParsingHTMLData: Data,
+              with elements : [ WOElement ]) {}
   
-  public func parser(_ parser: WOTemplateParser, failedParsingHTMLData: Data,
-                     with elements : [ WOElement ],
-                     error: Swift.Error?) {}
+  func parser(_ parser: WOTemplateParser, failedParsingHTMLData: Data,
+              with elements : [ WOElement ], error: Swift.Error?) {}
   
-  public func parser(_ parser: WOTemplateParser, dynamicElementFor name: String,
-                     attributes: [ String : String ], children: [ WOElement ])
+  func parser(_ parser: WOTemplateParser, dynamicElementFor name: String,
+              attributes: [ String : String ], children: [ WOElement ])
               -> WOElement?
   {
     return nil

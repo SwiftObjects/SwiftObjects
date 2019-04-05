@@ -3,10 +3,11 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import class Foundation.Formatter
+import class Foundation.NSString
 
 /**
  * Helper class which deals with formatting attributes of WODynamicElement's.
@@ -69,10 +70,10 @@ public enum WOFormatterFactory { // can't have statics on Swift protocols
 
 public extension WOFormatter {
 
-  public func objectValue(for s: String, in context: WOContext) -> Any? {
+  func objectValue(for s: String, in context: WOContext) -> Any? {
     return defaultObjectValue(for: s, in: context)
   }
-  public func defaultObjectValue(for s: String, in context: WOContext) -> Any? {
+  func defaultObjectValue(for s: String, in context: WOContext) -> Any? {
     guard let formatter = self.formatter(in: context) else {
       return nil
     }
@@ -97,7 +98,7 @@ public extension WOFormatter {
     #endif
   }
   
-  public func string(for o: Any?, in context: WOContext) -> String? {
+  func string(for o: Any?, in context: WOContext) -> String? {
     guard let formatter = self.formatter(in: context) else { return nil }
 
     #if os(Linux)

@@ -3,15 +3,14 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 26.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
-
-import Foundation
 
 /**
  * A marker interface which denotes objects which can store additional key/value
  * pairs in a HashMap via KVC (w/o declaring ivars).
  *
- * Examples are WOComponent and WOSession.
+ * Examples are `WOComponent` and `WOSession`.
  */
 public protocol ExtraVariables : class {
   
@@ -65,7 +64,7 @@ public protocol ExtraVariables : class {
 
 public extension ExtraVariables { // Default Imp
 
-  public func setObject(_ o: Any?, for key: String) {
+  func setObject(_ o: Any?, for key: String) {
     if let o = o {
       variableDictionary[key] = o
     }
@@ -74,15 +73,15 @@ public extension ExtraVariables { // Default Imp
     }
   }
   
-  public func removeObject(for key: String) {
+  func removeObject(for key: String) {
     variableDictionary.removeValue(forKey: key)
   }
   
-  public func object(for key: String) -> Any? {
+  func object(for key: String) -> Any? {
     return variableDictionary[key]
   }
 
-  public func appendExtraAttributesToDescription(_ ms: inout String) {
+  func appendExtraAttributesToDescription(_ ms: inout String) {
     guard !variableDictionary.isEmpty else { return }
     
     ms.append(" vars=")

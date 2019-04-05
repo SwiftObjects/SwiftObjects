@@ -3,15 +3,15 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 public protocol WOAction {
   // TODO: document
   // - only relevant subclass: WODirectAction?
   
-  var context : WOContext { get }
-  var request : WORequest { get }
+  var context         : WOContext  { get }
+  var request         : WORequest  { get }
   
   var existingSession : WOSession? { get }
   var session         : WOSession  { get }
@@ -19,24 +19,20 @@ public protocol WOAction {
   func pageWithName(_ name: String) -> WOComponent?
   
   func performActionNamed(_ name: String) throws -> Any?
-  
 }
 
 public extension WOAction {
 
-  public var request : WORequest { return context.request }
+  var request : WORequest { return context.request }
+  var session : WOSession { return context.session }
 
-  public var existingSession : WOSession? {
+  var existingSession : WOSession? {
     return context.hasSession ? context.session : nil
   }
-  public var session : WOSession {
-    return context.session
-  }
 
-  public func pageWithName(_ name: String) -> WOComponent? {
+  func pageWithName(_ name: String) -> WOComponent? {
     return context.application.pageWithName(name, in: context)
   }
-
 }
 
 
@@ -107,11 +103,11 @@ public protocol WOActionMapper : class {
 
 public extension WOActionMapper { // default imp
 
-  public func expose(_ cb: @escaping WOActionCallback, as name: String) {
+  func expose(_ cb: @escaping WOActionCallback, as name: String) {
     exposedActions[name] = cb
   }
   
-  public func lookupActionNamed(_ name: String) -> WOActionCallback? {
+  func lookupActionNamed(_ name: String) -> WOActionCallback? {
     guard let method = exposedActions[name] else { return nil }
     return method
   }
@@ -120,12 +116,11 @@ public extension WOActionMapper { // default imp
 public extension WOActionMapper { // helper to support non-throwing actions
 
   /// An action that takes no own parameters, and returns a result.
-  public func expose(_ cb: @escaping () -> Any?, as name: String) {
+  func expose(_ cb: @escaping () -> Any?, as name: String) {
     // I guess `rethrows` can do this too? No idea :-)
     func makeThrowing() throws -> Any? {
       return cb()
     }
     expose(makeThrowing, as: name)
   }
-
 }

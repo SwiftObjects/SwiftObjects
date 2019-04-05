@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 import class Foundation.NSObject
@@ -36,7 +36,7 @@ public extension KeyValueCodingType {
     return KeyValueCoding.defaultValue(forKey: k, inObject: self)
   }
   
-  public func values(forKeys keys: [String]) -> [ String : Any ] {
+  func values(forKeys keys: [String]) -> [ String : Any ] {
     var values = [ String : Any ]()
     for key in keys {
       if let value = self.value(forKey: key) {
@@ -50,7 +50,7 @@ public extension KeyValueCodingType {
 
 public extension MutableKeyValueCodingType {
 
-  public func takeValuesForKeys(_ values : [ String : Any? ]) throws {
+  func takeValuesForKeys(_ values : [ String : Any? ]) throws {
     for ( key, value ) in values {
       try takeValue(value, forKey: key)
     }
@@ -223,8 +223,8 @@ public struct KeyValueCoding {
 
 public extension KeyValueCoding {
   
-  public static func defaultValue(forKey k: String, inDictionary o: Any,
-                                  mirror: Mirror) -> Any?
+  static func defaultValue(forKey k: String, inDictionary o: Any,
+                           mirror: Mirror) -> Any?
   {
     for ( _, pair ) in mirror.children {
       let pairMirror = Mirror(reflecting: pair)
@@ -340,14 +340,14 @@ open class KeyValueCodingBox<T> : KeyValueCodingTargetValue {
 }
 
 public extension KeyValueCodingType {
-  public func handleQueryWithUnboundKey(_ key: String) -> Any? {
+  func handleQueryWithUnboundKey(_ key: String) -> Any? {
     return nil
   }
 }
 
 public extension MutableKeyValueCodingType {
   
-  public func handleTakeValue(_ value: Any?, forUnboundKey k: String) throws {
+  func handleTakeValue(_ value: Any?, forUnboundKey k: String) throws {
     throw KeyValueCoding.Error.CannotTakeValueForKey(k)
   }
 

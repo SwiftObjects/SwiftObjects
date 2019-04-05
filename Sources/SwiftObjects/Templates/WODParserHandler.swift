@@ -3,6 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 18.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 /**
@@ -84,35 +85,30 @@ public protocol WODParserHandler : class {
 
 public extension WODParserHandler { // default imp
   
-  public
   func parser(_ parser: WODParser, willParseDeclarationData: Data) -> Bool {
     return true
   }
   
-  public
   func parser(_ parser: WODParser, finishedParsingDeclarationData: Data,
               with entries : [ String : WODParser.Entry ]) {}
   
-  public
   func parser(_ parser: WODParser, failedParsingDeclarationData: Data,
               with entries : [ String : WODParser.Entry ],
               error: Swift.Error?) {}
   
-  public func parser(_ parser: WODParser, associationFor v: Any?)
-         -> WOAssociation?
-  {
+  func parser(_ parser: WODParser, associationFor v: Any?) -> WOAssociation? {
     return WOAssociationFactory.associationWithValue(v)
   }
   
-  public func parser(_ parser: WODParser, associationForKeyPath path: String)
-         -> WOAssociation?
+  func parser(_ parser: WODParser, associationForKeyPath path: String)
+       -> WOAssociation?
   {
     return WOAssociationFactory.associationWithKeyPath(path)
   }
 
-  public func parser(_ parser: WODParser,
-                     definitionForComponentNamed name: String,
-                     className: String, bindings: Bindings) -> WODParser.Entry?
+  func parser(_ parser: WODParser,
+              definitionForComponentNamed name: String,
+              className: String, bindings: Bindings) -> WODParser.Entry?
   {
     return WODParser.Entry(componentName: name, componentClassName: className,
                            bindings: bindings)

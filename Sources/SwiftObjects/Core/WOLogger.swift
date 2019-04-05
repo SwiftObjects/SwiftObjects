@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 /**
@@ -21,19 +21,19 @@ public protocol WOLogger {
 
 public extension WOLogger {
   
-  public func error(_ msg: @autoclosure () -> String, _ values: Any?...) {
+  func error(_ msg: @autoclosure () -> String, _ values: Any?...) {
     primaryLog(.Error, msg, values)
   }
-  public func warn (_ msg: @autoclosure () -> String, _ values: Any?...) {
+  func warn (_ msg: @autoclosure () -> String, _ values: Any?...) {
     primaryLog(.Warn, msg, values)
   }
-  public func log  (_ msg: @autoclosure () -> String, _ values: Any?...) {
+  func log  (_ msg: @autoclosure () -> String, _ values: Any?...) {
     primaryLog(.Log, msg, values)
   }
-  public func info (_ msg: @autoclosure () -> String, _ values: Any?...) {
+  func info (_ msg: @autoclosure () -> String, _ values: Any?...) {
     primaryLog(.Info, msg, values)
   }
-  public func trace(_ msg: @autoclosure () -> String, _ values: Any?...) {
+  func trace(_ msg: @autoclosure () -> String, _ values: Any?...) {
     primaryLog(.Trace, msg, values)
   }
   

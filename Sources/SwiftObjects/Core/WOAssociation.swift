@@ -3,18 +3,18 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 /**
- * Associations define how
- * dynamic elements (stateless, non-WOComponent template elements) pull and
- * push their 'bindings'.
+ * Associations define how dynamic elements (stateless, non-WOComponent
+ * template elements) pull and push their 'bindings'.
  *
- * The most common implementors are `WOKeyPathAssociation`, which
- * pushes/pulls values into/from the current component in the context,
- * and `WOValueAssociation`, which just wraps a constant value in
- * the WOAssociation API.
+ * The most common implementors are:
+ * `WOKeyPathAssociation`, which pushes/pulls values into/from the current
+ * component in the context, and
+ * `WOValueAssociation`, which just wraps a constant value in the WOAssociation
+ * API.
  *
  * But in addition there are associations which evaluate OGNL expressions,
  * which resolve their value as localization keys or which resolve string
@@ -87,25 +87,25 @@ public protocol WOAssociation : class {
 
 public extension WOAssociation {
 
-  public var isValueConstant : Bool { return false }
-  public var isValueSettable : Bool { return true }
+  var isValueConstant : Bool { return false }
+  var isValueSettable : Bool { return true }
   
-  public func isValueConstantInComponent(_ cursor: Any?) -> Bool {
+  func isValueConstantInComponent(_ cursor: Any?) -> Bool {
     return isValueConstant
   }
-  public func isValueSettableInComponent(_ cursor: Any?) -> Bool {
+  func isValueSettableInComponent(_ cursor: Any?) -> Bool {
     return isValueSettable
   }
   
-  public var keyPath : String? { return nil }
+  var keyPath : String? { return nil }
   
   
   // MARK: - Values
   
-  public func setValue(_ value: Any?, in component: Any?) {
+  func setValue(_ value: Any?, in component: Any?) {
     // TBD: we could throw, but GETobjects used to be quite forgiving ;-)
   }
-  public func value(in component: Any?) -> Any? {
+  func value(in component: Any?) -> Any? {
     return nil
   }
   

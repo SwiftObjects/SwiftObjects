@@ -3,10 +3,14 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.URL
+import struct Foundation.Data
+import struct Foundation.Locale
+import class  Foundation.Bundle
+import class  Foundation.NSLock
 
 /*
  * Manages access to resources associated with WOApplication.
@@ -245,11 +249,9 @@ public protocol WOResourceManager {
 
 public extension WOResourceManager { // default implementation
 
-  public var log : WOLogger { return WOPrintLogger.shared }
+  var log : WOLogger { return WOPrintLogger.shared }
 
-  public func pageWithName(_ name: String, in context: WOContext?)
-              -> WOComponent?
-  {
+  func pageWithName(_ name: String, in context: WOContext?) -> WOComponent? {
     log.trace("pageWithName(\(name), \(context?.description ?? "-"))")
     guard let context = context else {
       log.error("got no context to lookup page:", name, self)
@@ -276,9 +278,8 @@ public extension WOResourceManager { // default implementation
     return cdef.instantiateComponent(using: self, in: context)
   }
 
-  public func templateWithName(_ name: String, languages: [ String ],
-                               using resourceManager: WOResourceManager)
-              -> WOElement?
+  func templateWithName(_ name: String, languages: [ String ],
+                        using resourceManager: WOResourceManager) -> WOElement?
   {
     guard let cdef = _definitionForComponent(name, languages: languages,
                                              using: resourceManager) else {
@@ -392,8 +393,7 @@ public extension WOResourceManager { // default implementation
     return name + ":" + languages.joined(separator: ":")
   }
   
-  public func dataForResourceNamed(_ name: String, languages: [ String ] = [])
-              -> Data?
+  func dataForResourceNamed(_ name: String, languages: [ String ] = []) -> Data?
   {
     guard let url = urlForResourceNamed(name, languages: languages) else {
       return nil
@@ -402,9 +402,9 @@ public extension WOResourceManager { // default implementation
     return try? Data(contentsOf: url)
   }
 
-  public func urlForResourceNamed(_ name: String, bundle: String?,
-                                  languages: [ String ],
-                                  in context: WOContext) -> String?
+  func urlForResourceNamed(_ name: String, bundle: String?,
+                           languages: [ String ],
+                           in context: WOContext) -> String?
   {
     // TODO: crappy way to detect whether a resource is available
     guard let _ = dataForResourceNamed("www/"+name, languages: languages) else {
@@ -414,19 +414,19 @@ public extension WOResourceManager { // default implementation
     return context.urlWithRequestHandlerKey("wr", path: name)
   }
 
-  public func localeForLanguages(_ languages: [ String ]) -> Locale {
+  func localeForLanguages(_ languages: [ String ]) -> Locale {
     if languages.isEmpty { return Locale(identifier: "en_US") }
     return Locale(identifier: languages[0]) // TODO: loop and find?
   }
 
-  public func stringTableWithName(_ table: String, framework: String?,
-                                  languages: [ String ]) -> Bundle?
+  func stringTableWithName(_ table: String, framework: String?,
+                           languages: [ String ]) -> Bundle?
   {
     return Bundle.main
   }
 
-  public func stringForKey(_ key: String, in table: String?, default: String?,
-                           framework: String?, languages: [ String ]) -> String?
+  func stringForKey(_ key: String, in table: String?, default: String?,
+                    framework: String?, languages: [ String ]) -> String?
   {
     guard let rb = stringTableWithName(table ?? "Default",
                                        framework: framework,
@@ -442,9 +442,9 @@ public extension WOResourceManager { // default implementation
   
 public extension WOResourceManager { // Convenience
     
-  public func stringForKey(_ key: String, default: String? = nil,
-                           framework: String? = nil, languages: [ String ] = [])
-              -> String?
+  func stringForKey(_ key: String, default: String? = nil,
+                    framework: String? = nil, languages: [ String ] = [])
+       -> String?
   {
     return stringForKey(key, in: nil, default: `default`, framework: framework,
                         languages: languages)
@@ -453,7 +453,7 @@ public extension WOResourceManager { // Convenience
 
 open class WOResourceManagerBase : WOResourceManager, SmartDescription {
   
-  public let lock = Foundation.NSLock()
+  public let lock = NSLock()
   public let log  : WOLogger = WOPrintLogger.shared
   
   public init() {}

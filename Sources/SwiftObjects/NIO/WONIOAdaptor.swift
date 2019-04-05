@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 import NIO
@@ -50,10 +50,11 @@ open class WONIOAdaptor {
   
   // MARK: - Dispatch
 
-  func dispatchRequest(_ request: WONIORequest, in ctx: ChannelHandlerContext,
+  func dispatchRequest(_ request: WONIORequest,
+                       in context: ChannelHandlerContext,
                        whenDone cb: @escaping ( WOResponse ) -> Void)
   {
-    let requestLoop = ctx.eventLoop
+    let requestLoop = context.eventLoop
     let workerLoop  = workerGroup.next()
     
     workerLoop.execute {
@@ -67,76 +68,90 @@ open class WONIOAdaptor {
   
   // MARK: - Server
   
-    open func listenAndWait() {
-        listen()
-      
-        do    { try serverChannel?.closeFuture.wait() }
-        catch { print("ERROR: Failed to wait on server:", error) }
-    }
-
-    open func listen() {
-        let bootstrap = makeBootstrap()
-      
-        do {
-            let address : SocketAddress
-          
-            if let host = configuration.host {
-                address = try SocketAddress
-                  .newAddressResolving(host: host, port: configuration.port)
-            }
-            else {
-                var addr = sockaddr_in()
-                addr.sin_port = in_port_t(configuration.port).bigEndian
-                address = SocketAddress(addr, host: "*")
-            }
-          
-            serverChannel = try bootstrap.bind(to: address).wait()
-          
-            if let addr = serverChannel?.localAddress {
-                print("Server running on:", addr)
-            }
-            else {
-                print("ERROR: server reported no local address?")
-            }
-        }
-        catch let error as NIO.IOError {
-            print("ERROR: failed to start server, errno:", error.errnoCode, "\n",
-                  error.localizedDescription)
-        }
-        catch {
-            print("ERROR: failed to start server:", type(of:error), error)
-        }
-    }
+  open func listenAndWait() {
+    listen()
   
+    do    { try serverChannel?.closeFuture.wait() }
+    catch { print("ERROR: Failed to wait on server:", error) }
+  }
 
-    // MARK: - Bootstrap
+  open func listen() {
+    let bootstrap = makeBootstrap()
   
-    func makeBootstrap() -> ServerBootstrap {
-      let reuseAddrOpt = ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET),
-                                               SO_REUSEADDR)
-      let bootstrap = ServerBootstrap(group: eventLoopGroup)
-          // Specify backlog and enable SO_REUSEADDR for the server itself
-          .serverChannelOption(ChannelOptions.backlog,
-                               value: Int32(configuration.backlog))
-          .serverChannelOption(reuseAddrOpt, value: 1)
-        
-          // Set the handlers that are applied to the accepted Channels
-          .childChannelInitializer { channel in
-              channel.pipeline
-                  .configureHTTPServerPipeline(withErrorHandling: true)
-                  .then {
-                      channel.pipeline
-                          .add(name: "WONIOHandler",
-                               handler: WONIOHandler(adaptor: self))
-                  }
-          }
-        
-          // Enable TCP_NODELAY and SO_REUSEADDR for the accepted Channels
-          .childChannelOption(ChannelOptions.socket(IPPROTO_TCP, TCP_NODELAY),
-                              value: 1)
-          .childChannelOption(reuseAddrOpt, value: 1)
-          .childChannelOption(ChannelOptions.maxMessagesPerRead, value: 1)
+    do {
+      let address : SocketAddress
     
-      return bootstrap
+      if let host = configuration.host {
+        #if swift(>=5) // NIO 2
+          address = try SocketAddress
+            .makeAddressResolvingHost(host, port: configuration.port)
+        #else // NIO 1
+          address = try SocketAddress
+            .newAddressResolving(host: host, port: configuration.port)
+        #endif
+      }
+      else {
+        var addr = sockaddr_in()
+        addr.sin_port = in_port_t(configuration.port).bigEndian
+        address = SocketAddress(addr, host: "*")
+      }
+    
+      serverChannel = try bootstrap.bind(to: address).wait()
+    
+      if let addr = serverChannel?.localAddress {
+        print("Server running on:", addr)
+      }
+      else {
+        print("ERROR: server reported no local address?")
+      }
     }
+    catch let error as NIO.IOError {
+      print("ERROR: failed to start server, errno:", error.errnoCode, "\n",
+            error.localizedDescription)
+    }
+    catch {
+      print("ERROR: failed to start server:", type(of:error), error)
+    }
+  }
+
+
+  // MARK: - Bootstrap
+
+  func makeBootstrap() -> ServerBootstrap {
+    let reuseAddrOpt = ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET),
+                                             SO_REUSEADDR)
+    let bootstrap = ServerBootstrap(group: eventLoopGroup)
+      // Specify backlog and enable SO_REUSEADDR for the server itself
+      .serverChannelOption(ChannelOptions.backlog,
+                           value: Int32(configuration.backlog))
+      .serverChannelOption(reuseAddrOpt, value: 1)
+    
+      // Set the handlers that are applied to the accepted Channels
+      .childChannelInitializer { channel in
+        #if swift(>=5) // NIO 2 API
+          return channel.pipeline
+            .configureHTTPServerPipeline(withErrorHandling: true)
+            .flatMap {
+              channel.pipeline
+                .addHandler(WONIOHandler(adaptor: self), name: "WONIOHandler")
+            }
+        #else // NIO 1 API
+          return channel.pipeline
+            .configureHTTPServerPipeline(withErrorHandling: true)
+            .then {
+              channel.pipeline
+                .add(name: "WONIOHandler",
+                     handler: WONIOHandler(adaptor: self))
+            }
+        #endif // NIO 1 API
+      }
+    
+      // Enable TCP_NODELAY and SO_REUSEADDR for the accepted Channels
+      .childChannelOption(ChannelOptions.socket(IPPROTO_TCP, TCP_NODELAY),
+                          value: 1)
+      .childChannelOption(reuseAddrOpt, value: 1)
+      .childChannelOption(ChannelOptions.maxMessagesPerRead, value: 1)
+  
+    return bootstrap
+  }
 }

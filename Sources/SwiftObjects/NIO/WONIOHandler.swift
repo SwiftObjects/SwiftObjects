@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 import NIO
@@ -25,13 +25,13 @@ final class WONIOHandler : ChannelInboundHandler {
     self.adaptor = adaptor
   }
   
-  func channelRead(ctx: ChannelHandlerContext, data: NIOAny) {
+  func channelRead(context: ChannelHandlerContext, data: NIOAny) {
     let requestPart = unwrapInboundIn(data)
     
     switch requestPart {
       
       case .head(let requestHead):
-        let request = WONIORequest(channel     : ctx.channel,
+        let request = WONIORequest(channel     : context.channel,
                                    method      : requestHead.method.woMethod,
                                    uri         : requestHead.uri,
                                    httpVersion : requestHead.version,
@@ -53,9 +53,15 @@ final class WONIOHandler : ChannelInboundHandler {
       
       case .end:
         guard let request = activeRequest else { break }
-        dispatchRequest(request, in: ctx)
+        dispatchRequest(request, in: context)
     }
   }
+  #if swift(>=5) // NIO 2 API default
+  #else // NIO 1 API wrapper
+    func channelRead(ctx context: ChannelHandlerContext, data: NIOAny) {
+      channelRead(context: context, data: data)
+    }
+  #endif
   
   func dispatchRequest(_ request: WONIORequest, in ctx: ChannelHandlerContext) {
     adaptor.dispatchRequest(request, in: ctx) { response in
@@ -74,7 +80,11 @@ final class WONIOHandler : ChannelInboundHandler {
       
       if contentLength > 0, let data = response.contents {
         var buf = ctx.channel.allocator.buffer(capacity: contentLength)
-        buf.write(bytes: data)
+        #if swift(>=5) // NIO 2 API
+          buf.writeBytes(data)
+        #else // NIO 1 API
+          buf.write(bytes: data)
+        #endif
         ctx.write(wrap(.body(.byteBuffer(buf))), promise: nil)
       }
       
@@ -85,18 +95,25 @@ final class WONIOHandler : ChannelInboundHandler {
     }
   }
   
-  
-  func channelActive(ctx: ChannelHandlerContext) {
-  }
-  
-  func channelInactive(ctx: ChannelHandlerContext) {
+
+  func channelInactive(context: ChannelHandlerContext) {
     activeRequest = nil
   }
   
   /// Called if an error happens. We just close the socket here.
-  func errorCaught(ctx: ChannelHandlerContext, error: Error) {
+  func errorCaught(context: ChannelHandlerContext, error: Error) {
     adaptor.application.log.error("adaptor error:", error)
-    ctx.close(promise: nil)
+    context.close(promise: nil)
     activeRequest = nil
   }
+  
+  #if swift(>=5) // NIO 2 API default
+  #else // NIO 1 shims
+    func channelInactive(ctx context: ChannelHandlerContext) {
+      channelInactive(context: context)
+    }
+    func errorCaught(ctx context: ChannelHandlerContext, error: Error) {
+      errorCaught(context: context, error: error)
+    }
+  #endif // NIO 1 shims
 }

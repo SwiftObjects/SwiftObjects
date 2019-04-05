@@ -4,6 +4,7 @@
 </h2>
 
 ![Swift4.2](https://img.shields.io/badge/swift-4.2-blue.svg)
+![Swift5](https://img.shields.io/badge/swift-5-blue.svg)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![tuxOS](https://img.shields.io/badge/os-tuxOS-green.svg?style=flat)
 <a href="https://travis-ci.org/SwiftObjects/SwiftObjects"><img src="https://travis-ci.org/SwiftObjects/SwiftObjects.svg?branch=develop" /></a>
@@ -27,8 +28,8 @@ This is part of a blog entry, called:
 
 ## Install
 
-Note: Setup to work with Swift 4.2, can be changed manually to 4.1, but 5-alpha
-      doesn't work yet.
+Note: Setup to work with Swift 5.0 aka Xcode 10.2 (can be changed manually to 
+      4.x). The SwiftXcode setup now requires Xcode 10.2.
 
 <a href="https://swiftxcode.github.io" target="extlink"><img src="http://zeezide.com/img/SwiftXcodePkgIcon.svg"
      align="right" width="86" height="86" style="padding: 0 0 0.5em 0.5em;" /></a>

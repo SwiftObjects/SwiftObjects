@@ -40,7 +40,11 @@ func SOGetPackageName<T>(_ type: T.Type, default: String = "") -> String {
   guard info.dli_sname != nil else { return `default` }
   
   // Swift 4.2 fails on this: $S13WOShowcaseAppAACN
-  #if swift(>=4.1.50)
+  #if swift(>=5)
+    print("Swift 5 cannot lookup package name yet, symbol:",
+          String(cString: info.dli_sname))
+    return `default`
+  #elseif swift(>=4.1.50)
     print("Swift 4.2 cannot lookup package name yet, symbol:",
           String(cString: info.dli_sname))
     return `default`

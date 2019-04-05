@@ -142,19 +142,30 @@ public struct WOCookie : SmartDescription {
   public static func parse(string s: String) -> WOCookie? {
     let log = WOPrintLogger.shared
     
-    guard let vidx = s.index(of: "=") else {
-      log.warn("got invalid cookie value: '\(s)'")
-      return nil
-    }
+    #if swift(>=5)
+      guard let vidx = s.firstIndex(of: "=") else {
+        log.warn("got invalid cookie value: '\(s)'"); return nil
+      }
+    #else
+      guard let vidx = s.index(of: "=") else {
+        log.warn("got invalid cookie value: '\(s)'"); return nil
+      }
+    #endif
     
     let name  = String(s[s.startIndex..<vidx])
     var value = String(s[s.index(after: vidx)..<s.endIndex])
     
     // TODO: process escaping
     
-    if value.index(of: ";") == nil {
-      return WOCookie(name: name, value: value)
-    }
+    #if swift(>=5)
+      if value.firstIndex(of: ";") == nil {
+        return WOCookie(name: name, value: value)
+      }
+    #else
+      if value.index(of: ";") == nil {
+        return WOCookie(name: name, value: value)
+      }
+    #endif
     
     /* process options */
     

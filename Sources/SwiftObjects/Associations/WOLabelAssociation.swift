@@ -3,6 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
 /**
@@ -38,8 +39,12 @@ open class WOLabelAssocation : WOAssociation, SmartDescription {
   
   public convenience init(key: String) {
     // TODO: parse `$` keypath markers
-    
-    if let idx = key.index(of: "/") {
+    #if swift(>=5)
+      let sepIdx = key.firstIndex(of: "/")
+    #else
+      let sepIdx = key.index(of: "/")
+    #endif
+    if let idx = sepIdx {
       let table  = String(key[key.startIndex..<idx])
       let newKey = String(key[key.index(after: idx)..<key.endIndex])
       self.init(key: newKey, table: table, defaultValue: nil)

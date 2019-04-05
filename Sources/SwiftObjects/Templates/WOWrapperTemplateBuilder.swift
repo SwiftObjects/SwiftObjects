@@ -3,9 +3,11 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
 
-import Foundation
+import struct Foundation.URL
+import struct Foundation.Data
 
 /**
  * This class implements a parser for so called 'wrapper templates', which
@@ -144,7 +146,12 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
     bindings.reserveCapacity(attributes.count)
     
     for ( k, value ) in attributes {
-      if let pm = k.index(of: ":") {
+      #if swift(>=5)
+        let sepIdx = k.firstIndex(of: ":")
+      #else
+        let sepIdx = k.index(of: ":")
+      #endif
+      if let pm = sepIdx {
         let prefix = String(k[k.startIndex..<pm])
         let newKey = String(k[k.index(after: pm)..<k.endIndex])
         

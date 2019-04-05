@@ -3,9 +3,8 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 21.05.18.
+//  Copyright © 2018-2019 ZeeZide. All rights reserved.
 //
-
-import Foundation
 
 /**
  * This handler manages 'direct action' and 'at-action' invocations. It works in
@@ -101,7 +100,12 @@ open class WODirectActionRequestHandler : WORequestHandler {
     var actionName      : String? = nil
     
     if let s = request.formAction {
-      if let idx = s.index(of: "/") {
+      #if swift(>=5)
+        let sepIdx = s.firstIndex(of: "/")
+      #else
+        let sepIdx = s.index(of: "/")
+      #endif
+      if let idx = sepIdx {
         actionClassName = String(s[s.startIndex..<idx])
         actionName      = String(s[s.index(after: idx)..<s.endIndex])
       }
@@ -134,9 +138,15 @@ open class WODirectActionRequestHandler : WORequestHandler {
     }
     
     /* discard everything after a point, to allow for better download URLs */
-    if let s = actionName, let idx = s.index(of: ".") {
-      actionName = String(s[s.startIndex..<idx])
-    }
+    #if swift(>=5)
+      if let s = actionName, let idx = s.firstIndex(of: ".") {
+        actionName = String(s[s.startIndex..<idx])
+      }
+    #else
+      if let s = actionName, let idx = s.index(of: ".") {
+        actionName = String(s[s.startIndex..<idx])
+      }
+    #endif
     
     return ( actionClassName ?? "DirectAction", actionName ?? "default" )
   }

@@ -11,8 +11,8 @@ import PackageDescription
 #if swift(>=4.1.50)
   #if compiler(>=5.0)
     let runtimeLib: PackageDescription.Package.Dependency =
-                    .package(url: "https://github.com/wickwirew/Runtime.git",
-                             .branch("swift5"))
+                    .package(url: "https://github.com/SwiftObjects/Runtime.git",
+                             from: "50.0.0")
   #else // 4.2
     let runtimeLib: PackageDescription.Package.Dependency =
                     .package(url: "https://github.com/wickwirew/Runtime.git",

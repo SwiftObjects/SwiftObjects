@@ -20,8 +20,8 @@ let package = Package(
                  from: "2.0.0"),
         .package(url: "https://github.com/onmyway133/SwiftHash.git",
                  from: "2.0.2"),
-        .package(url: "https://github.com/wickwirew/Runtime.git",
-                 .branch("swift5")),
+        .package(url: "https://github.com/SwiftObjects/Runtime.git",
+                 from: "50.0.0"),
         
         // just for the showcase
         .package(url: "https://github.com/SwiftWebResources/SemanticUI-Swift.git",

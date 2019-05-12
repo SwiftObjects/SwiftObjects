@@ -38,10 +38,10 @@ public extension KeyValueCodingType {
   
   func values(forKeys keys: [String]) -> [ String : Any ] {
     var values = [ String : Any ]()
+    values.reserveCapacity(keys.count)
     for key in keys {
-      if let value = self.value(forKey: key) {
-        values[key] = value
-      }
+      guard let value = self.value(forKey: key) else { continue }
+      values[key] = value
     }
     return values
   }

@@ -12,7 +12,7 @@ protocol QueryDictionaryStringValue { // sigh
   func stringForQueryDictionary() -> String?
 }
 
-extension Dictionary where Key == String {
+public extension Dictionary where Key == String {
   
   /**
    * Return a URL query string for the given key/value Map. We moved this into

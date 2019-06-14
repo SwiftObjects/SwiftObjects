@@ -257,7 +257,9 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    *
    * @param _ctx - the WOContext
    */
-  internal func ensureAwake(in context: WOContext) {
+  public func ensureAwake(in context: WOContext) {
+    // This is now public, so that external code can implement WORequestHandlers
+    
     if isAwake && self.context === context { return } // awake already
     
     if self.context == nil { self.context = context }

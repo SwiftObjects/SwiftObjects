@@ -70,4 +70,6 @@ Package.pins
 Package.resolved
 .docker.build
 *.xcodeproj
+.DS_Store
+.swiftpm
 

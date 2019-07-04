@@ -38,13 +38,11 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git",
                  from: "1.13.2"),
-        .package(url: "https://github.com/onmyway133/SwiftHash.git",
-                 from: "2.0.2"),
         runtimeLib,
         
         // just for the showcase
         .package(url: "https://github.com/SwiftWebResources/SemanticUI-Swift.git",
-                 from: "2.3.3"),
+                 from: "2.3.4"),
         .package(url: "https://github.com/SwiftWebResources/jQuery-Swift.git",
                  from: "3.3.2"),
     ],
@@ -56,7 +54,6 @@ let package = Package(
                     "NIOHTTP1",
                     "NIOFoundationCompat",
                     "NIOConcurrencyHelpers",
-                    "SwiftHash",
                     "Runtime"
                 ]),
         .testTarget(name: "SwiftObjectsTests",

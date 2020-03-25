@@ -3,13 +3,13 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.TimeInterval
 import struct Foundation.Date
+import struct Foundation.UUID
 import NIOConcurrencyHelpers
-import SwiftHash
 import Runtime
 
 /**
@@ -40,16 +40,11 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
     sessionID = WOSession.createSessionID()
   }
   
-  private static var snIdCounter = Atomic(value: 0)
+  private static var snIdCounter = NIOAtomic.makeAtomic(value: 0)
   
   static func createSessionID() -> String {
-    // TODO: better place in app object to allow for 'weird' IDs ;-), like
-    //       using a session per basic-auth user
-    // FIXME: dangerous non-sense, use properly secured SID :-)
-    let now = Int(Date().timeIntervalSince1970)
-    let cnt = snIdCounter.add(1)
-    let baseString = "\txyyzSID\n\(now)\t\(cnt)\tRANDOMWOULDBECOOL"
-    return SwiftHash.MD5(baseString)
+    // As suggested for SwiftWebUI. Not perfect but reasonable.
+    return UUID().uuidString
   }
   
   

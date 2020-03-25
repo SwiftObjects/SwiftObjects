@@ -121,7 +121,7 @@ open class WOFragment : WODynamicElement {
     let cursor       = context.cursor
     let wasDisabled  = context.isRenderingDisabled
     let isFragActive = isFragmentActive(in: context)
-    var doRender     = isFragActive
+    let doRender     = isFragActive
                     || (onlyOnMatch?.boolValue(in: cursor) ?? true)
     
     /* enable rendering if we are active */

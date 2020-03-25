@@ -3,11 +3,15 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Data
-import class  Foundation.XMLDocument
+#if os(Linux) && swift(>=5.2)
+  import class FoundationXML.XMLDocument
+#else
+  import class Foundation.XMLDocument
+#endif
 import NIOHTTP1 // This ties it to NIO, happy to remove this ;-)
 
 /**

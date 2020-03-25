@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.TimeInterval
@@ -40,7 +40,7 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
     sessionID = WOSession.createSessionID()
   }
   
-  private static var snIdCounter = Atomic(value: 0)
+  private static var snIdCounter = NIOAtomic.makeAtomic(value: 0)
   
   static func createSessionID() -> String {
     // As suggested for SwiftWebUI. Not perfect but reasonable.

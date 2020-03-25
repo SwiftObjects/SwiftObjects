@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Data
@@ -70,8 +70,8 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   public let log : WOLogger = WOPrintLogger(logLevel: .Log)
   
   let properties          = UserDefaults.standard
-  var requestCounter      = Atomic(value: 0)
-  var activeDispatchCount = Atomic(value: 0)
+  var requestCounter      = NIOAtomic.makeAtomic(value: 0)
+  var activeDispatchCount = NIOAtomic.makeAtomic(value: 0)
   
   open var contextClass      : WOContext.Type? = nil
   open var sessionClass      : WOSession.Type? = nil

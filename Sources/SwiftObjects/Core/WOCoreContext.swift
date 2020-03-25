@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Date
@@ -77,7 +77,7 @@ open class WOCoreContextBase : WOCoreContext {
   open   var closeAllElements        = true  // generate <br /> instead of <br>
   open   var generateXMLStyleEmptyElements = false
   
-  private static var ctxIdCounter = Atomic(value: 0)
+  private static var ctxIdCounter = NIOAtomic.makeAtomic(value: 0)
 
   public init(application: WOApplication, request: WORequest) {
     self.application = application

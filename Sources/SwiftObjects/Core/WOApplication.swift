@@ -180,7 +180,7 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   }()
   
   open func dispatchRequest(_ request: WORequest) -> WOResponse {
-    let rqId = requestCounter.add(1)
+    _ = requestCounter.add(1)
     _ = activeDispatchCount.add(1)
     defer { _ = activeDispatchCount.sub(1) }
     

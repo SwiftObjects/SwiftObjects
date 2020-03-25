@@ -68,6 +68,14 @@ public enum WOFormatterFactory { // can't have statics on Swift protocols
   }
 }
 
+import Foundation
+
+enum WOFormatterError: Swift.Error {
+  case formatterCannotConvertFromString(Formatter)
+  /// https://bugs.swift.org/browse/SR-12411
+  case unsupportedFormatterBlameSwift52Foundation(Formatter)
+}
+
 public extension WOFormatter {
 
   func objectValue(for s: String, in context: WOContext) -> Any? {
@@ -78,7 +86,41 @@ public extension WOFormatter {
       return nil
     }
     
-    #if os(Linux)
+    #if os(Linux) && swift(>=5.2)
+      do {
+        // https://bugs.swift.org/browse/SR-12411
+        switch formatter {
+          case let formatter as DateFormatter:
+            return formatter.date(from: s)
+          case let formatter as ISO8601DateFormatter:
+            return formatter.date(from: s)
+          case let formatter as NumberFormatter:
+            return formatter.number(from: s)
+          
+          case is ByteCountFormatter,
+               is DateIntervalFormatter, is EnergyFormatter,
+               is LengthFormatter,       is MassFormatter:
+            throw WOFormatterError.formatterCannotConvertFromString(formatter)
+          
+          // unavailable on Linux 5.2
+          #if false
+          case let formatter as PersonNameComponentsFormatter:
+            return WOFormatterError.formatterCannotConvertFromString(formatter)
+          case is DateComponentsFormatter,
+               is MeasurementFormatter:
+            throw WOFormatterError.formatterCannotConvertFromString(formatter)
+          #endif
+
+          default:
+            throw WOFormatterError
+              .unsupportedFormatterBlameSwift52Foundation(formatter)
+        }
+      }
+      catch {
+        // TODO: throw
+        return nil
+      }
+    #elseif os(Linux)
       do {
         return try formatter.objectValue(s)
       }

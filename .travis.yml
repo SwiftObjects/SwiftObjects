@@ -9,16 +9,16 @@ matrix:
     include:
         - os:   Linux
           dist: trusty
-          env:  SWIFT_SNAPSHOT_NAME="https://swift.org/builds/swift-5.0-release/ubuntu1404/swift-5.0-RELEASE/swift-5.0-RELEASE-ubuntu14.04.tar.gz"
+          env:  SWIFT_SNAPSHOT_NAME="https://swift.org/builds/swift-5.0.2-release/ubuntu1404/swift-5.0.2-RELEASE/swift-5.0.2-RELEASE-ubuntu14.04.tar.gz"
           sudo: required
         - os:   Linux
           dist: xenial
-          env:  SWIFT_SNAPSHOT_NAME="https://swift.org/builds/swift-5.2-release/ubuntu1604/swift-5.2-RELEASE/swift-5.2-RELEASE-ubuntu16.04.tar.gz"
+          env:  SWIFT_SNAPSHOT_NAME="https://swift.org/builds/swift-5.3.1-release/ubuntu1604/swift-5.3.1-RELEASE/swift-5.3.1-RELEASE-ubuntu16.04.tar.gz"
           sudo: required
         - os:   osx
-          osx_image: xcode10.2
+          osx_image: xcode12
         - os:   osx
-          osx_image: xcode11
+          osx_image: xcode11.4
 
 before_install:
     - ./.travis.d/before-install.sh

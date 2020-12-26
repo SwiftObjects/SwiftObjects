@@ -17,15 +17,15 @@ let package = Package(
 
     dependencies: [
         .package(url: "https://github.com/apple/swift-nio.git",
-                 from: "2.15.0"),
-        .package(url: "https://github.com/SwiftObjects/Runtime.git",
-                 from: "50.0.0"),
+                 from: "2.25.1"),
+        .package(url: "https://github.com/wickwirew/Runtime.git",
+                 from: "2.2.2"),
         
         // just for the showcase
         .package(url: "https://github.com/SwiftWebResources/SemanticUI-Swift.git",
-                 from: "2.3.4"),
+                 from: "2.4.2"),
         .package(url: "https://github.com/SwiftWebResources/jQuery-Swift.git",
-                 from: "3.3.2"),
+                 from: "3.5.1"),
     ],
 
     targets: [

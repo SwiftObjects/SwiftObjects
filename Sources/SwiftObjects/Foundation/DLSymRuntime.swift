@@ -40,10 +40,34 @@ func SOGetPackageName<T>(_ type: T.Type, default: String = "") -> String {
   
   guard info.dli_sname != nil else { return `default` }
   
-  // Swift 4.2 fails on this: $S13WOShowcaseAppAACN
-  #if swift(>=5)
-    print("Swift 5 cannot lookup package name yet, symbol:",
-          String(cString: info.dli_sname))
+  #if swift(>=4.2)
+    // App Names examples:
+    // - "WOShowcaseApp"  : $S13WOShowcaseAppAACN / $s13WOShowcaseAppAACN
+    // - "WOShowcaseApp2" : $s13WOShowcaseApp0A4App2CN (compression?)
+    // - "OTHER"          : $s13WOShowcaseApp5OTHERCN
+    //
+    // It is a string length 13, S13 WOShowcaseApp
+    // Don't know what the 'AACN' is.
+    //
+    let symbolName = String(cString: info.dli_sname)
+    #if swift(>=5)
+      let prefix = "$s"
+    #else
+      let prefix = "$S"
+    #endif
+    if symbolName.hasPrefix(prefix) {
+      let x = symbolName.dropFirst(prefix.count)
+      if let endCountIdx = x.firstIndex(where: { !"0123456789".contains($0) }),
+         endCountIdx > x.startIndex,
+         let len = Int(x[..<endCountIdx]), len > 0
+      {
+        let stringEndIdx = x.index(endCountIdx, offsetBy: len)
+        return String(x[endCountIdx..<stringEndIdx])
+      }
+    }
+    
+    print("Swift 4.2/5+ cannot lookup package name yet, symbol:",
+          symbolName)
     return `default`
   #elseif swift(>=4.1.50)
     print("Swift 4.2 cannot lookup package name yet, symbol:",

@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 import Runtime
@@ -224,7 +224,7 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * is being used. It can be used to perform 'late' initialization.
    */
   open func awake() {
-    expose(defaultAction, as: "default")
+    expose(defaultAction, as: WODirectAction.defaultActionName)
   }
   
   open func reset() {

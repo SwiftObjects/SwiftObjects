@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 import Runtime
@@ -26,7 +26,7 @@ open class WODirectAction : WOAction, SmartDescription,
   public required init(context: WOContext) {
     self.context = context
     self.log     = context.log
-    expose(defaultAction, as: "default")
+    expose(defaultAction, as: WODirectAction.defaultActionName)
   }
   
   /**

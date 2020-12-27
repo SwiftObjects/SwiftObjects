@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 21.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 /**
@@ -86,6 +86,13 @@ open class WODirectActionRequestHandler : WORequestHandler {
         results = try page.performActionNamed(actionName)
       }
     }
+    else if actionName      == WODirectAction.defaultActionName
+         && actionClassName == WODirectAction.defaultActionClassName
+    {
+      // Fallback to `WODirectAction` superclass
+      let da  = WODirectAction(context: context)
+      results = try da.performActionNamed(actionName)
+    }
     else {
       log.error("did not find action class:", actionClassName, "using:", rm)
       return nil
@@ -119,8 +126,12 @@ open class WODirectActionRequestHandler : WORequestHandler {
     let path = request.requestHandlerPathArray
     switch path.count {
       case 0:
-        if actionClassName == nil { actionClassName = "DirectAction" }
-        if actionName      == nil { actionName      = "default" }
+        if actionClassName == nil {
+          actionClassName = WODirectAction.defaultActionClassName
+        }
+        if actionName == nil {
+          actionName = WODirectAction.defaultActionName
+        }
       
       case 1:
         if actionName != nil {
@@ -128,7 +139,7 @@ open class WODirectActionRequestHandler : WORequestHandler {
           if actionClassName == nil { actionClassName = path[0] }
         }
         else {
-          actionClassName = "DirectAction"
+          actionClassName = WODirectAction.defaultActionClassName
           actionName      = path[0]
         }
       
@@ -148,7 +159,8 @@ open class WODirectActionRequestHandler : WORequestHandler {
       }
     #endif
     
-    return ( actionClassName ?? "DirectAction", actionName ?? "default" )
+    return ( actionClassName ?? WODirectAction.defaultActionClassName,
+             actionName      ?? WODirectAction.defaultActionName )
   }
   
   open func renderResults(_ results: Any?, in context: WOContext) throws
@@ -177,5 +189,9 @@ open class WODirectActionRequestHandler : WORequestHandler {
     
     return nil
   }
+}
 
+public extension WODirectAction {
+  static let defaultActionClassName = "DirectAction"
+  static let defaultActionName      = "default"
 }

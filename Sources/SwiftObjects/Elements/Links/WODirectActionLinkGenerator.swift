@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2020 ZeeZide. All rights reserved.
 //
 
 /**
@@ -40,7 +40,7 @@ open class WODirectActionLinkGenerator : WOLinkGenerator {
     
     if let actionClass = actionClass {
       if let lac = actionClass.stringValue(in: cursor), !lac.isEmpty {
-        lda = lac + "/" + (lda ?? "default")
+        lda = lac + "/" + (lda ?? WODirectAction.defaultActionName)
       }
     }
     
@@ -52,10 +52,10 @@ open class WODirectActionLinkGenerator : WOLinkGenerator {
       return context.session.storesIDsInURLs
     }()
 
-    return context.directActionURLForActionNamed(lda ?? "default", // TBD
-                                                 with: qd,
-                                                 addSessionID: addSessionID,
-                                                 includeQuerySession: false)
+    return context.directActionURLForActionNamed(
+      lda ?? WODirectAction.defaultActionName, // TBD
+      with: qd, addSessionID: addSessionID, includeQuerySession: false
+    )
   }
 
   override

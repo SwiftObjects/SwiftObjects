@@ -86,6 +86,13 @@ open class WODirectActionRequestHandler : WORequestHandler {
         results = try page.performActionNamed(actionName)
       }
     }
+    else if actionName      == WODirectAction.defaultActionName
+         && actionClassName == WODirectAction.defaultActionClassName
+    {
+      // Fallback to `WODirectAction` superclass
+      let da  = WODirectAction(context: context)
+      results = try da.performActionNamed(actionName)
+    }
     else {
       log.error("did not find action class:", actionClassName, "using:", rm)
       return nil

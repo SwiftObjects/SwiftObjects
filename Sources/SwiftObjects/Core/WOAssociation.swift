@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 /**
@@ -20,7 +20,7 @@
  * which resolve their value as localization keys or which resolve string
  * patterns in a certain context. etc etc
  */
-public protocol WOAssociation : class {
+public protocol WOAssociation : AnyObject {
   
   // MARK: - Reflection
   

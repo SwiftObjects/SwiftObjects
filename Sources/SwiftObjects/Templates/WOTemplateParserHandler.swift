@@ -3,12 +3,12 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Data
 
-public protocol WOTemplateParserHandler : class {
+public protocol WOTemplateParserHandler : AnyObject {
   
   typealias Data     = UnsafeBufferPointer<UInt8>
   

@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 public protocol WOResponder { // TODO: better name for this
@@ -65,7 +65,7 @@ public protocol WOResponder { // TODO: better name for this
  * Any element which has a subtemplate (a container) should implement the
  * walkTemplate method.
  */
-public protocol WOElement : class, WOResponder {
+public protocol WOElement : AnyObject, WOResponder {
 
   typealias Bindings = [ String : WOAssociation ]
   

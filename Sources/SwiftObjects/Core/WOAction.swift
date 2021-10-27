@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 public protocol WOAction {
@@ -70,7 +70,7 @@ public extension WOAction {
  * they have definite life times.
  * But this means component-actions should be registered in awake.
  */
-public protocol WOActionMapper : class {
+public protocol WOActionMapper : AnyObject {
   
   /// An action takes no own parameters, and returns a result. Or throws.
   typealias WOActionCallback = () throws -> Any?

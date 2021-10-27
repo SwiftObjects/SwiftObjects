@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.URL
@@ -23,7 +23,7 @@ import struct Foundation.URL
  *
  * P.S.: StaticCMS has additional parser for some specific XHTML syntax.
  */
-public protocol WOTemplateParser : class {
+public protocol WOTemplateParser : AnyObject {
   
   var handler : WOTemplateParserHandler? { get set }
   

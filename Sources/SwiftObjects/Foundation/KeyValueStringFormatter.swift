@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 import class Foundation.Formatter
@@ -250,7 +250,7 @@ final class KeyValueStringFormatter : Formatter, SmartDescription {
   }
 }
 
-fileprivate protocol KeyValueStringFormatterValueHandler: class {
+fileprivate protocol KeyValueStringFormatterValueHandler: AnyObject {
   // Swift 3: Cannot nest protocols in classes, hence outside of the class
   // - if that isn't a class protocol, swiftc 3.1.1 crashes on Linux
   

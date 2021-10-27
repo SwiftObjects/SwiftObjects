@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 /**
@@ -149,8 +149,9 @@ open class WOConditional : WODynamicElement {
     }
     
     public func evaluateWithObject(_ object: Any?) -> Bool {
-      let context  = object as? WOContext
-      let cursor   = context != nil ? context?.cursor : context
+      let cursor : Any?
+      if let context  = object as? WOContext { cursor = context.cursor }
+      else                                   { cursor = object }
       
       let doShow = condition.boolValue(in: cursor)
       return doNegate ? !doShow : doShow
@@ -230,8 +231,9 @@ open class WOConditional : WODynamicElement {
     public func evaluateWithObject(_ object: Any?) -> Bool {
       guard let condition = condition else { return false }
       
-      let context  = object as? WOContext
-      let cursor   = context != nil ? context?.cursor : context
+      let cursor : Any?
+      if let context  = object as? WOContext { cursor = context.cursor }
+      else                                   { cursor = object }
       
       var doShow   = false
       var doNegate = false

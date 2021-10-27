@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 import class Foundation.NSObject
@@ -16,7 +16,7 @@ public protocol KeyValueCodingType {
 
 }
 
-public protocol MutableKeyValueCodingType : class {
+public protocol MutableKeyValueCodingType : AnyObject {
   // MutableKeyValueCodingType only really makes sense for classes, right?
   // Well, it could return 'self' with the updated struct?
   
@@ -25,7 +25,7 @@ public protocol MutableKeyValueCodingType : class {
   func takeValuesForKeys(_ values : [ String : Any? ]) throws
 
 }
-public protocol KeyValueCodingTargetValue : class {
+public protocol KeyValueCodingTargetValue : AnyObject {
   // Again, only makes sense for classes? But we'd like to have structs.
   func setValue(_ value: Any?) throws
 }

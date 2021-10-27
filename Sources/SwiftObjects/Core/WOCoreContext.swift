@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2020 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Date
@@ -27,7 +27,7 @@ import NIOConcurrencyHelpers
  * THREAD: WOCoreContext is not threadsafe, its supposed to be used from one
  *         thread only.
  */
-public protocol WOCoreContext : class, SmartDescription {
+public protocol WOCoreContext : AnyObject, SmartDescription {
   
   var log         : WOLogger { get }
   

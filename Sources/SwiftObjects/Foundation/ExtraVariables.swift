@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 26.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 /**
@@ -12,7 +12,7 @@
  *
  * Examples are `WOComponent` and `WOSession`.
  */
-public protocol ExtraVariables : class {
+public protocol ExtraVariables : AnyObject {
   
   /**
    * Attach an additional key/value pair to the object.

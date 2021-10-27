@@ -3,14 +3,14 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 18.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2021 ZeeZide. All rights reserved.
 //
 
 /**
  * This is the callback interface provided by the WODParser class.
  * The most prominent implementation is WOWrapperTemplateBuilder.
  */
-public protocol WODParserHandler : class {
+public protocol WODParserHandler : AnyObject {
   
   typealias Bindings = WODParser.Bindings
   typealias Data     = UnsafeBufferPointer<UInt8>

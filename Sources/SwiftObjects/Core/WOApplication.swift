@@ -3,14 +3,14 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2020 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Data
 import struct Foundation.Date
 import struct Foundation.TimeInterval
 import class  Foundation.UserDefaults
-import NIOConcurrencyHelpers
+import Synchronization
 import Runtime
 
 /**
@@ -70,8 +70,8 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   public let log : WOLogger = WOPrintLogger(logLevel: .Log)
   
   let properties          = UserDefaults.standard
-  var requestCounter      = NIOAtomic.makeAtomic(value: 0)
-  var activeDispatchCount = NIOAtomic.makeAtomic(value: 0)
+  let requestCounter      = Atomic<Int>(0)
+  let activeDispatchCount = Atomic<Int>(0)
   
   open var contextClass      : WOContext.Type? = nil
   open var sessionClass      : WOSession.Type? = nil
@@ -180,9 +180,9 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   }()
   
   open func dispatchRequest(_ request: WORequest) -> WOResponse {
-    _ = requestCounter.add(1)
-    _ = activeDispatchCount.add(1)
-    defer { _ = activeDispatchCount.sub(1) }
+    requestCounter.wrappingAdd(1, ordering: .relaxed)
+    activeDispatchCount.wrappingAdd(1, ordering: .relaxed)
+    defer { activeDispatchCount.wrappingAdd(-1, ordering: .relaxed) }
     
     // TODO: port CORS stuff, OPTIONS
     
@@ -677,7 +677,8 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   open func appendToDescription(_ ms: inout String) {
     if let s = _name { ms += " '\(s)'" }
     
-    ms += " #req=\(requestCounter.load())/\(activeDispatchCount.load())"
+    ms += " #req=\(requestCounter.load(ordering: .relaxed))"
+    ms += "/\(activeDispatchCount.load(ordering: .relaxed))"
     ms += " rh=\(requestHandlerRegistry.keys.joined(separator:","))"
     
     if refusesNewSessions { ms += " REFUSES-NEW" }

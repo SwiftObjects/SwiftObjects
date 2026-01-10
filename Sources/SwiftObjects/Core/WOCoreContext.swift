@@ -7,7 +7,7 @@
 //
 
 import struct Foundation.Date
-import NIOConcurrencyHelpers
+import Synchronization
 
 /**
  * WOCoreContext
@@ -77,15 +77,17 @@ open class WOCoreContextBase : WOCoreContext {
   open   var closeAllElements        = true  // generate <br /> instead of <br>
   open   var generateXMLStyleEmptyElements = false
   
-  private static var ctxIdCounter = NIOAtomic.makeAtomic(value: 0)
+  private static let ctxIdCounter = Atomic<Int>(0)
 
   public init(application: WOApplication, request: WORequest) {
     self.application = application
     self.request     = request
     self.response    = WOResponse(request: request)
-    
+
     let stamp = Date().timeIntervalSince1970 - 1157999293 // magic
-    self.contextID = "\(Int(stamp))x\(WOCoreContextBase.ctxIdCounter.add(1))"
+    let count = WOCoreContextBase.ctxIdCounter
+                  .wrappingAdd(1, ordering: .relaxed).newValue
+    self.contextID = "\(Int(stamp))x\(count)"
   }
 
   

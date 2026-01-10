@@ -1,5 +1,5 @@
 <h2>SwiftObjects
-  <img src="http://zeezide.com/img/SoElementIcon.svg"
+  <img src="https://zeezide.com/img/SoElementIcon.svg"
        align="right" width="128" height="128" />
 </h2>
 
@@ -24,14 +24,14 @@ Nor is it optimized, or fast at all, to the contrary.
 ## Blog
 
 This is part of a blog entry, called:
-[An Introduction to WebObjects, in Swift](http://www.alwaysrightinstitute.com/wo-intro/).
+[An Introduction to WebObjects, in Swift](https://www.alwaysrightinstitute.com/wo-intro/).
 
 ## Install
 
 Note: Setup to work with Swift 5.0 aka Xcode 10.2 (can be changed manually to 
       4.x). The SwiftXcode setup now requires Xcode 10.2.
 
-<a href="https://swiftxcode.github.io" target="extlink"><img src="http://zeezide.com/img/SwiftXcodePkgIcon.svg"
+<a href="https://swiftxcode.github.io" target="extlink"><img src="https://zeezide.com/img/SwiftXcodePkgIcon.svg"
      align="right" width="86" height="86" style="padding: 0 0 0.5em 0.5em;" /></a>
 We use [Homebrew](https://brew.sh) to install the SwiftObjects
 development environment.
@@ -54,14 +54,14 @@ template, very much at the bottom of the inspector
 (pro tip: type "wo" in the filter field at the upper right):
 
 <center><img src=
-  "http://www.alwaysrightinstitute.com/images/swiftobjects/01-so-create-project-1.png" 
+  "https://www.alwaysrightinstitute.com/images/swiftobjects/01-so-create-project-1.png" 
   /></center>
 
 Give your project a name, say "HelloWOrld" create it somewhere, and you should
 end up with something like this:
 
 <center><img src=
-  "http://www.alwaysrightinstitute.com/images/swiftobjects/05-so-create-project-5.png" 
+  "https://www.alwaysrightinstitute.com/images/swiftobjects/05-so-create-project-5.png" 
   /></center>
   
 Press the Play/Run button to build and start the application. Open your
@@ -69,7 +69,7 @@ favorite browser and navigate to
 [http://localhost:1337/](http://localhost:1337/):
 
 <center><img src=
-  "http://www.alwaysrightinstitute.com/images/swiftobjects/21-main-page.png" 
+  "https://www.alwaysrightinstitute.com/images/swiftobjects/21-main-page.png" 
   /></center>
 
 Yay. History is up and running!
@@ -79,9 +79,9 @@ Yay. History is up and running!
 ### Who
 
 **SwiftObjects** is brought to you by
-[ZeeZide](http://zeezide.de).
+[ZeeZide](https://zeezide.de).
 We like feedback, GitHub stars, 
-cool [contract work](http://zeezide.com/en/services/services.html),
+cool [contract work](https://zeezide.com/en/services/services.html),
 presumably any form of praise you can think of.
 
-There is a channel on the [Noze.io Slack](http://slack.noze.io).
+There is a channel on the [Noze.io Slack](https://slack.noze.io).

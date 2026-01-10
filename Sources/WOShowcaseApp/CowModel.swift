@@ -33,7 +33,7 @@ final class Cow: @unchecked Sendable {
 
 final class CowStore: @unchecked Sendable {
   
-  let urlPrefix = "http://zeezide.com/img/SquareCows/"
+  let urlPrefix = "https://zeezide.com/img/SquareCows/"
   let availableImages = [
     "andreas.jpg",
     "anne.jpg",

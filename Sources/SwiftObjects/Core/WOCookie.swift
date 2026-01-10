@@ -36,8 +36,8 @@ import struct Foundation.Date
  *       not what you want.
  *
  * Outdated iunfo:
- * http://www.ietf.org/rfc/rfc2109.txt
- * http://www.faqs.org/rfcs/rfc2965.html (only implemented by Opera?)
+ * https://www.ietf.org/rfc/rfc2109.txt
+ * https://www.faqs.org/rfcs/rfc2965.html (only implemented by Opera?)
  */
 public struct WOCookie : SmartDescription {
   
@@ -125,7 +125,7 @@ public struct WOCookie : SmartDescription {
     }
     else if timeout == nil {
       /* A convenience to improve browser compat, straight from:
-       *   http://wp.netscape.com/newsref/std/cookie_spec.html
+       *   https://wp.netscape.com/newsref/std/cookie_spec.html
        * This helps Safari3 forget cookies (Max-Age: 0 doesn't seem to affect
        * it).
        */

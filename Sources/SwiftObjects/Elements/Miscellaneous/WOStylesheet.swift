@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 15.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.URL
@@ -12,36 +12,37 @@ import struct Foundation.URL
  * Generate a style tag containing CSS code or a link tag.
  *
  * Sample:
- *
- *     Style: WOStylesheet {
- *         filename = "site.css";
- *     }
- *
- * Renders:<pre>
+ * ```wod
+ * Style: WOStylesheet {
+ *     filename = "site.css";
+ * }
  * ```
- *   <link rel="stylesheet" type="text/css"
- *         href="/MyApp/wr/site.css" />
+ *
+ * Renders:
+ * ```html
+ * <link rel="stylesheet" type="text/css"
+ *       href="/MyApp/wr/site.css" />
  * ```
  *
  * Bindings:
  * ```
- *   cssResource      [in] - string          (name of a WOResource to be emb.)
- *   cssFile          [in] - string/File/URL (contents will be embedded)
- *   cssString        [in] - string          (will be embedded)
- *   hideInComment    [in] - bool
- *   escapeHTML       [in] - boolean (set to false to avoid HTML escaping)
+ * cssResource      [in] - string          (name of a WOResource to be emb.)
+ * cssFile          [in] - string/File/URL (contents will be embedded)
+ * cssString        [in] - string          (will be embedded)
+ * hideInComment    [in] - bool
+ * escapeHTML       [in] - boolean (set to false to avoid HTML escaping)
  * ```
  *
- * Bindings (WOLinkGenerator for image resource):
+ * Bindings (``WOLinkGenerator`` for image resource):
  * ```
- *   href             [in] - string
- *   filename         [in] - string
- *   framework        [in] - string
- *   actionClass      [in] - string
- *   directActionName [in] - string
- *   queryDictionary  [in] - Map<String,String>
- *   ?wosid           [in] - boolean (constant!)
- *   - all bindings starting with a ? are stored as query parameters.
+ * href             [in] - string
+ * filename         [in] - string
+ * framework        [in] - string
+ * actionClass      [in] - string
+ * directActionName [in] - string
+ * queryDictionary  [in] - Dictionary<String, Any>
+ * ?wosid           [in] - boolean (constant!)
+ * - all bindings starting with a ? are stored as query parameters.
  * ```
  */
 open class WOStylesheet : WOHTMLDynamicElement {
@@ -90,7 +91,9 @@ open class WOStylesheet : WOHTMLDynamicElement {
     /* cssFile first, because its usually some kind of library(s) */
     if let v = cssFile?.stringValue(in: cursor) {
       // TODO: support array
-      if let s = try? String(contentsOf: URL(fileURLWithPath: v)) {
+      if let s = try? String(contentsOf: URL(fileURLWithPath: v),
+                             encoding: .utf8)
+      {
         if doEscape { try response.appendContentHTMLString(s) }
         else        { try response.appendContentString(s)     }
       }

@@ -3,11 +3,12 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.CharacterSet
 import struct Foundation.URLComponents
+import NIOHTTP1
 
 open class WORequest : WOMessage {
   

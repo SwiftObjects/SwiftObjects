@@ -3,14 +3,15 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import class Foundation.Formatter
 import class Foundation.NSString
 
 /**
- * Helper class which deals with formatting attributes of WODynamicElement's.
+ * Helper objects that deals with formatting attributes of
+ * ``WODynamicElement``'s.
  * It is based upon Foundation.Formatter.
  *
  * THREAD: remember that Format objects are usually not thread-safe.
@@ -38,8 +39,9 @@ public enum WOFormatterFactory { // can't have statics on Swift protocols
    * - formatter
    * - formatterClass
    *
-   * @param _assocs - the bindings of the element
-   * @return a WOFormatter object used to handle the bindings
+   * - Parameters:
+   *   - associactions: the bindings of the element
+   * - Returns: a ``WOFormatter`` object used to handle the bindings
    */
   public static func formatter(for associations: inout Bindings)
                      -> WOFormatter?
@@ -52,14 +54,14 @@ public enum WOFormatterFactory { // can't have statics on Swift protocols
     if let format = associations.removeValue(forKey: "dateformat") {
       return WODateFormatter(
         format    : format,
-        isLenient : associations.removeValue(forKey: ""),
+        isLenient : associations.removeValue(forKey: "lenient"),
         locale    : associations.removeValue(forKey: "locale"),
         timeZone  : associations.removeValue(forKey: "timeZone")
                  ?? associations.removeValue(forKey: "tz")
       )
     }
     
-    // TODO: formatterclass
+    // TODO: formatterclass registry
     if let formatter = associations.removeValue(forKey: "formatter") {
       return WOObjectFormatter(formatter: formatter)
     }

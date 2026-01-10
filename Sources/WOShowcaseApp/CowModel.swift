@@ -5,12 +5,12 @@
 //  Created by Helge Hess on 01.06.18.
 //
 
-final class Cow {
+final class Cow: @unchecked Sendable {
   
   // Those are optional because we use empty cows during the create phase
-  var name  : String?
-  var body  : String?
-  var image : String?
+  var name        : String?
+  var body        : String?
+  var image       : String?
   var friendCount : Int = 0
   
   init(name: String? = nil, body: String? = nil, image: String? = nil,
@@ -31,9 +31,9 @@ final class Cow {
   }
 }
 
-final class CowStore {
+final class CowStore: @unchecked Sendable {
   
-  let urlPrefix = "http://zeezide.com/img/SquareCows/"
+  let urlPrefix = "https://zeezide.com/img/SquareCows/"
   let availableImages = [
     "andreas.jpg",
     "anne.jpg",

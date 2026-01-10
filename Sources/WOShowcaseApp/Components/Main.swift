@@ -11,7 +11,7 @@ import SwiftObjects
 
 class Main : WOComponent {
   
-  let componentFileURL = URL(fileURLWithPath: "\(#file)")
+  let componentFileURL = URL(fileURLWithPath: #filePath)
   var demos = [ String ]()
   
   public var demo : String? = nil

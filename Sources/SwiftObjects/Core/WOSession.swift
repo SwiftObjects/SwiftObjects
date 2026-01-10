@@ -9,7 +9,6 @@
 import struct Foundation.TimeInterval
 import struct Foundation.Date
 import struct Foundation.UUID
-import NIOConcurrencyHelpers
 import Runtime
 
 /**
@@ -39,8 +38,6 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
   required public init() {
     sessionID = WOSession.createSessionID()
   }
-  
-  private static var snIdCounter = NIOAtomic.makeAtomic(value: 0)
   
   static func createSessionID() -> String {
     // As suggested for SwiftWebUI. Not perfect but reasonable.

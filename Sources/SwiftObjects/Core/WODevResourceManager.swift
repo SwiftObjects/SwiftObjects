@@ -11,7 +11,7 @@ import struct Foundation.Data
 
 /**
  * A basic resource manager, which supports class registration and looks up
- * resources relative to some source file (using the #filename trick).
+ * resources relative to some source file (using the #filePath trick).
  */
 open class WODevResourceManager : WOResourceManagerBase {
   
@@ -42,7 +42,7 @@ open class WODevResourceManager : WOResourceManagerBase {
   var resourceMissCache    = Set<String>()
   var memoryResources      = [ String : InMemoryResource ]()
   
-  public init<T>(sourceFile: StaticString = #file, sourceType: T.Type,
+  public init<T>(sourceFile: StaticString = #filePath, sourceType: T.Type,
                  defaultFramework: String,
                  _ classes : [ String : AnyClass ] = [:])
   {

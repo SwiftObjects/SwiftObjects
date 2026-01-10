@@ -9,3 +9,14 @@
 
 Frame: Frame {
 }
+Body: WOString {
+  value = "Hello";
+}
+Form: WOForm {
+}
+TitleField: WOTextField {
+  value = title;
+}
+Submit: WOSubmitButton {
+  action = self;
+}

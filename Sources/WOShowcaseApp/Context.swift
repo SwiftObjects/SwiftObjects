@@ -1,6 +1,6 @@
 //
 //  Context.swift
-//  testit
+//  WOShowcaseApp
 //
 //  Created by Helge Hess on 25.05.18.
 //

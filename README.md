@@ -3,7 +3,6 @@
        align="right" width="128" height="128" />
 </h2>
 
-![Swift4.2](https://img.shields.io/badge/swift-4.2-blue.svg)
 ![Swift5](https://img.shields.io/badge/swift-5-blue.svg)
 ![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
 ![tuxOS](https://img.shields.io/badge/os-tuxOS-green.svg?style=flat)
@@ -28,8 +27,11 @@ This is part of a blog entry, called:
 
 ## Install
 
-Note: Setup to work with Swift 5.0 aka Xcode 10.2 (can be changed manually to 
-      4.x). The SwiftXcode setup now requires Xcode 10.2.
+Note: Setup to work with Swift 6.2 aka Xcode 26.
+
+**2026-01-11**: This can be used to install the Xcode templates for components,
+though swift-xcode itself probably won't work anymore? Untested as of today.
+Swift-Xcode was for the timeframe when Xcode didn't have SPM support at all.
 
 <a href="https://swiftxcode.github.io" target="extlink"><img src="https://zeezide.com/img/SwiftXcodePkgIcon.svg"
      align="right" width="86" height="86" style="padding: 0 0 0.5em 0.5em;" /></a>
@@ -47,6 +49,10 @@ swift xcode link-templates
 That will take a moment to install and compile, but then we are ready to go!
 
 ## Create a new WOApp
+
+**2026-01-11**: It probably doesn't work like that anymore. To create an app,
+just create a new tool project, add SwiftObjects as a package dependency
+and configure the app/adaptor as shown in the WOShowcaseApp example.
 
 Within Xcode, create a new project (⌘-Shift-N),
 go to the "macOS" section and select the "WOApplication"

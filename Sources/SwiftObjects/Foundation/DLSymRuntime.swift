@@ -3,7 +3,7 @@
 //  testit
 //
 //  Created by Helge Hess on 25.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import Foundation
@@ -40,53 +40,34 @@ func SOGetPackageName<T>(_ type: T.Type, default: String = "") -> String {
   
   guard info.dli_sname != nil else { return `default` }
   
-  #if swift(>=4.2)
-    // App Names examples:
-    // - "WOShowcaseApp"  : $S13WOShowcaseAppAACN / $s13WOShowcaseAppAACN
-    // - "WOShowcaseApp2" : $s13WOShowcaseApp0A4App2CN (compression?)
-    // - "OTHER"          : $s13WOShowcaseApp5OTHERCN
-    //
-    // It is a string length 13, S13 WOShowcaseApp
-    // Don't know what the 'AACN' is.
-    //
-    let symbolName = String(cString: info.dli_sname)
-    #if swift(>=5)
-      let prefix = "$s"
-    #else
-      let prefix = "$S"
-    #endif
-    if symbolName.hasPrefix(prefix) {
-      let x = symbolName.dropFirst(prefix.count)
-      if let endCountIdx = x.firstIndex(where: { !"0123456789".contains($0) }),
-         endCountIdx > x.startIndex,
-         let len = Int(x[..<endCountIdx]), len > 0
-      {
-        let stringEndIdx = x.index(endCountIdx, offsetBy: len)
-        return String(x[endCountIdx..<stringEndIdx])
-      }
-    }
-    
-    print("Swift 4.2/5+ cannot lookup package name yet, symbol:",
-          symbolName)
-    return `default`
-  #elseif swift(>=4.1.50)
-    print("Swift 4.2 cannot lookup package name yet, symbol:",
-          String(cString: info.dli_sname))
-    return `default`
+  // App Names examples:
+  // - "WOShowcaseApp"  : $S13WOShowcaseAppAACN / $s13WOShowcaseAppAACN
+  // - "WOShowcaseApp2" : $s13WOShowcaseApp0A4App2CN (compression?)
+  // - "OTHER"          : $s13WOShowcaseApp5OTHERCN
+  //
+  // It is a string length 13, S13 WOShowcaseApp
+  // Don't know what the 'AACN' is.
+  //
+  let symbolName = String(cString: info.dli_sname)
+  #if swift(>=5)
+    let prefix = "$s"
   #else
-    assert(UnsafePointer(strstr(info.dli_sname, "_T")) == info.dli_sname,
-           "package name does not begin with: " +
-           "_T (\(String(cString: info.dli_sname))")
-    var p = info.dli_sname!.advanced(by: 2) // skip _T
-    
-    let   len = Int(atoi(p))
-    while isdigit(Int32(p.pointee)) != 0 { p += 1 }
-    
-    return p.withMemoryRebound(to: UInt8.self, capacity: len) { p in
-      let data = UnsafeBufferPointer(start: p, count: len)
-      return String(decoding: data, as: UTF8.self)
-    }
+    let prefix = "$S"
   #endif
+  if symbolName.hasPrefix(prefix) {
+    let x = symbolName.dropFirst(prefix.count)
+    if let endCountIdx = x.firstIndex(where: { !"0123456789".contains($0) }),
+       endCountIdx > x.startIndex,
+       let len = Int(x[..<endCountIdx]), len > 0
+    {
+      let stringEndIdx = x.index(endCountIdx, offsetBy: len)
+      return String(x[endCountIdx..<stringEndIdx])
+    }
+  }
+  
+  print("Swift 4.2/5+ cannot lookup package name yet, symbol:",
+        symbolName)
+  return `default`
 }
 
 func SOGetClassByName(_ name: String, _ module: String) -> AnyClass? {

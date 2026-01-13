@@ -10,26 +10,30 @@ class WOAssociationFactoryTests: XCTestCase {
 
   // MARK: - associationWithKeyPath Tests
 
-  func testKeyPathWithDot() {
-    let assoc = WOAssociationFactory.associationWithKeyPath("person.name")
+  func testKeyPathWithDot() throws {
+    let assoc = try WOAssociationFactory.associationWithKeyPath("person.name")
 
-    XCTAssertNotNil(assoc)
     XCTAssert(assoc is WOKeyPathAssociation)
-    XCTAssertEqual(assoc?.keyPath, "person.name")
+    XCTAssertEqual(assoc.keyPath, "person.name")
   }
 
-  func testKeyPathWithoutDot() {
-    let assoc = WOAssociationFactory.associationWithKeyPath("name")
+  func testKeyPathWithoutDot() throws {
+    let assoc = try WOAssociationFactory.associationWithKeyPath("name")
 
-    XCTAssertNotNil(assoc)
     XCTAssert(assoc is WOKeyAssociation)
-    XCTAssertEqual(assoc?.keyPath, "name")
+    XCTAssertEqual(assoc.keyPath, "name")
   }
 
   func testEmptyKeyPath() {
-    let assoc = WOAssociationFactory.associationWithKeyPath("")
-
-    XCTAssertNil(assoc)
+    XCTAssertThrowsError(
+      try WOAssociationFactory.associationWithKeyPath("")
+    ) { error in
+      guard case WOAssociationFactory.AssociationError.emptyKeyPath = error
+      else {
+        XCTFail("Expected emptyKeyPath error, got \(error)")
+        return
+      }
+    }
   }
 
 
@@ -62,8 +66,8 @@ class WOAssociationFactoryTests: XCTestCase {
 
   // MARK: - associationForPrefix Tests
 
-  func testVarPrefix() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testVarPrefix() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "var", name: "test", value: "person.name"
     )
 
@@ -71,8 +75,8 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssert(assoc is WOKeyPathAssociation)
   }
 
-  func testVarPrefixSimpleKey() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testVarPrefixSimpleKey() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "var", name: "test", value: "name"
     )
 
@@ -80,8 +84,8 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssert(assoc is WOKeyAssociation)
   }
 
-  func testConstPrefix() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testConstPrefix() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "const", name: "test", value: "Hello World"
     )
 
@@ -90,8 +94,8 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssertEqual(assoc?.stringValue(in: nil), "Hello World")
   }
 
-  func testLabelPrefix() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testLabelPrefix() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "label", name: "test", value: "greeting.hello"
     )
 
@@ -99,8 +103,8 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssert(assoc is WOLabelAssocation)
   }
 
-  func testNotPrefix() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testNotPrefix() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "not", name: "test", value: "isEnabled"
     )
 
@@ -108,8 +112,8 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssert(assoc is WONegateAssocation)
   }
 
-  func testPlistPrefixArray() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testPlistPrefixArray() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "plist", name: "test", value: "(a, b, c)"
     )
 
@@ -124,8 +128,8 @@ class WOAssociationFactoryTests: XCTestCase {
     }
   }
 
-  func testPlistPrefixDictionary() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testPlistPrefixDictionary() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "plist", name: "test", value: "{ key = value }"
     )
 
@@ -138,8 +142,8 @@ class WOAssociationFactoryTests: XCTestCase {
     }
   }
 
-  func testVarpatPrefix() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testVarpatPrefix() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "varpat", name: "test", value: "Hello %(name)s"
     )
 
@@ -147,8 +151,8 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssert(assoc is WOKeyPathPatternAssociation)
   }
 
-  func testRsrcPrefix() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testRsrcPrefix() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "rsrc", name: "test", value: "images/logo.png"
     )
 
@@ -156,8 +160,8 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssert(assoc is WOResourceURLAssociation)
   }
 
-  func testRsrcpatPrefix() {
-    let assoc = WOAssociationFactory.associationForPrefix(
+  func testRsrcpatPrefix() throws {
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "rsrcpat", name: "test", value: "images/%(name)s.png"
     )
 
@@ -165,9 +169,9 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssert(assoc is WOResourcePatternAssociation)
   }
 
-  func testUnknownPrefixDefault() {
+  func testUnknownPrefixDefault() throws {
     // Unknown prefix should create a value association with the string
-    let assoc = WOAssociationFactory.associationForPrefix(
+    let assoc = try WOAssociationFactory.associationForPrefix(
       "unknown", name: "test", value: "some value"
     )
 

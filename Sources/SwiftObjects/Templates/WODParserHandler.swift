@@ -54,8 +54,8 @@ public protocol WODParserHandler : AnyObject {
    * @param _kp - the String containing the keypath (eg person.lastname)
    * @return a WOAssociation (most likely a WOKeyPathAssocation)
    */
-  func parser(_ parser: WODParser, associationForKeyPath path: String)
-       -> WOAssociation?
+  func parser(_ parser: WODParser, associationForKeyPath path: String) throws
+       -> WOAssociation
 
   /**
    * Called by the WODParser once it has parsed the data of a WOD entry
@@ -100,10 +100,10 @@ public extension WODParserHandler { // default imp
     return WOAssociationFactory.associationWithValue(v)
   }
   
-  func parser(_ parser: WODParser, associationForKeyPath path: String)
-       -> WOAssociation?
+  func parser(_ parser: WODParser, associationForKeyPath path: String) throws
+       -> WOAssociation
   {
-    return WOAssociationFactory.associationWithKeyPath(path)
+    return try WOAssociationFactory.associationWithKeyPath(path)
   }
 
   func parser(_ parser: WODParser,

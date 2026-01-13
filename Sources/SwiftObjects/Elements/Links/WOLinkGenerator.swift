@@ -288,9 +288,15 @@ open class WOLinkGenerator : WOElement, SmartDescription {
   
   // MARK: - Regular href links
   
-  static let defaultMethod      : WOAssociation =
+  static let defaultMethod : WOAssociation =
                WOAssociationFactory.associationWithValue("default")
-  static let defaultActionClass : WOAssociation =
-               WOAssociationFactory.associationWithKeyPath("context.page.name")!
+  static var defaultActionClass : WOAssociation {
+    do {
+      return try WOAssociationFactory.associationWithKeyPath("context.page.name")
+    }
+    catch {
+      fatalError("Unexpected error for non-empty keypath: \(error)")
+    }
+  }
 }
 

@@ -58,10 +58,10 @@ class FormTestCase: DynamicElementTestCase {
 
   /**
    * Creates a keypath association for the given path.
-   * Returns nil if the path is invalid.
+   * Throws if the path is empty.
    */
-  func keypath(_ path: String) -> WOAssociation? {
-    return WOAssociationFactory.associationWithKeyPath(path)
+  func keypath(_ path: String) throws -> WOAssociation {
+    return try WOAssociationFactory.associationWithKeyPath(path)
   }
 
 

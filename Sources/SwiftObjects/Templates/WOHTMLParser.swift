@@ -331,9 +331,10 @@ open class WOHTMLParser : WOTemplateParser {
     
     attrs["NAME"] = name
     
-    guard let element = handler?.parser(self, dynamicElementFor: name,
-                                        attributes: attrs,
-                                        children: children) else {
+    guard let element = try handler?.parser(self, dynamicElementFor: name,
+                                            attributes: attrs,
+                                            children: children)
+    else {
       log.error("could not build hash element:", name)
       return nil
     }
@@ -404,9 +405,10 @@ open class WOHTMLParser : WOTemplateParser {
       }
     }
     
-    guard let element = handler?.parser(self, dynamicElementFor: name,
-                                        attributes: attrs,
-                                        children: children) else {
+    guard let element = try handler?.parser(self, dynamicElementFor: name,
+                                            attributes: attrs,
+                                            children: children)
+    else {
       log.error("could not build WEBOBJECT element:", name)
       return nil
     }

@@ -39,7 +39,12 @@ open class WOAtActionLinkGenerator : WOLinkGenerator {
     }
     
     if action.isValueConstant, let v = action.value(in: nil) as? String {
-      self.action = WOAssociationFactory.associationWithKeyPath(v)!
+      do {
+        self.action = try WOAssociationFactory.associationWithKeyPath(v)
+      }
+      catch {
+        return nil
+      }
     }
     else {
       self.action = action

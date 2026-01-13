@@ -37,7 +37,7 @@ class RequestFlowTests: FormTestCase {
     testComponent.stringValue = "original"
 
     var fieldBindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("field1")
     ]
     let field = WOTextField(name: "Field", bindings: &fieldBindings,
@@ -60,7 +60,7 @@ class RequestFlowTests: FormTestCase {
     testComponent.stringValue = "Hello World"
 
     var fieldBindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("field1")
     ]
     let field = WOTextField(name: "Field", bindings: &fieldBindings,
@@ -82,7 +82,7 @@ class RequestFlowTests: FormTestCase {
 
     // Build form with text field
     var fieldBindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("myField")
     ]
     let field = WOTextField(name: "Field", bindings: &fieldBindings,
@@ -113,7 +113,7 @@ class RequestFlowTests: FormTestCase {
   func testElementIDGeneration() throws {
     // When rendering, element IDs should be generated
     var fieldBindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("field1")
     ]
     let field = WOTextField(name: "Field", bindings: &fieldBindings,
@@ -134,12 +134,12 @@ class RequestFlowTests: FormTestCase {
 
     // Create a repetition with items
     var repBindings : Bindings = [
-      "list" : keypath("items")!,
-      "item" : keypath("currentItem")!
+      "list" : try keypath("items"),
+      "item" : try keypath("currentItem")
     ]
 
     var innerBindings : Bindings = [
-      "value" : keypath("currentItem")!
+      "value" : try keypath("currentItem")
     ]
     let inner = WOString(name: "Item", bindings: &innerBindings, template: nil)
 
@@ -176,11 +176,11 @@ class RequestFlowTests: FormTestCase {
     testComponent.stringValue = "original"
 
     var condBindings : Bindings = [
-      "condition" : keypath("boolValue")!
+      "condition" : try keypath("boolValue")
     ]
 
     var fieldBindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("field1")
     ]
     let field = WOTextField(name: "Field", bindings: &fieldBindings,
@@ -204,11 +204,11 @@ class RequestFlowTests: FormTestCase {
     testComponent.stringValue = "original"
 
     var condBindings : Bindings = [
-      "condition" : keypath("boolValue")!
+      "condition" : try keypath("boolValue")
     ]
 
     var fieldBindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("field1")
     ]
     let field = WOTextField(name: "Field", bindings: &fieldBindings,

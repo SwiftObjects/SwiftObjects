@@ -128,10 +128,10 @@ public enum WOListWalkerFactory {
      */
     if let a = list, a.isValueConstant, let s = a.value(in: nil) as? String {
       // TODO: support Plists/json strings ( list="(a,b,c)" )
-      bindings["list"] = WOAssociationFactory.associationWithKeyPath(s)
+      bindings["list"] = try? WOAssociationFactory.associationWithKeyPath(s)
     }
     if let a = item, a.isValueConstant, let s = a.value(in: nil) as? String {
-      bindings["item"] = WOAssociationFactory.associationWithKeyPath(s)
+      bindings["item"] = try? WOAssociationFactory.associationWithKeyPath(s)
     }
     
     

@@ -53,7 +53,7 @@ open class WOSubmitButton : WOInput {
     
     /* special, shortcut hack. Doesn't make sense to have String actions ... */
     if let a = action, a.isValueConstant, let v = a.value(in: nil) as? String {
-      self.action = WOAssociationFactory.associationWithKeyPath(v)
+      self.action = try? WOAssociationFactory.associationWithKeyPath(v)
     }
     else {
       self.action = action

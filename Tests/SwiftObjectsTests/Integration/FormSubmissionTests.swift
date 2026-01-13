@@ -38,7 +38,7 @@ class FormSubmissionTests: FormTestCase {
 
     // Create form with text field
     var fieldBindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("username")
     ]
     let field = WOTextField(name: "Field", bindings: &fieldBindings,
@@ -63,14 +63,14 @@ class FormSubmissionTests: FormTestCase {
 
     // Create two fields
     var field1Bindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("name")
     ]
     let field1 = WOTextField(name: "Name", bindings: &field1Bindings,
                              template: nil)
 
     var field2Bindings : Bindings = [
-      "value" : keypath("intValue")!,
+      "value" : try keypath("intValue"),
       "name"  : value("age")
     ]
     let field2 = WOTextField(name: "Age", bindings: &field2Bindings,
@@ -98,7 +98,7 @@ class FormSubmissionTests: FormTestCase {
     testComponent.boolValue = false
 
     var cbBindings : Bindings = [
-      "checked" : keypath("boolValue")!,
+      "checked" : try keypath("boolValue"),
       "name"    : value("agree")
     ]
     let checkbox = WOCheckBox(name: "CB", bindings: &cbBindings, template: nil)
@@ -123,7 +123,7 @@ class FormSubmissionTests: FormTestCase {
     testComponent.boolValue = true
 
     var cbBindings : Bindings = [
-      "checked" : keypath("boolValue")!,
+      "checked" : try keypath("boolValue"),
       "name"    : value("agree")
     ]
     let checkbox = WOCheckBox(name: "CB", bindings: &cbBindings, template: nil)
@@ -148,9 +148,9 @@ class FormSubmissionTests: FormTestCase {
     testComponent.selection = nil
 
     var popupBindings : Bindings = [
-      "list"      : keypath("items")!,
-      "item"      : keypath("currentItem")!,
-      "selection" : keypath("selection")!,
+      "list"      : try keypath("items"),
+      "item"      : try keypath("currentItem"),
+      "selection" : try keypath("selection"),
       "name"      : value("color")
     ]
     let popup = WOPopUpButton(name: "Color", bindings: &popupBindings,
@@ -177,14 +177,14 @@ class FormSubmissionTests: FormTestCase {
     testComponent.boolValue   = true
 
     var fieldBindings : Bindings = [
-      "value" : keypath("stringValue")!,
+      "value" : try keypath("stringValue"),
       "name"  : value("text")
     ]
     let field = WOTextField(name: "Field", bindings: &fieldBindings,
                             template: nil)
 
     var cbBindings : Bindings = [
-      "checked" : keypath("boolValue")!,
+      "checked" : try keypath("boolValue"),
       "name"    : value("check")
     ]
     let checkbox = WOCheckBox(name: "CB", bindings: &cbBindings, template: nil)
@@ -208,12 +208,12 @@ class FormSubmissionTests: FormTestCase {
     testComponent.items = [ "Item1", "Item2", "Item3" ]
 
     var repBindings : Bindings = [
-      "list" : keypath("items")!,
-      "item" : keypath("currentItem")!
+      "list" : try keypath("items"),
+      "item" : try keypath("currentItem")
     ]
 
     var innerBindings : Bindings = [
-      "value" : keypath("currentItem")!
+      "value" : try keypath("currentItem")
     ]
     let inner = WOString(name: "Item", bindings: &innerBindings, template: nil)
 
@@ -238,7 +238,7 @@ class FormSubmissionTests: FormTestCase {
     testComponent.stringValue = "original"
 
     var fieldBindings : Bindings = [
-      "value"    : keypath("stringValue")!,
+      "value"    : try keypath("stringValue"),
       "name"     : value("field1"),
       "disabled" : value(true)
     ]

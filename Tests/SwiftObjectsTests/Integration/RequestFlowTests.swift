@@ -23,9 +23,7 @@ class RequestFlowTests: FormTestCase {
   }
 
   override func tearDown() {
-    if testComponent != nil {
-      context.leaveComponent(testComponent)
-    }
+    if let testComponent { context.leaveComponent(testComponent) }
     testComponent = nil
     super.tearDown()
   }

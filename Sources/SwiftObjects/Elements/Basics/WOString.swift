@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -11,35 +11,35 @@
  * then formatted using a Formatter.
  *
  * Sample:
- *
- *    ComponentName: WOString {
- *        value = name;
- *    }
+ * ```
+ * ComponentName: WOString {
+ *   value = name;
+ * }
+ * ```
  *
  * Renders:
  *   The element renders the given value, possibly after applying conversions.
  *
  * Bindings:
- * ```
- *   value          [in] - object
- *   valueWhenEmpty [in] - object
- *   escapeHTML     [in] - boolean (set to false to avoid HTML escaping)
- *   insertBR       [in] - boolean (replace newlines with &lt;br/&gt; tags)
- *   %value         [in] - string (pattern in %(keypath)s syntax)
- *   prefix         [in] - string (prefix for non-empty value)
- *   suffix         [in] - string (suffix for non-empty value)</pre>
- * Bindings (WOFormatter):<pre>
- *   calformat      [in] - a dateformat   (returns java.util.Calendar)
- *   dateformat     [in] - a dateformat   (returns java.util.Date)
- *   lenient        [in] - bool, only in combination with cal/dateformat!
- *   numberformat   [in] - a numberformat (NumberFormat.getInstance())
- *   currencyformat [in] - a numberformat (NumberFormat.getCurrencyInstance())
- *   percentformat  [in] - a numberformat (NumberFormat.getPercentInstance())
- *   intformat      [in] - a numberformat (NumberFormat.getIntegerInstance())
- *   formatterClass [in] - Class or class name of a formatter to use
- *   formatter      [in] - java.text.Format used to format the value or the
+ * - value          [in] - object
+ * - valueWhenEmpty [in] - object
+ * - escapeHTML     [in] - boolean (set to false to avoid HTML escaping)
+ * - insertBR       [in] - boolean (replace newlines with &lt;br/&gt; tags)
+ * - %value         [in] - string (pattern in %(keypath)s syntax)
+ * - prefix         [in] - string (prefix for non-empty value)
+ * - suffix         [in] - string (suffix for non-empty value)
+ *
+ * Bindings (``WOFormatter``):
+ * - calformat      [in] - a dateformat   (returns java.util.Calendar)
+ * - dateformat     [in] - a dateformat   (returns java.util.Date)
+ * - lenient        [in] - bool, only in combination with cal/dateformat!
+ * - numberformat   [in] - a numberformat (NumberFormat.getInstance())
+ * - currencyformat [in] - a numberformat (NumberFormat.getCurrencyInstance())
+ * - percentformat  [in] - a numberformat (NumberFormat.getPercentInstance())
+ * - intformat      [in] - a numberformat (NumberFormat.getIntegerInstance())
+ * - formatterClass [in] - Class or class name of a formatter to use
+ * - formatter      [in] - java.text.Format used to format the value or the
  *                         format for the formatterClass
- * ```
  *
  * If additional bindings are given, the text will get embedded into a tag
  * (defaults to 'span' if no other 'elementName' binding is given).

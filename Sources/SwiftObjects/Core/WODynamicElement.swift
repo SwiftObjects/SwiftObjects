@@ -23,9 +23,10 @@
  *
  * Further 'extra bindings' can be `%(key)s` style patterns IF
  * the value starts with a % sign. Example:
- *
- *     <wo:span varpat:id="employee-%(person.id)s">...<wo:span>
- *     <wo:a varpat:onclick="alert('clicked %(person.name)s');" />
+ * ```wox
+ * <wo:span varpat:id="employee-%(person.id)s">...<wo:span>
+ * <wo:a varpat:onclick="alert('clicked %(person.name)s');" />
+ * ```
  *
  * Those patterns are resolved using the KeyValueStringFormatter.format()
  * function.
@@ -174,5 +175,17 @@ open class WODynamicElement : WOElement, SmartDescription {
       guard let assoc = bindings[i + 1] as? WOAssociation else { continue }
       appendBindingToDescription(&ms, name, assoc)
     }
+  }
+}
+
+public extension WODynamicElement {
+  
+  @inlinable
+  convenience init(name: String = "", bindings: Bindings,
+                   template: WOElement? = nil)
+  {
+    var modifiableBindings = bindings
+    self.init(name: name, bindings: &modifiableBindings, template: template)
+    assert(modifiableBindings.isEmpty, "Not all bindings got consumed?!")
   }
 }

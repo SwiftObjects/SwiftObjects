@@ -68,21 +68,19 @@ public struct KeyValueCoding {
     case EmptyKeyPath
     case CannotTakeValueForKey(String)
   }
-  
+
+  // MARK: - KeyPath Operations
+
   public static func takeValue(_ v: Any?, forKeyPath p: String,
                                inObject o: Any?) throws
   {
-    #if swift(>=3.2)
-      let path = p.split(separator: ".").map(String.init)
-    #else
-      let path = p.characters.split(separator: ".").map { String($0) }
-    #endif
+    let path = p.split(separator: ".").map(String.init)
     try takeValue(v, forKeyPath: path, inObject: o)
   }
+
   public static func takeValue(_ v: Any?, forKeyPath p: [ String ],
                                inObject o: Any?) throws
   {
-    // TBD
     guard !p.isEmpty else { throw Error.EmptyKeyPath }
     guard let o = o  else { return } // no-op
     
@@ -94,11 +92,7 @@ public struct KeyValueCoding {
   }
 
   public static func value(forKeyPath p: String, inObject o: Any?) -> Any? {
-    #if swift(>=3.2)
-      let path = p.split(separator: ".").map(String.init)
-    #else
-      let path = p.characters.split(separator: ".").map { String($0) }
-    #endif
+    let path = p.split(separator: ".").map(String.init)
     return value(forKeyPath: path, inObject: o)
   }
   
@@ -110,6 +104,8 @@ public struct KeyValueCoding {
     }
     return cursor
   }
+
+  // MARK: - Single Key Operations
 
   public static func takeValue(_ v: Any?, forKey k: String,
                                inObject o: Any?) throws

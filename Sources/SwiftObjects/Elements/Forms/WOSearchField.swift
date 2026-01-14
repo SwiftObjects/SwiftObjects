@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 15.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -56,7 +56,9 @@ open class WOSearchField : WOTextField {
   let results     : WOAssociation?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     incremental = bindings.removeValue(forKey: "incremental")
     placeholder = bindings.removeValue(forKey: "placeholder")
     autosave    = bindings.removeValue(forKey: "autosave")

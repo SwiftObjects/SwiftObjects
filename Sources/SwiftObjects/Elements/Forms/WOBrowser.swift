@@ -66,7 +66,9 @@ open class WOBrowser : WOPopUpButton {
   let multiple : WOAssociation?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     size     = bindings.removeValue(forKey: "size")
     multiple = bindings.removeValue(forKey: "multiple")
     super.init(name: name, bindings: &bindings, template: template)

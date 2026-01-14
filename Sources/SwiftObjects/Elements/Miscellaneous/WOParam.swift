@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -24,7 +24,9 @@ public class WOParam : WOHTMLDynamicElement {
   let value : WOAssociation?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     self.name  = bindings.removeValue(forKey: "name")
     self.value = bindings.removeValue(forKey: "value")
 

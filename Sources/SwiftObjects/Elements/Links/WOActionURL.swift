@@ -39,7 +39,9 @@ open class WOActionURL : WOHTMLDynamicElement {
   let template : WOElement?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     link = WOLinkGenerator.linkGenerator(for: &bindings)
     self.template = template
     

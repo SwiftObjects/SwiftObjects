@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 15.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /*
@@ -39,7 +39,9 @@ open class WOSetHeader : WOHTMLDynamicElement {
   let addToExisting : WOAssociation?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     object        = bindings.removeValue(forKey: "object")
     value         = bindings.removeValue(forKey: "value")
     addToExisting = bindings.removeValue(forKey: "addToExisting")

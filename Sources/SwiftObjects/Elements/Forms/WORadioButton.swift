@@ -51,7 +51,9 @@ open class WORadioButton : WOInput {
   let checked   : WOAssociation?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     selection = bindings.removeValue(forKey: "selection")
     checked   = bindings.removeValue(forKey: "checked")
     super.init(name: name, bindings: &bindings, template: template)

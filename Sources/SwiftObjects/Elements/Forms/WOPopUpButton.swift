@@ -72,7 +72,9 @@ open class WOPopUpButton : WOInput {
   let template          : WOElement?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     list               = bindings.removeValue(forKey: "list")
     item               = bindings.removeValue(forKey: "item")
     selection          = bindings.removeValue(forKey: "selection")

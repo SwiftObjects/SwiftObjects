@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 15.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -67,7 +67,9 @@ open class WOCheckBox : WOInput {
   let safeGuard : WOAssociation?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     selection = bindings.removeValue(forKey: "selection")
     checked   = bindings.removeValue(forKey: "checked")
     safeGuard = bindings.removeValue(forKey: "safeGuard")

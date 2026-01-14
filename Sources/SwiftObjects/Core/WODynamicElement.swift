@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -35,8 +35,8 @@ open class WODynamicElement : WOElement, SmartDescription {
   var otherTagString : WOAssociation?
   var extra          : [ String : WOAssociation ]?
   
-  public required init(name: String, bindings: inout Bindings,
-                       template: WOElement?)
+  public required init(name: String = "", bindings: inout Bindings,
+                       template: WOElement? = nil)
   {
   }
   

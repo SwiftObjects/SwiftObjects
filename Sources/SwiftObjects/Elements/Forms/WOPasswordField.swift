@@ -51,7 +51,9 @@ open class WOPasswordField : WOInput {
   open var inputType : String { return "text" }
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     size = bindings.removeValue(forKey: "size")
     super.init(name: name, bindings: &bindings, template: template)
   }

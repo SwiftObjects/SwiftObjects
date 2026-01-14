@@ -56,7 +56,9 @@ open class WOJavaScript : WOHTMLDynamicElement {
   let template      : WOElement?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     scriptFile    = bindings.removeValue(forKey: "scriptFile")
     scriptString  = bindings.removeValue(forKey: "scriptString")
     hideInComment = bindings.removeValue(forKey: "hideInComment")

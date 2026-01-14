@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -48,7 +48,9 @@ open class WOHTMLElementAttributes : WODynamicElement {
   let dynClasses : [ String : WOAssociation ]? /* all .class bindings */
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     style = bindings.removeValue(forKey: "style")
     clazz = bindings.removeValue(forKey: "class")
     

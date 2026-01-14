@@ -21,7 +21,9 @@ open class WOSwitchComponent : WOHTMLDynamicElement {
   let bindings      : Bindings
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     componentName = bindings.removeValue(forKey: "componentName")
     self.template = template
     

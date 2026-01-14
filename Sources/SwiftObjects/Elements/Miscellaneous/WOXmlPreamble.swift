@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -36,7 +36,9 @@ public class WOXmlPreamble : WOHTMLDynamicElement {
   let template   : WOElement?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     version    = bindings.removeValue(forKey: "version")
               ?? WOXmlPreamble.versionAssoc
     encoding   = bindings.removeValue(forKey: "encoding")

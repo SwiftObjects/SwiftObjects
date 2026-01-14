@@ -61,7 +61,9 @@ open class WOHyperlink : WOHTMLDynamicElement {
   let coreAttributes       : WOElement?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     id                   = bindings.removeValue(forKey: "id")
     target               = bindings.removeValue(forKey: "target")
     disabled             = bindings.removeValue(forKey: "disabled")

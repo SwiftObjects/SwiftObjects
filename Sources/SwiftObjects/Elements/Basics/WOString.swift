@@ -59,7 +59,9 @@ open class WOString : WOHTMLDynamicElement {
   let coreAttributes : WOElement?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     value          = bindings.removeValue(forKey: "value")
     valuePattern   = bindings.removeValue(forKey: "%value")
     escapeHTML     = bindings.removeValue(forKey: "escapeHTML")

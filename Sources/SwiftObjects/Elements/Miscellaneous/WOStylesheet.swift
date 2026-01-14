@@ -56,7 +56,9 @@ open class WOStylesheet : WOHTMLDynamicElement {
   let template      : WOElement?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     cssFile       = bindings.removeValue(forKey: "cssFile")
     cssResource   = bindings.removeValue(forKey: "cssResource")
     cssString     = bindings.removeValue(forKey: "cssString")

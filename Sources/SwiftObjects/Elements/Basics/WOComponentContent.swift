@@ -63,7 +63,9 @@ open class WOComponentContent : WODynamicElement {
   let fragmentID : WOAssociation?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     fragmentID = bindings.removeValue(forKey: "fragmentID")
     super.init(name: name, bindings: &bindings, template: template)
   }

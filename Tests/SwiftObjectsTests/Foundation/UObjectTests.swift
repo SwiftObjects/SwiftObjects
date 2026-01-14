@@ -174,53 +174,41 @@ class UObjectTests: XCTestCase {
   }
 
 
-  // MARK: - isEqual Tests
-  //
-  // Note: The current isEqual implementation has a bug where non-nil values
-  // always return false due to incorrect logic on line 70 of UObject.swift:
-  //   `if lhs != nil || rhs != nil { return false }`
-  // This should be `if lhs == nil || rhs == nil { return false }`.
-  // These tests document the actual (buggy) behavior.
+  // MARK: - eq() Tests
 
-  func testIsEqualBothNil() {
-    XCTAssertTrue(UObject.isEqual(nil, nil))
+  func testEqBothNil() {
+    XCTAssertTrue(eq(nil as Any?, nil as Any?))
   }
 
-  func testIsEqualLeftNilRightValue() {
-    XCTAssertFalse(UObject.isEqual(nil, "value"))
+  func testEqLeftNilRightValue() {
+    XCTAssertFalse(eq(nil as Any?, "value"))
   }
 
-  func testIsEqualLeftValueRightNil() {
-    XCTAssertFalse(UObject.isEqual("value", nil))
+  func testEqLeftValueRightNil() {
+    XCTAssertFalse(eq("value", nil as Any?))
   }
 
-  func testIsEqualInts() {
-    // BUG: Returns false due to incorrect logic in isEqual
-    XCTAssertFalse(UObject.isEqual(42, 42))
-    XCTAssertFalse(UObject.isEqual(42, 43))
+  func testEqInts() {
+    XCTAssertTrue(eq(42 as Any?, 42 as Any?))
+    XCTAssertFalse(eq(42 as Any?, 43 as Any?))
   }
 
-  func testIsEqualStrings() {
-    // BUG: Returns false due to incorrect logic in isEqual
-    XCTAssertFalse(UObject.isEqual("hello", "hello"))
-    XCTAssertFalse(UObject.isEqual("hello", "world"))
+  func testEqStrings() {
+    XCTAssertTrue(eq("hello" as Any?, "hello" as Any?))
+    XCTAssertFalse(eq("hello" as Any?, "world" as Any?))
   }
 
-  func testIsEqualMixedTypes() {
-    // BUG: Returns false due to incorrect logic in isEqual
-    XCTAssertFalse(UObject.isEqual(42, "42"))
+  func testEqMixedTypes() {
+    XCTAssertFalse(eq(42 as Any?, "42" as Any?))
   }
 
-  func testIsEqualFallbackStringComparison() {
-    // BUG: Never reaches fallback due to incorrect logic in isEqual
-    class CustomObject: CustomStringConvertible {
-      var description: String { "custom" }
-    }
-    let obj1 = CustomObject()
-    let obj2 = CustomObject()
-
-    // Returns false due to bug, never reaches string comparison
-    XCTAssertFalse(UObject.isEqual(obj1, obj2))
+  func testEqOptionals() {
+    let a: String? = "hello"
+    let b: String? = "hello"
+    let c: String? = nil
+    XCTAssertTrue(eq(a, b))
+    XCTAssertFalse(eq(a, c))
+    XCTAssertTrue(eq(c, nil))
   }
 
 
@@ -283,14 +271,13 @@ class UObjectTests: XCTestCase {
     ( "testIntValueFromStringInvalid",     testIntValueFromStringInvalid     ),
     ( "testIntValueFromNil",               testIntValueFromNil               ),
     ( "testIntValueFromStringOptional",    testIntValueFromStringOptional    ),
-    ( "testIsEqualBothNil",                testIsEqualBothNil                ),
-    ( "testIsEqualLeftNilRightValue",      testIsEqualLeftNilRightValue      ),
-    ( "testIsEqualLeftValueRightNil",      testIsEqualLeftValueRightNil      ),
-    ( "testIsEqualInts",                   testIsEqualInts                   ),
-    ( "testIsEqualStrings",                testIsEqualStrings                ),
-    ( "testIsEqualMixedTypes",             testIsEqualMixedTypes             ),
-    ( "testIsEqualFallbackStringComparison",
-                                         testIsEqualFallbackStringComparison ),
+    ( "testEqBothNil",             testEqBothNil             ),
+    ( "testEqLeftNilRightValue",   testEqLeftNilRightValue   ),
+    ( "testEqLeftValueRightNil",   testEqLeftValueRightNil   ),
+    ( "testEqInts",                testEqInts                ),
+    ( "testEqStrings",             testEqStrings             ),
+    ( "testEqMixedTypes",          testEqMixedTypes          ),
+    ( "testEqOptionals",           testEqOptionals           ),
     ( "testGetSimpleName",                 testGetSimpleName                 ),
     ( "testGetSimpleNameInt",              testGetSimpleNameInt              ),
     ( "testGetSimpleNameString",           testGetSimpleNameString           ),

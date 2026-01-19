@@ -85,10 +85,11 @@ public struct KeyValueCoding {
     guard let o = o  else { return } // no-op
     
     if p.count == 1 { return try takeValue(v, forKey: p[0], inObject: o) }
+    guard let last = p.last else { fatalError("Key path was empty") }
     
-    let target = value(forKeyPath: Array(p[0..<(p.count - 1)]), inObject: o)
+    let target = value(forKeyPath: p.dropLast(), inObject: o)
     guard let t = target else { return } // no-op
-    try takeValue(v, forKey: p[p.count - 1], inObject: t)
+    try takeValue(v, forKey: last, inObject: t)
   }
 
   public static func value(forKeyPath p: String, inObject o: Any?) -> Any? {

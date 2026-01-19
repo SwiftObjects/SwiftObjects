@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -62,7 +62,9 @@ open class WOForm : WOHTMLDynamicElement {
   let template        : WOElement?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     id              = bindings.removeValue(forKey: "id");
     target          = bindings.removeValue(forKey: "target");
     method          = bindings.removeValue(forKey: "method");

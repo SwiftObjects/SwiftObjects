@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -23,9 +23,10 @@
  *
  * Further 'extra bindings' can be `%(key)s` style patterns IF
  * the value starts with a % sign. Example:
- *
- *     <wo:span varpat:id="employee-%(person.id)s">...<wo:span>
- *     <wo:a varpat:onclick="alert('clicked %(person.name)s');" />
+ * ```wox
+ * <wo:span varpat:id="employee-%(person.id)s">...<wo:span>
+ * <wo:a varpat:onclick="alert('clicked %(person.name)s');" />
+ * ```
  *
  * Those patterns are resolved using the KeyValueStringFormatter.format()
  * function.
@@ -35,8 +36,8 @@ open class WODynamicElement : WOElement, SmartDescription {
   var otherTagString : WOAssociation?
   var extra          : [ String : WOAssociation ]?
   
-  public required init(name: String, bindings: inout Bindings,
-                       template: WOElement?)
+  public required init(name: String = "", bindings: inout Bindings,
+                       template: WOElement? = nil)
   {
   }
   
@@ -174,5 +175,17 @@ open class WODynamicElement : WOElement, SmartDescription {
       guard let assoc = bindings[i + 1] as? WOAssociation else { continue }
       appendBindingToDescription(&ms, name, assoc)
     }
+  }
+}
+
+public extension WODynamicElement {
+  
+  @inlinable
+  convenience init(name: String = "", bindings: Bindings,
+                   template: WOElement? = nil)
+  {
+    var modifiableBindings = bindings
+    self.init(name: name, bindings: &modifiableBindings, template: template)
+    assert(modifiableBindings.isEmpty, "Not all bindings got consumed?!")
   }
 }

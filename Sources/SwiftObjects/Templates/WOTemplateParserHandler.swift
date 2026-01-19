@@ -22,7 +22,7 @@ public protocol WOTemplateParserHandler : AnyObject {
               error: Swift.Error?)
 
   func parser(_ parser: WOTemplateParser, dynamicElementFor name: String,
-              attributes: [ String : String ], children: [ WOElement ])
+              attributes: [ String : String ], children: [ WOElement ]) throws
        -> WOElement?
 }
 
@@ -39,7 +39,7 @@ public extension WOTemplateParserHandler { // default imp
               with elements : [ WOElement ], error: Swift.Error?) {}
   
   func parser(_ parser: WOTemplateParser, dynamicElementFor name: String,
-              attributes: [ String : String ], children: [ WOElement ])
+              attributes: [ String : String ], children: [ WOElement ]) throws
               -> WOElement?
   {
     return nil

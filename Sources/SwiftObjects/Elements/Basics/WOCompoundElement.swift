@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 open class WOCompoundElement : WODynamicElement {
@@ -18,7 +18,9 @@ open class WOCompoundElement : WODynamicElement {
   }
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     if let template = template { children = [ template ]}
     else { children = [] }
     super.init(name: name, bindings: &bindings, template: nil)

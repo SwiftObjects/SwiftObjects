@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 15.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -76,7 +76,9 @@ open class WOGenericElement : WOHTMLDynamicElement {
   let log : WOLogger = WOPrintLogger.shared
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     tagName  = bindings.removeValue(forKey: "elementName")
     omitTags = bindings.removeValue(forKey: "omitTags")
     

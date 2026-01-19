@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018-2021 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -41,7 +41,9 @@ open class WOConditional : WODynamicElement {
   let template  : WOElement? // not really optional, makes no sense?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     let condition = WOComplexCondition(bindings: &bindings)
     self.condition = condition.optimize()
     

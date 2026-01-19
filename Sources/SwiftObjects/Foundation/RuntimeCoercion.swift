@@ -3,89 +3,19 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 30.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
-import Runtime
-
-fileprivate protocol OptionalProtocol {
-  func isSome() -> Bool
-  func unwrap() -> Any
-}
-
-extension Optional : OptionalProtocol {
-  func isSome() -> Bool {
-    switch self {
-      case .none: return false
-      case .some: return true
-    }
-  }
-  func unwrap() -> Any {
-    switch self {
-      case .none: preconditionFailure("trying to unwrap nil")
-      case .some(let unwrapped): return unwrapped
-    }
-  }
-}
-
-extension Runtime.PropertyInfo {
-
-  public func zget(from object: Any) throws -> Any? {
-    /*
-       1> let s : String? = "Hello"
-       s: String? = "Hello"
-       2> let a : Any = s
-       a: Any = { .. }
-       3> let o = a as Any?
-       o: Any? = some { .. }
-       4> print("o: \(o)")
-       o: Optional(Optional("Hello"))
-    */
-    // There MUST be a way to do this simpler :-)
-    let v = try get(from: object)
-    guard let ov = v as? OptionalProtocol else { return v }
-    guard ov.isSome() else { return nil }
-    return ov.unwrap()
-  }
-
-  /// Do type coercion
-  public func zset<TObject>(value: Any, on object: inout TObject) throws {
-    if Swift.type(of: value) == self.type {
-      return try set(value: value, on: &object)
-    }
-    
-    let coercedValue = try coerce(value: value, to: self.type)
-    assert(Swift.type(of: coercedValue) == self.type)
-    return try set(value: coercedValue, on: &object)
-  }
-  
-  func coerce(value: Any, to type: Any.Type) throws -> Any {
-    // Again, pretty lame ;-) Suggestions are welcome! @helje5
-    
-    // Note: Optionals are a little lame here due to 4.0 support
-    
-    if let ct = type as? RuntimeCoercion.Type {
-      return try ct.coerce(runtimeValue: value)
-    }
-    
-    throw CoercionError.invalidType(got: Swift.type(of: value),
-                                    expected: type)
-  }
-  
-  func coerceToString(value: Any?) -> String {
-    if let s = value as? String           { return s }
-    if let s = value as? Optional<String> { return s ?? "" }
-    return String(describing: value)
-  }
-  enum CoercionError : Swift.Error {
-    case invalidType(got: Any.Type, expected: Any.Type)
-  }
-}
+// MARK: - RuntimeCoercion Protocol
 
 protocol RuntimeCoercion {
   
   static func coerce(runtimeValue v: Any?) throws -> Self
   
+}
+
+enum CoercionError : Swift.Error {
+  case invalidType(got: Any.Type, expected: Any.Type)
 }
 
 extension String : RuntimeCoercion {
@@ -151,9 +81,7 @@ extension Optional : RuntimeCoercion {
         return (UObject.boolValue(v) as Bool?) as! Optional<Wrapped>
       
       default:
-        throw Runtime.PropertyInfo
-                .CoercionError.invalidType(got: Swift.type(of: v),
-                                           expected: self)
+        throw CoercionError.invalidType(got: Swift.type(of: v), expected: self)
     }
 
   }

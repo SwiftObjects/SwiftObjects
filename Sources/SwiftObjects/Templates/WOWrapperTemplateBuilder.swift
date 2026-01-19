@@ -141,10 +141,10 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
    * @param _attrs - a `Dictionary<String, String>` as parsed from HTML
    * @return a `Dictionary<String, WOAssociation>`
    */
-  func buildBindings(for attributes: [ String : String ]) -> Bindings {
+  func buildBindings(for attributes: [ String : String ]) throws -> Bindings {
     var bindings = Bindings()
     bindings.reserveCapacity(attributes.count)
-    
+
     for ( k, value ) in attributes {
       #if swift(>=5)
         let sepIdx = k.firstIndex(of: ":")
@@ -154,8 +154,8 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
       if let pm = sepIdx {
         let prefix = String(k[k.startIndex..<pm])
         let newKey = String(k[k.index(after: pm)..<k.endIndex])
-        
-        bindings[newKey] = WOAssociationFactory
+
+        bindings[newKey] = try WOAssociationFactory
                        .associationForPrefix(prefix, name: newKey, value: value)
       }
       else {
@@ -167,7 +167,7 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
          */
         // TODO: support escaping, e.g.: `\$hello` to get a plain `$hello`
         // TODO: OGNL
-        
+
         /* well, we do not convert '$(', because this is usually some
          * prototype const attribute, eg:
          *    before="$('progress').show()"
@@ -176,14 +176,14 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
         if value.hasPrefix("$") && !value.hasPrefix("$(") {
           let idx  = value.index(after: value.startIndex)
           let path = String(value[idx..<value.endIndex])
-          bindings[k] = WOAssociationFactory.associationWithKeyPath(path)
+          bindings[k] = try WOAssociationFactory.associationWithKeyPath(path)
         }
         else {
           bindings[k] = WOAssociationFactory.associationWithValue(value)
         }
       }
     }
-    
+
     return bindings
   }
   
@@ -200,13 +200,13 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
    */
   open func parser(_ parser: WOTemplateParser, dynamicElementFor name: String,
                    attributes: [ String : String ], children: [ WOElement ])
-            -> WOElement?
+            throws -> WOElement?
   {
     // TODO: split up
     guard !name.isEmpty else {
       return WOStaticHTMLElement("[ERROR: unnamed dynamic element]")
     }
-    
+
     var cls      : WODynamicElement.Type?
     var bindings : Bindings
     let cname    : String?
@@ -222,12 +222,12 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
       // if nil, most likely a WOComponent
       cls = lookupDynamicElementClass(entry.componentClassName)
       cname = cls != nil ? nil : entry.componentClassName
-      
+
       if entry.bindings.isEmpty {
-        bindings = buildBindings(for: attributes)
+        bindings = try buildBindings(for: attributes)
       }
       else {
-        let tagAttrs = buildBindings(for: attributes)
+        let tagAttrs = try buildBindings(for: attributes)
         bindings = entry.bindings.merging(tagAttrs, uniquingKeysWith: { $1 })
       }
     }
@@ -240,7 +240,7 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
        * This will attempt to find the class 'WOString'. If it can't find the
        * class, it checks for aliases and HTML tags (generic elements).
        */
-      bindings = buildBindings(for: attributes)
+      bindings = try buildBindings(for: attributes)
       cls      = lookupDynamicElementClass(name)
       cname    = nil
       
@@ -299,7 +299,7 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
     if let cls = cls {
       let e = cls.init(name: name, bindings: &bindings, template: content)
       
-      element = hackNewElement(e, with: &bindings)
+      element = try hackNewElement(e, with: &bindings)
       
       if !bindings.isEmpty, let de = element as? WODynamicElement {
         de.setExtraAttributes(&bindings)
@@ -325,16 +325,16 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
    * @return a hacked element (or the original, if no hack was necessary)
    */
   func hackNewElement(_ original: WODynamicElement,
-                      with bindings: inout Bindings)
+                      with bindings: inout Bindings) throws
        -> WOElement
   {
     var element : WOElement = original
-    
+
     if let a = bindings.removeValue(forKey: "if") {
       var b : Bindings = [ "condition" : a ]
       element = WOConditional(name: "if-attr", bindings: &b, template: element)
     }
-    
+
     if let a = bindings.removeValue(forKey: "ifnot") {
       var b : Bindings = [
         "condition" : a,
@@ -343,11 +343,11 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
       element = WOConditional(name: "ifnot-attr", bindings: &b,
                               template: element)
     }
-    
+
     if let a = bindings.removeValue(forKey: "foreach") {
       var b : Bindings = [
         "list" : a,
-        "item" : WOAssociationFactory.associationWithKeyPath("item")!
+        "item" : try WOAssociationFactory.associationWithKeyPath("item")
       ]
       element = WOConditional(name: "foreach-attr", bindings: &b,
                               template: element)

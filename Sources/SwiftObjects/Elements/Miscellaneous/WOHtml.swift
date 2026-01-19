@@ -47,7 +47,9 @@ public class WOHtml : WOHTMLDynamicElement {
   let template : WOElement?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     doctype = bindings.removeValue(forKey: "doctype")
            ?? bindings.removeValue(forKey: "type")
            ?? WOHtml.quirksTypeAssoc

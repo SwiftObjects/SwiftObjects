@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 14.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -13,21 +13,19 @@
  * and EODataSource's (fetchObjects will get called).
  *
  * Bindings:
- * ```
- *   list       [in]  - WOListWalkable
- *   count      [in]  - int
- *   item       [out] - object
- *   index      [out] - int
- *   index1     [out] - int (like index, but starts at 1, not 0)
- *   startIndex [in]  - int
- *   identifier [in]  - string (TODO: currently unescaped)
- *   sublist    [in]  - WOListWalkable
- *   isEven     [out] - boolean
- *   isFirst    [out] - boolean
- *   isLast     [out] - boolean
- *   filter     [in]  - EOQualifier/String
- *   sort       [in]  - EOSortOrdering/EOSortOrdering[]/Comparator/String/bool
- * ```
+ * - list       [in]  - WOListWalkable
+ * - count      [in]  - int
+ * - item       [out] - object
+ * - index      [out] - int
+ * - index1     [out] - int (like index, but starts at 1, not 0)
+ * - startIndex [in]  - int
+ * - identifier [in]  - string (TODO: currently unescaped)
+ * - sublist    [in]  - WOListWalkable
+ * - isEven     [out] - boolean
+ * - isFirst    [out] - boolean
+ * - isLast     [out] - boolean
+ * - filter     [in]  - EOQualifier/String
+ * - sort       [in]  - EOSortOrdering/EOSortOrdering[]/Comparator/String/bool
  */
 public protocol WOListWalker {
   
@@ -70,11 +68,7 @@ func WOMakeListIterator<T: Collection>(_ list: T)
     guard let v = typedIterator.next() else { return nil }
     return v as Any
   }
-  #if swift(>=4.1)
-    return ( count: list.count, iterator: erasedIterator )
-  #else
-    return ( count: list.count as! Int, iterator: erasedIterator )
-  #endif
+  return ( count: list.count, iterator: erasedIterator )
 }
 
 // TODO: what else would we want here?
@@ -128,10 +122,10 @@ public enum WOListWalkerFactory {
      */
     if let a = list, a.isValueConstant, let s = a.value(in: nil) as? String {
       // TODO: support Plists/json strings ( list="(a,b,c)" )
-      bindings["list"] = WOAssociationFactory.associationWithKeyPath(s)
+      bindings["list"] = try? WOAssociationFactory.associationWithKeyPath(s)
     }
     if let a = item, a.isValueConstant, let s = a.value(in: nil) as? String {
-      bindings["item"] = WOAssociationFactory.associationWithKeyPath(s)
+      bindings["item"] = try? WOAssociationFactory.associationWithKeyPath(s)
     }
     
     

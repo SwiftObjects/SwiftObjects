@@ -9,7 +9,7 @@
  * Create HTML form radio buttons.
  *
  * Sample:
- * ```
+ * ```wod
  * Firstname: WORadioButton {
  *   name      = "products";
  *   value     = "iPhone";
@@ -18,32 +18,27 @@
  * ```
  *
  * Renders:
- * ```
- *   <input type="radio" name="products" value="iPhone" />
+ * ```html
+ * <input type="radio" name="products" value="iPhone" />
  * ```
  *
- * Bindings (WOInput):<pre>
- * ```
- *   id         [in]  - string
- *   name       [in]  - string
- *   value      [io]  - object
- *   readValue  [in]  - object (different value for generation)
- *   writeValue [out] - object (different value for takeValues)
- *   disabled   [in]  - boolean</pre>
- * ```
- * Bindings:<pre>
- * ```
- *   selection [io] - object
- *   checked   [io] - boolean</pre>
- * ```
+ * Bindings (WOInput):
+ * - id         [in]  - string
+ * - name       [in]  - string
+ * - value      [io]  - object
+ * - readValue  [in]  - object (different value for generation)
+ * - writeValue [out] - object (different value for takeValues)
+ * - disabled   [in]  - boolean
+ *
+ * Bindings:
+ * - selection [io] - object
+ * - checked   [io] - boolean
  *
  * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (e.g. `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (e.g. `<input class="selected">`)
  */
 open class WORadioButton : WOInput {
   
@@ -51,7 +46,9 @@ open class WORadioButton : WOInput {
   let checked   : WOAssociation?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     selection = bindings.removeValue(forKey: "selection")
     checked   = bindings.removeValue(forKey: "checked")
     super.init(name: name, bindings: &bindings, template: template)
@@ -148,7 +145,7 @@ open class WORadioButton : WOInput {
     else if let selection = selection {
       /* compare selection with value */
       let s = selection.value(in: cursor)
-      if UObject.isEqual(v, s) {
+      if eq(v, s) {
         try response.appendAttribute("checked",
                        context.generateEmptyAttributes ? nil : "checked")
       }

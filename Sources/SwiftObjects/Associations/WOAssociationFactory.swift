@@ -11,12 +11,18 @@
 public enum WOAssociationFactory {
   // This should be `public extension WOAssociation {}`, but you can't
   // call static methods on a protocol type in Swift ...
-  
+
   static let log = WOPrintLogger.shared
-  
-  public static func associationWithKeyPath(_ path: String) -> WOAssociation? {
-    guard !path.isEmpty else { return nil }
-    
+
+  public enum AssociationError: Swift.Error {
+    case emptyKeyPath
+  }
+
+  public static func associationWithKeyPath(_ path: String) throws
+                      -> WOAssociation
+  {
+    guard !path.isEmpty else { throw AssociationError.emptyKeyPath }
+
     return path.contains(".")
                ? WOKeyPathAssociation(path)
                : WOKeyAssociation(path)
@@ -55,17 +61,17 @@ public enum WOAssociationFactory {
    * @param _value  - the value which needs to be put into the context
    */
   public static func associationForPrefix(_ prefix: String, name: String,
-                                          value: String) -> WOAssociation?
+                                          value: String) throws
+                      -> WOAssociation?
   {
     switch prefix {
-      case "var":   return associationWithKeyPath(value)
+      case "var":   return try associationWithKeyPath(value)
       case "const": return associationWithValue(value)
       case "label": return WOLabelAssocation(key: value)
-      
+
       case "not":
         // TBD: inspect value for common _static_ values, eg 'true'?
-        guard let a = associationWithKeyPath(value) else { return nil }
-        return WONegateAssocation(a)
+        return WONegateAssocation(try associationWithKeyPath(value))
       
       case "plist":
         /* Allow arrays like this: list="(a,b,c)",

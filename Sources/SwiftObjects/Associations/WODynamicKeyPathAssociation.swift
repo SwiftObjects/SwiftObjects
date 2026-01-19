@@ -14,9 +14,9 @@ public class WODynamicKeyPathAssociation : WOAssociation, SmartDescription {
   
   public let keyAssociation : WOAssociation
   
-  public init(_ keyPath: String) {
+  public init(_ keyPath: String) throws {
     self.keyAssociation =
-      WOAssociationFactory.associationWithKeyPath(keyPath)!
+      try WOAssociationFactory.associationWithKeyPath(keyPath)
   }
   public init(_ keyAssociation: WOAssociation) {
     self.keyAssociation = keyAssociation

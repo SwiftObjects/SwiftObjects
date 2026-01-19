@@ -9,7 +9,7 @@
  * Create HTML form single-selection popups.
  *
  * Sample:
- * ```
+ * ```wod
  * Country: WOPopUpButton {
  *   name      = "country";
  *   list      = ( "UK", "US", "Germany" );
@@ -18,43 +18,38 @@
  * }
  * ```
  * Renders:
- * ```
- *   <select name="country">
- *     <option value="UK">UK</option>
- *     <option value="US" selected>US</option>
- *     <option value="Germany">Germany</option>
- *     [sub-template]
- *   </select>
+ * ```html
+ * <select name="country">
+ *   <option value="UK">UK</option>
+ *   <option value="US" selected>US</option>
+ *   <option value="Germany">Germany</option>
+ *   [sub-template]
+ * </select>
  * ```
  *
- * Bindings (WOInput):
- * ```
- *   id         [in]  - string
- *   name       [in]  - string
- *   value      [io]  - object
- *   readValue  [in]  - object (different value for generation)
- *   writeValue [out] - object (different value for takeValues)
- *   disabled   [in]  - boolean
- * ```
+ * Bindings (``WOInput``):
+ * - id         [in]  - string
+ * - name       [in]  - string
+ * - value      [io]  - object
+ * - readValue  [in]  - object (different value for generation)
+ * - writeValue [out] - object (different value for takeValues)
+ * - disabled   [in]  - boolean
+ *
  * Bindings:
- * ```
- *   list              [in]  - List
- *   item              [out] - object
- *   selection         [out] - object
- *   string            [in]  - String
- *   noSelectionString [in]  - String
- *   selectedValue     [out] - String
- *   escapeHTML        [in]  - boolean
- *   itemGroup
- * ```
+ * - list              [in]  - List
+ * - item              [out] - object
+ * - selection         [out] - object
+ * - string            [in]  - String
+ * - noSelectionString [in]  - String
+ * - selectedValue     [out] - String
+ * - escapeHTML        [in]  - boolean
+ * - itemGroup
  *
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (e.g. `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (e.g. `<input class="selected">`)
  */
 open class WOPopUpButton : WOInput {
   
@@ -72,7 +67,9 @@ open class WOPopUpButton : WOInput {
   let template          : WOElement?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     list               = bindings.removeValue(forKey: "list")
     item               = bindings.removeValue(forKey: "item")
     selection          = bindings.removeValue(forKey: "selection")
@@ -316,14 +313,14 @@ open class WOPopUpButton : WOInput {
         #if true // oh man, no proper equal in Swift :-) BAD BAD BAD
           if byVal {
             if let s = sel { // so bad, so wrong
-              isSelected = UObject.isEqual(vs, s)
+              isSelected = eq(vs, s)
             }
             else {
               isSelected = false // wrong, selection could be nil and match
             }
           }
           else { // OMG
-            isSelected = UObject.isEqual(sel, object)
+            isSelected = eq(sel, object)
           }
         #else
           if sel == (byVal ? v : object) { // Note: also matches null==null

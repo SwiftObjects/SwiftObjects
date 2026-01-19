@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 15.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.CharacterSet
@@ -72,7 +72,9 @@ open class WOTextField : WOInput {
   open var inputType : String { return "text" }
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     readonly  = bindings.removeValue(forKey: "readonly")
     size      = bindings.removeValue(forKey: "size")
     trim      = bindings.removeValue(forKey: "trim")

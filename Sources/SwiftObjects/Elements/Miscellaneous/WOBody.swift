@@ -36,7 +36,9 @@ open class WOBody : WOHTMLDynamicElement {
   let template : WOElement?
   
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     link = WOLinkGenerator.resourceLinkGenerator(keyedOn: "src", for: &bindings)
     self.template = template
     super.init(name: name, bindings: &bindings, template: template)

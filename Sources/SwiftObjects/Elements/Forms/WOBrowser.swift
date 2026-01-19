@@ -11,7 +11,7 @@
  * but a select-list.
  *
  * Sample:
- * ```
+ * ```wod
  * Country: WOBrowser {
  *   name      = "country";
  *   list      = ( "UK", "US", "Germany" );
@@ -20,45 +20,40 @@
  * }
  * ```
  * Renders:
- * ```
- *   <select name="country">
- *     <option value="UK">UK</option>
- *     <option value="US" selected&gt;US</option>
- *     <option value="Germany">Germany</option>
- *     [sub-template]
- *   </select>
+ * ```html
+ * <select name="country">
+ *   <option value="UK">UK</option>
+ *   <option value="US" selected&gt;US</option>
+ *   <option value="Germany">Germany</option>
+ *   [sub-template]
+ * </select>
  * ```
  *
- * Bindings (WOInput):
- * ```
- *   id         [in]  - string
- *   name       [in]  - string
- *   value      [io]  - object
- *   readValue  [in]  - object (different value for generation)
- *   writeValue [out] - object (different value for takeValues)
- *   disabled   [in]  - boolean
- * ```
+ * Bindings (``WOInput``):
+ * - id         [in]  - string
+ * - name       [in]  - string
+ * - value      [io]  - object
+ * - readValue  [in]  - object (different value for generation)
+ * - writeValue [out] - object (different value for takeValues)
+ * - disabled   [in]  - boolean
+ *
  * Bindings:
- * ```
- *   list              [in]  - List
- *   item              [out] - object
- *   selection         [out] - object or List of objects (multiple)
- *   size              [in]  - int (number of slots in UI element)
- *   string            [in]  - String
- *   multiple          [in]  - boolean (whether multi-selection is allowed)
- *   noSelectionString [in]  - String
- *   selectedValue     [out] - String
- *   escapeHTML        [in]  - boolean
- *   itemGroup
- * ```
+ * - list              [in]  - List
+ * - item              [out] - object
+ * - selection         [out] - object or List of objects (multiple)
+ * - size              [in]  - int (number of slots in UI element)
+ * - string            [in]  - String
+ * - multiple          [in]  - boolean (whether multi-selection is allowed)
+ * - noSelectionString [in]  - String
+ * - selectedValue     [out] - String
+ * - escapeHTML        [in]  - boolean
+ * - itemGroup
  *
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (e.g. `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (e.g. `<input class="selected">`)
  */
 open class WOBrowser : WOPopUpButton {
 
@@ -66,7 +61,9 @@ open class WOBrowser : WOPopUpButton {
   let multiple : WOAssociation?
 
   required
-  public init(name: String, bindings: inout Bindings, template: WOElement?) {
+  public init(name: String = "", bindings: inout Bindings,
+              template: WOElement? = nil)
+  {
     size     = bindings.removeValue(forKey: "size")
     multiple = bindings.removeValue(forKey: "multiple")
     super.init(name: name, bindings: &bindings, template: template)
@@ -378,14 +375,14 @@ open class WOBrowser : WOPopUpButton {
         else {
           if byVal {
             if let s = sel { // so bad, so wrong
-              isSelected = UObject.isEqual(vs, s)
+              isSelected = eq(vs, s)
             }
             else {
               isSelected = false // wrong, selection could be nil and match
             }
           }
           else { // OMG
-            isSelected = UObject.isEqual(sel, object)
+            isSelected = eq(sel, object)
           }
         }
         

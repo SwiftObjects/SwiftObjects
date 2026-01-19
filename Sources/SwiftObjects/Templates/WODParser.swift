@@ -312,10 +312,16 @@ open class WODParser : PropertyListParser {
             _ = reportError(.unexpectedNilValue)
             return nil
           }
-          guard let handler = self.handler else {
-            return WOAssociationFactory.associationWithKeyPath(value)
+          do {
+            guard let handler = self.handler else {
+              return try WOAssociationFactory.associationWithKeyPath(value)
+            }
+            return try handler.parser(self, associationForKeyPath: value)
           }
-          return handler.parser(self, associationForKeyPath: value)
+          catch {
+            _ = reportError(.associationError(error))
+            return nil
+          }
         }
     }
   }
@@ -334,6 +340,7 @@ open class WODParser : PropertyListParser {
     case duplicateElement(Int, name: String)
     case unexpectedNilValue
     case invalidParseResult
+    case associationError(Swift.Error)
   }
   
   /**

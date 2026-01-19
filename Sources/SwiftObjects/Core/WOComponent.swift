@@ -3,10 +3,8 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2020 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
-
-import Runtime
 
 /**
  * Subclasses of WOComponent are used to represent template based pages or
@@ -706,13 +704,12 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
 
   
   // MARK: - KVC
-  
-  lazy var typeInfo = try? Runtime.typeInfo(of: type(of: self))
-  
+
   open func takeValue(_ value : Any?, forKey k: String) throws {
     if variableDictionary[k] != nil {
       if let value = value { variableDictionary[k] = value }
       else { variableDictionary.removeValue(forKey: k) }
+      return
     }
     
     switch k {
@@ -726,35 +723,23 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
     if exposedActions[k] != nil {
       return try handleTakeValue(value, forUnboundKey: k)
     }
-    
-    if let ti = typeInfo, let prop = try? ti.property(named: k) {
-      var me = self // TBD
-      if let value = value { try prop.zset(value: value,        on: &me) }
-      else                 { try prop.zset(value: value as Any, on: &me) }
-      return
-    }
-    
+
+    if defaultTakeValueForKey(value, forKey: k) { return }
+
     variableDictionary[k] = value
   }
   
   open func value(forKey k: String) -> Any? {
-    if let v = variableDictionary[k] { return v }
-    
+    // Check exposedActions (special to WOComponent)
     if let a = exposedActions[k] {
-      do {
-        let actionResult = try a()
-        return actionResult
-      }
-      catch { // FIXME
-        log.error("KVC action failed:", k, "error:", error)
-        return nil
-      }
+      do    { return try a() }
+      catch { log.error("KVC action failed:", k, "error:", error); return nil }
     }
-    
+
+    // Handle computed/weak properties not found by typeInfo
     switch k {
-      case "context":         return context
+      case "context":         return context  // weak reference
       case "name":            return name
-      case "parentComponent": return parentComponent
       case "application":     return application
       case "hasSession":      return hasSession
       case "session":         return session
@@ -762,20 +747,8 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
       case "self":            return self
       default: break
     }
-    
-    guard let ti = typeInfo, let prop = try? ti.property(named: k) else {
-      return handleQueryWithUnboundKey(k)
-    }
-    
-    do {
-      // if this is an optional, we wrap it again
-      let v = try prop.zget(from: self)
-      return v
-    }
-    catch {
-      log.error("Failed to get KVC property:", k, error)
-      return nil
-    }
+
+    return defaultValueForKey(k)
   }
 
   

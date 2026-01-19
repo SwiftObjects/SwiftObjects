@@ -23,9 +23,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/apple/swift-nio.git",
              from: "2.92.1"),
-    .package(url: "https://github.com/wickwirew/Runtime.git",
-             from: "2.2.7"),
-    
+
     // just for the showcase
     .package(url: "https://github.com/SwiftWebResources/SemanticUI-Swift.git",
              from: "2.5.0"),
@@ -39,7 +37,6 @@ let package = Package(
               .product(name: "NIO",                 package: "swift-nio"),
               .product(name: "NIOHTTP1",            package: "swift-nio"),
               .product(name: "NIOFoundationCompat", package: "swift-nio"),
-              .product(name: "Runtime",             package: "Runtime"),
             ],
             exclude:
               fm.filesWithExtension("api", at: targetURL("SwiftObjects")),

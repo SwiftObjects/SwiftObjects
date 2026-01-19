@@ -11,7 +11,6 @@ import struct Foundation.Date
 import struct Foundation.TimeInterval
 import class  Foundation.UserDefaults
 import Synchronization
-import Runtime
 
 /**
  * This is the main entry class for Go web applications. You usually
@@ -638,38 +637,21 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   
   
   // MARK: - KVC
-  
-  lazy var typeInfo = try? Runtime.typeInfo(of: type(of: self))
-  
+
   open func value(forKey k: String) -> Any? {
+    // Handle computed properties not found by typeInfo
     switch k {
       case "name":                          return name
-      case "resourceManager":               return resourceManager
-      case "defaultRequestHandler":         return defaultRequestHandler
       case "registeredRequestHandlerKeys":  return registeredRequestHandlerKeys
       case "directActionRequestHandlerKey": return directActionRequestHandlerKey
       case "componentRequestHandlerKey":    return componentRequestHandlerKey
       case "resourceRequestHandlerKey":     return resourceRequestHandlerKey
-      case "sessionStore":                  return sessionStore
       case "refusesNewSessions":            return refusesNewSessions
       case "defaultSessionTimeOut":         return defaultSessionTimeOut
-      case "isPageRefreshOnBacktrackEnabled":
-        return isPageRefreshOnBacktrackEnabled
       default: break
     }
-    
-    guard let ti = typeInfo, let prop = try? ti.property(named: k) else {
-      return handleQueryWithUnboundKey(k)
-    }
-    do {
-      // if this is an optional, we wrap it again
-      let v = try prop.zget(from: self)
-      return v
-    }
-    catch {
-      log.error("Failed to get KVC property:", k, error)
-      return nil
-    }
+
+    return defaultValueForKey(k)
   }
 
   // MARK: - Description

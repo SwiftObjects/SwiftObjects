@@ -3,10 +3,10 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2021 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
-import class Foundation.NSObject
+import Synchronization
 
 public protocol KeyValueCodingType {
   
@@ -32,8 +32,30 @@ public protocol KeyValueCodingTargetValue : AnyObject {
 
 public extension KeyValueCodingType {
 
+  /**
+   * Standard implementation that checks ExtraVariables, does typeInfo lookup,
+   * and calls handleQueryWithUnboundKey. Custom implementations can call this
+   * after handling their special cases.
+   */
+  func defaultValueForKey(_ k: String) -> Any? {
+    // Check ExtraVariables first
+    if let ev = self as? ExtraVariables,
+       let v = ev.variableDictionary[k] { return v }
+
+    // Do typeInfo lookup
+    let ti = typeInfo(of: self)
+    if ti.kind == .class || ti.kind == .struct {
+      if let prop = ti.property(named: k) {
+        return prop.get(from: self)
+      }
+    }
+
+    // Not found
+    return handleQueryWithUnboundKey(k)
+  }
+
   func value(forKey k: String) -> Any? {
-    return KeyValueCoding.defaultValue(forKey: k, inObject: self)
+    return defaultValueForKey(k)
   }
   
   func values(forKeys keys: [String]) -> [ String : Any ] {
@@ -50,6 +72,22 @@ public extension KeyValueCodingType {
 
 public extension MutableKeyValueCodingType {
 
+  /**
+   * Standard implementation using typeInfo for direct property access.
+   * Returns true if property was found and set, false otherwise.
+   * Custom implementations can call this after handling their special cases.
+   */
+  @discardableResult
+  func defaultTakeValueForKey(_ value: Any?, forKey k: String) -> Bool {
+    let ti = typeInfo(of: self)
+    guard ti.kind == .class, let prop = ti.property(named: k) else {
+      return false
+    }
+    var me = self
+    prop.setValue(value, on: &me)
+    return true
+  }
+
   func takeValuesForKeys(_ values : [ String : Any? ]) throws {
     for ( key, value ) in values {
       try takeValue(value, forKey: key)
@@ -57,7 +95,8 @@ public extension MutableKeyValueCodingType {
   }
 }
 
-import Runtime // just for takeValueForKey
+
+// MARK: - KeyValueCoding
 
 public struct KeyValueCoding {
   
@@ -117,28 +156,29 @@ public struct KeyValueCoding {
     else if let target = value(forKey: k, inObject: o)
                          as? KeyValueCodingTargetValue
     {
-      if let v = v {
-        try target.setValue(v)
+      try target.setValue(v)
+    }
+    else if let o = o {
+      // Use SwiftRuntime for direct property access
+      let ti = typeInfo(of: o)
+      guard ti.kind == .class || ti.kind == .struct,
+            let prop = ti.property(named: k)
+      else {
+        throw Error.CannotTakeValueForKey(k)
+      }
+
+      // For classes, we can set directly
+      if ti.kind == .class {
+        if let value = v {
+          prop.setOnClass(value: coerce(value, to: prop.type), object: o)
+        }
+        else {
+          prop.setOnClass(value: v as Any, object: o)
+        }
       }
       else {
-        try target.setValue(nil)
+        throw Error.CannotTakeValueForKey(k)
       }
-    }
-      // try using Runtime
-    else if let o        = o,
-            let typeInfo = try? Runtime.typeInfo(of: type(of: o)),
-            let prop     = try? typeInfo.property(named: k)
-    {
-      assert(typeInfo.kind == .class, "you can only use KVC on classes")
-      var me = o // TBD: this actually fails doing the right thing on structs ...
-      if let value = v { try prop.zset(value: value,    on: &me) }
-      else             { try prop.zset(value: v as Any, on: &me) }
-    }
-    else if let _ = o {
-      throw Error.CannotTakeValueForKey(k)
-    }
-    else {
-      // nil messaging :-)
     }
   }
 
@@ -149,57 +189,52 @@ public struct KeyValueCoding {
     return defaultValue(forKey: k, inObject: o)
   }
 
-  static func defaultValue(forKey k: String, inObject o: Any?,
-                           using mirror: Mirror)
-              -> Any?
-  {
+  // MARK: - Default Value Implementation
+
+  public static func defaultValue(forKey k: String, inObject o: Any?) -> Any? {
     guard let object = o else { return nil }
-    
-    // extra guard against Optionals
-    let isOpt  = mirror.displayStyle == .optional
-    let isDict = mirror.displayStyle == .dictionary
-    if isOpt {
-      guard mirror.children.count > 0 else { return nil }
-      let (_, some) = mirror.children.first!
-      return value(forKey: k, inObject: some)
+
+    // Safety check: detect double-boxed Any (Any containing Any)
+    // This can happen when values pass through multiple KVC layers
+    let objectType = Swift.type(of: object)
+    let typeName = String(reflecting: objectType)
+    if typeName == "Any" || typeName == "Swift.AnyObject" {
+      return nil
     }
-    
-    // support dictionary
-    if isDict {
-      return defaultValue(forKey: k, inDictionary: object, mirror: mirror)
+
+    // Handle optionals by unwrapping
+    let ti = typeInfo(of: objectType)
+    if ti.kind == .optional {
+      guard let opt = object as? OptionalUnwrap,
+            let unwrapped = opt.unwrap()
+      else { return nil }
+      return value(forKey: k, inObject: unwrapped)
     }
-    
-    // regular object, scan
-    for ( label, value ) in mirror.children {
-      guard let okey = label else { continue }
-      guard okey == k        else { continue }
-      
-      let valueMirror = Mirror(reflecting: value)
-      if valueMirror.displayStyle != .optional { return value }
-      
-      guard valueMirror.children.count > 0 else { return nil }
-      
-      let (_, some) = valueMirror.children.first!
-      
-      return some
+
+    // Handle existential types (Any, AnyObject, protocols) - can't do KVC
+    if ti.kind == TypeInfo.Kind.existential {
+      return nil
     }
-    
-    if let mirror = mirror.superclassMirror {
-      return defaultValue(forKey: k, inObject: object, using: mirror)
+
+    // Handle dictionaries specially
+    if let dict = object as? [ String : Any ] {
+      return dict[k]
     }
-    
+    if let dict = object as? [ String : Any? ] {
+      return dict[k] ?? nil
+    }
+
+    // Use SwiftRuntime for struct/class property access
+    if ti.kind == .class || ti.kind == .struct {
+      if let prop = ti.property(named: k) {
+        return prop.get(from: object)
+      }
+    }
+
     return nil
   }
 
-  public static func defaultValue(forKey k: String, inObject o: Any?) -> Any? {
-    // Presumably this is really inefficient, but well :-)
-    guard let object = o else { return nil }
-    
-    return defaultValue(forKey: k, inObject: object,
-                        using: Mirror(reflecting: object))
-  }
-  
-  public static func values(forKeys keys: [String], inObject o: Any?)
+  public static func values(forKeys keys: [ String ], inObject o: Any?)
                      -> [ String : Any ]
   {
     guard let o = o else { return [:] }
@@ -216,61 +251,40 @@ public struct KeyValueCoding {
     }
     return values
   }
-}
 
-public extension KeyValueCoding {
-  
-  static func defaultValue(forKey k: String, inDictionary o: Any,
-                           mirror: Mirror) -> Any?
-  {
-    for ( _, pair ) in mirror.children {
-      let pairMirror = Mirror(reflecting: pair)
-        // mirror on the (Key,Value) tuple of the Dictionary
-        //   children[0] = ( Optional(".0"), String )
-        //   children[1] = ( Optional(".1"), Any )
-      
-      // extract key
-      let keyIdx        = pairMirror.children.startIndex
-      let ( _, anyKey ) = pairMirror.children[keyIdx]
-      let key           = (anyKey as? String) ?? "\(anyKey)"
-      guard key == k else { continue } // break if key is not matching
-      
-      // extract value
-      let valueIdx      = pairMirror.children.index(after: keyIdx)
-      let ( _, value )  = pairMirror.children[valueIdx]
-      
-      // log.info("  \(key) = \(value)")
-      
-      let valueMirror = Mirror(reflecting: value)
-      if valueMirror.displayStyle != .optional { return value }
-      
-      guard valueMirror.children.count > 0 else { return nil }
-      
-      let (_, some) = valueMirror.children.first!
-      
-      return some
+  // MARK: - Type Coercion
+
+  private static func coerce(_ value: Any, to type: Any.Type) -> Any {
+    if Swift.type(of: value) == type { return value }
+
+    // Basic coercions
+    if type == String.self || type == Optional<String>.self {
+      if let s = value as? String { return s }
+      return String(describing: value)
     }
-    return nil
+    if type == Int.self || type == Optional<Int>.self {
+      if let i = value as? Int { return i }
+      if let s = value as? String { return Int(s) ?? 0 }
+      return 0
+    }
+    if type == Bool.self || type == Optional<Bool>.self {
+      return UObject.boolValue(value)
+    }
+
+    return value
   }
-  
 }
 
 
 // MARK: - KVC for Swift Base Collections
 
-extension Dictionary: KeyValueCodingType /*, MutableKeyValueCodingType */ {
-  // Technically we would want to just extend Dictionary<String, Any?> but that
-  // doesn't fly yet in Swift 3.0.
-  // MutableKeyValueCodingType only really makes sense for classes, right?
-  // Well, it could return 'self' with the updated struct?
+extension Dictionary: KeyValueCodingType {
 
   public mutating func takeValue(_ value : Any?, forKey key: String) throws {
-    // TODO: support the Int.Type key values below
     guard let k = key as? Key else {
       throw KeyValueCoding.Error.UnsupportedDictionaryKeyType(Key.self)
     }
-    
-    // TODO: more coercion
+
     guard let v = value as? Value else {
       throw KeyValueCoding.Error.CannotCoerceValueForKey(Value.self, value, key)
     }
@@ -289,15 +303,14 @@ extension Dictionary: KeyValueCodingType /*, MutableKeyValueCodingType */ {
       guard let value : Value = self[ik as! Key] else { return nil }
       return value
     }
-    
-    return value
+
+    return nil
   }
   
 }
 
 extension Array : KeyValueCodingType {
-  // KVC on an array is a map operation. Except for the special '@' functions.
-  
+
   public func value(forKey k: String) -> Any? {
     // Element
     if k.hasPrefix("@") {
@@ -320,8 +333,8 @@ extension Array : KeyValueCodingType {
 open class KeyValueCodingBox<T> : KeyValueCodingTargetValue {
   
   public final var value : T
-  
-  init(_ value : T) {
+
+  public init(_ value : T) {
     self.value = value
   }
   
@@ -349,3 +362,302 @@ public extension MutableKeyValueCodingType {
   }
 
 }
+
+
+// MARK: - Swift Runtime Type Metadata
+// Inspired by ikhvorost/KeyValueCoding.
+
+/**
+ * Cached metadata for a Swift type including its properties.
+ * Private to this file - external code should use KeyValueCoding API.
+ */
+fileprivate struct TypeInfo {
+
+  enum Kind : UInt {
+
+    case `class`      = 0
+    case `struct`     = 0x200
+    case `enum`       = 0x201
+    case optional     = 0x202
+    case tuple        = 0x301
+    case function     = 0x302
+    case existential  = 0x303  // Any, AnyObject, protocol types
+    case metatype     = 0x304
+    case other        = 0xffff
+
+    static func of(_ type: Any.Type) -> Self {
+      let raw = swift_getMetadataKind(type)
+      if let kind = Self(rawValue: raw) { return kind }
+      // Existential types have various kind values in 0x300 range
+      if raw >= 0x300 && raw < 0x400 { return .existential }
+      return .other
+    }
+  }
+
+  struct Property {
+
+    let name     : String
+    let type     : Any.Type
+    let isStrong : Bool  // false for weak references
+    let offset   : Int
+    let accessor : Accessor.Type
+
+    func get(from object: Any) -> Any? {
+      // Skip weak references - they have special storage we can't read
+      guard isStrong else { return nil }
+
+      let objectType = Swift.type(of: object)
+      let kind = Kind.of(objectType)
+      guard kind == .class || kind == .struct else { return nil }
+
+      if kind == .class {
+        // For classes: cast to AnyObject and use Unmanaged to get raw pointer.
+        let anyObj = object as AnyObject
+        let instancePtr = Unmanaged.passUnretained(anyObj).toOpaque()
+        let rawValue = accessor.get(
+          from: UnsafeRawPointer(instancePtr).advanced(by: offset)
+        )
+        return unwrapOptional(rawValue)
+      }
+      else {
+        // For structs: value is inline in the existential container (≤24 bytes)
+        // or heap-boxed (>24 bytes). Use withUnsafeBytes for inline access.
+        return withUnsafeBytes(of: object) { buffer in
+          guard let baseAddress = buffer.baseAddress else { return nil }
+          let rawValue = accessor.get(from: baseAddress.advanced(by: offset))
+          return unwrapOptional(rawValue)
+        }
+      }
+    }
+
+    func setOnClass(value: Any?, object: Any) {
+      // Skip weak references - they have special storage we can't write
+      guard isStrong else { return }
+
+      let kind = Kind.of(Swift.type(of: object))
+      guard kind == .class else { return }
+
+      // Use Unmanaged to correctly extract class pointer from Any.
+      let anyObj = object as AnyObject
+      let instancePtr = Unmanaged.passUnretained(anyObj).toOpaque()
+      accessor.set(
+        value: value as Any,
+        to: UnsafeMutableRawPointer(instancePtr).advanced(by: offset)
+      )
+    }
+
+    func set<T>(value: Any?, on object: inout T) {
+      // Skip weak references - they have special storage we can't write
+      guard isStrong else { return }
+
+      let kind = Kind.of(T.self)
+      guard kind == .class || kind == .struct else { return }
+
+      withUnsafeMutablePointer(to: &object) { ptr in
+        if kind == .class {
+          ptr.withMemoryRebound(to: UnsafeMutableRawPointer.self, capacity: 1) {
+            accessor.set(value: value as Any,
+                         to: $0.pointee.advanced(by: offset))
+          }
+        }
+        else {
+          accessor.set(value: value as Any,
+                       to: UnsafeMutableRawPointer(ptr).advanced(by: offset))
+        }
+      }
+    }
+
+    private func unwrapOptional(_ value: Any) -> Any? {
+      guard let optional = value as? OptionalUnwrap else { return value }
+      // Check isSome() first to avoid crash on invalid memory
+      guard optional.isSome() else { return nil }
+      return optional.unwrap()
+    }
+  }
+
+  let kind       : Kind
+  let properties : [ Property ]
+
+  fileprivate init(of type: Any.Type) {
+    self.kind = Kind.of(type)
+
+    if kind == .class || kind == .struct {
+      let count = swift_reflectionMirror_recursiveCount(type)
+      var props = [ Property ]()
+      props.reserveCapacity(count)
+
+      for i in 0..<count {
+        var fieldMeta = FieldReflectionMetadata()
+        let propType  = swift_reflectionMirror_recursiveChildMetadata(
+          type, index: i, fieldMetadata: &fieldMeta
+        )
+        defer { fieldMeta.freeFunc?(fieldMeta.name) }
+
+        var name = fieldMeta.name.map { String(cString: $0) } ?? ""
+
+        // Handle lazy storage
+        let lazyPrefix = "$__lazy_storage_$_"
+        if name.hasPrefix(lazyPrefix) {
+          name = String(name.dropFirst(lazyPrefix.count))
+        }
+
+        let offset = swift_reflectionMirror_recursiveChildOffset(type, index: i)
+        let propContainer = ProtocolTypeContainer(type: propType)
+
+        props.append(Property(
+          name: name, type: propType, isStrong: fieldMeta.isStrong,
+          offset: offset, accessor: propContainer.accessor
+        ))
+      }
+      self.properties = props
+    }
+    else {
+      self.properties = []
+    }
+  }
+
+  /**
+   * Find a property by name.
+   */
+  func property(named name: String) -> Property? {
+    properties.first { $0.name == name }
+  }
+}
+
+fileprivate extension TypeInfo.Property {
+
+  /**
+   * Set value with type coercion.
+   */
+  func setValue<TObject>(_ value: Any?, on object: inout TObject) {
+    if let value = value {
+      if Swift.type(of: value) == self.type {
+        set(value: value, on: &object)
+      }
+      else if let coercedValue = coerce(value: value, to: self.type) {
+        set(value: coercedValue, on: &object)
+      }
+    }
+    else {
+      set(value: value as Any, on: &object)
+    }
+  }
+
+  private func coerce(value: Any, to type: Any.Type) -> Any? {
+    if let ct = type as? RuntimeCoercion.Type {
+      return try? ct.coerce(runtimeValue: value)
+    }
+    return nil
+  }
+}
+
+
+// MARK: - Accessor Protocol Trick
+
+fileprivate protocol Accessor {}
+
+extension Accessor {
+
+  static func get(from pointer: UnsafeRawPointer) -> Any {
+    pointer.assumingMemoryBound(to: Self.self).pointee
+  }
+
+  static func set(value: Any, to pointer: UnsafeMutableRawPointer) {
+    if let value = value as? Self {
+      pointer.assumingMemoryBound(to: Self.self).pointee = value
+    }
+  }
+}
+
+fileprivate struct ProtocolTypeContainer {
+
+  let type: Any.Type
+  let witnessTable = 0
+
+  var accessor: Accessor.Type {
+    unsafeBitCast(self, to: Accessor.Type.self)
+  }
+}
+
+
+// MARK: - Optional Unwrapping (without Mirror)
+
+fileprivate protocol OptionalUnwrap {
+  func isSome() -> Bool
+  func unwrap() -> Any?
+}
+
+extension Optional : OptionalUnwrap {
+
+  func isSome() -> Bool {
+    switch self {
+      case .none: return false
+      case .some: return true
+    }
+  }
+
+  func unwrap() -> Any? {
+    switch self {
+      case .none:                return nil
+      case .some(let unwrapped): return unwrapped
+    }
+  }
+}
+
+
+// MARK: - TypeInfo Cache
+
+private let typeInfoCache = Mutex<[ ObjectIdentifier : TypeInfo ]>([:])
+
+/**
+ * Get cached TypeInfo for a type.
+ * Private to this file - external code should use KeyValueCoding API.
+ */
+fileprivate func typeInfo(of type: Any.Type) -> TypeInfo {
+  let key = ObjectIdentifier(type)
+  return typeInfoCache.withLock { cache in
+    if let cached = cache[key] { return cached }
+    let info = TypeInfo(of: type)
+    cache[key] = info
+    return info
+  }
+}
+
+/**
+ * Get cached TypeInfo for a value's type.
+ * Private to this file - external code should use KeyValueCoding API.
+ */
+fileprivate func typeInfo<T>(of value: T) -> TypeInfo {
+  typeInfo(of: Swift.type(of: value as Any))
+}
+
+
+// MARK: - Swift Runtime Bindings
+
+fileprivate typealias NameFreeFunc =
+  @convention(c) (UnsafePointer<CChar>?) -> Void
+
+fileprivate struct FieldReflectionMetadata {
+
+  let name: UnsafePointer<CChar>? = nil
+  let freeFunc: NameFreeFunc?     = nil
+  let isStrong: Bool              = false
+  let isVar: Bool                 = false
+}
+
+@_silgen_name("swift_reflectionMirror_recursiveCount")
+fileprivate func swift_reflectionMirror_recursiveCount(_: Any.Type) -> Int
+
+@_silgen_name("swift_reflectionMirror_recursiveChildMetadata")
+fileprivate func swift_reflectionMirror_recursiveChildMetadata(
+  _: Any.Type, index: Int,
+  fieldMetadata: UnsafeMutablePointer<FieldReflectionMetadata>
+) -> Any.Type
+
+@_silgen_name("swift_reflectionMirror_recursiveChildOffset")
+fileprivate func swift_reflectionMirror_recursiveChildOffset(
+  _: Any.Type, index: Int
+) -> Int
+
+@_silgen_name("swift_getMetadataKind")
+fileprivate func swift_getMetadataKind(_: Any.Type) -> UInt

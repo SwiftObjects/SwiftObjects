@@ -1,5 +1,5 @@
 //
-//  MirrorKVCTests.swift
+//  PlainObjectKVCTests.swift
 //  SwiftObjectsTests
 //
 
@@ -7,16 +7,16 @@ import XCTest
 @testable import SwiftObjects
 
 /**
- * Tests for Mirror-based reflection fallback in KVC.
+ * Tests for KVC on plain objects without explicit KVC conformance.
  *
  * When an object doesn't conform to KeyValueCodingType, the KVC system
- * falls back to using Swift's Mirror API for property access.
+ * uses Swift runtime metadata for property access.
  */
-class MirrorKVCTests: XCTestCase {
+class PlainObjectKVCTests: XCTestCase {
 
   // MARK: - Test Helpers (Non-KVC Classes)
 
-  /// Plain class without KVC conformance - uses Mirror fallback
+  /// Plain class without KVC conformance - uses runtime reflection
   class PlainPerson {
 
     var name : String
@@ -56,9 +56,9 @@ class MirrorKVCTests: XCTestCase {
   }
 
 
-  // MARK: - Basic Mirror Access Tests
+  // MARK: - Basic Property Access Tests
 
-  func testMirrorBasedAccessString() {
+  func testBasicAccessString() {
     let person = PlainPerson(name: "Alice", age: 30)
 
     let name = KeyValueCoding.value(forKey: "name", inObject: person)
@@ -66,7 +66,7 @@ class MirrorKVCTests: XCTestCase {
     XCTAssertEqual(name as? String, "Alice")
   }
 
-  func testMirrorBasedAccessInt() {
+  func testBasicAccessInt() {
     let person = PlainPerson(name: "Bob", age: 25)
 
     let age = KeyValueCoding.value(forKey: "age", inObject: person)
@@ -74,7 +74,7 @@ class MirrorKVCTests: XCTestCase {
     XCTAssertEqual(age as? Int, 25)
   }
 
-  func testMirrorBasedAccessMissingKey() {
+  func testBasicAccessMissingKey() {
     let person = PlainPerson(name: "Charlie", age: 35)
 
     let result = KeyValueCoding.value(forKey: "nonexistent", inObject: person)
@@ -85,7 +85,7 @@ class MirrorKVCTests: XCTestCase {
 
   // MARK: - Optional Unwrapping Tests
 
-  func testMirrorOptionalPresent() {
+  func testOptionalPresent() {
     let person = PlainPerson(name: "Diana", age: 28, email: "diana@example.com")
 
     let email = KeyValueCoding.value(forKey: "email", inObject: person)
@@ -93,7 +93,7 @@ class MirrorKVCTests: XCTestCase {
     XCTAssertEqual(email as? String, "diana@example.com")
   }
 
-  func testMirrorOptionalNil() {
+  func testOptionalNil() {
     let person = PlainPerson(name: "Eva", age: 22)
     // email is nil
 
@@ -105,7 +105,7 @@ class MirrorKVCTests: XCTestCase {
 
   // MARK: - Superclass Property Access Tests
 
-  func testMirrorSuperclassProperty() {
+  func testSuperclassProperty() {
     let employee = Employee(name: "Frank", age: 40,
                             department: "Engineering", salary: 100000)
 
@@ -127,7 +127,7 @@ class MirrorKVCTests: XCTestCase {
 
   // MARK: - Nested Object Access Tests
 
-  func testMirrorNestedObjectAccess() {
+  func testNestedObjectAccess() {
     let ceo     = PlainPerson(name: "Grace", age: 50)
     let company = Company(name: "TechCorp", ceo: ceo)
 
@@ -139,7 +139,7 @@ class MirrorKVCTests: XCTestCase {
     XCTAssertEqual(ceoAge as? Int, 50)
   }
 
-  func testMirrorNestedObjectNil() {
+  func testNestedObjectNil() {
     let company = Company(name: "StartupCo")
     // ceo is nil
 
@@ -166,14 +166,14 @@ class MirrorKVCTests: XCTestCase {
   }
 
 
-  // MARK: - Dictionary via Mirror Tests
+  // MARK: - Dictionary Access Tests
 
-  func testMirrorDictionaryAccess() {
-    // Dictionaries also use Mirror-based access when not going through
+  func testDictionaryAccess() {
+    // Dictionaries also use runtime-based access when not going through
     // the Dictionary extension
     let dict : [ String : Any ] = [ "key" : "value" ]
 
-    // This goes through Mirror-based dictionary lookup
+    // This goes through runtime-based dictionary lookup
     let result = KeyValueCoding.defaultValue(forKey: "key", inObject: dict)
 
     XCTAssertEqual(result as? String, "value")
@@ -183,16 +183,16 @@ class MirrorKVCTests: XCTestCase {
   // MARK: - Linux
 
   static var allTests = [
-    ( "testMirrorBasedAccessString",     testMirrorBasedAccessString     ),
-    ( "testMirrorBasedAccessInt",        testMirrorBasedAccessInt        ),
-    ( "testMirrorBasedAccessMissingKey", testMirrorBasedAccessMissingKey ),
-    ( "testMirrorOptionalPresent",       testMirrorOptionalPresent       ),
-    ( "testMirrorOptionalNil",           testMirrorOptionalNil           ),
-    ( "testMirrorSuperclassProperty",    testMirrorSuperclassProperty    ),
-    ( "testMirrorNestedObjectAccess",    testMirrorNestedObjectAccess    ),
-    ( "testMirrorNestedObjectNil",       testMirrorNestedObjectNil       ),
-    ( "testDefaultValueDirect",          testDefaultValueDirect          ),
-    ( "testDefaultValueNilObject",       testDefaultValueNilObject       ),
-    ( "testMirrorDictionaryAccess",      testMirrorDictionaryAccess      ),
+    ( "testBasicAccessString",     testBasicAccessString     ),
+    ( "testBasicAccessInt",        testBasicAccessInt        ),
+    ( "testBasicAccessMissingKey", testBasicAccessMissingKey ),
+    ( "testOptionalPresent",       testOptionalPresent       ),
+    ( "testOptionalNil",           testOptionalNil           ),
+    ( "testSuperclassProperty",    testSuperclassProperty    ),
+    ( "testNestedObjectAccess",    testNestedObjectAccess    ),
+    ( "testNestedObjectNil",       testNestedObjectNil       ),
+    ( "testDefaultValueDirect",    testDefaultValueDirect    ),
+    ( "testDefaultValueNilObject", testDefaultValueNilObject ),
+    ( "testDictionaryAccess",      testDictionaryAccess      ),
   ]
 }

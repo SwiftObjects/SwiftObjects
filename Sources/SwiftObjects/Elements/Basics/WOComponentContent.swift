@@ -116,8 +116,8 @@ open class WOComponentContent : WODynamicElement {
     
     /* apply copied values */
     if !extraValues.isEmpty {
-      if let setCursor = context.cursor as? MutableKeyValueCodingType {
-        try setCursor.takeValuesForKeys(extraValues) // Go can also do pathes
+      if let setCursor = context.cursor as? AnyObject & MutableKeyValueCodingType {
+        try setCursor.takeValuesForKeys(extraValues)
       }
     }
     extraValues.removeAll()

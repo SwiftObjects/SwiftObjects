@@ -615,7 +615,7 @@ open class WOAppContext : WOCoreContextBase, WOContext, ExtraVariables {
       default: break
     }
 
-    if defaultTakeValueForKey(value, forKey: k) { return }
+    if try defaultTakeValueForKey(value, forKey: k) { return }
 
     variableDictionary[k] = value
   }

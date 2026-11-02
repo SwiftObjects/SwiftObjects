@@ -296,7 +296,7 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
       default: break
     }
 
-    if defaultTakeValueForKey(value, forKey: k) { return }
+    if try defaultTakeValueForKey(value, forKey: k) { return }
 
     variableDictionary[k] = value
   }

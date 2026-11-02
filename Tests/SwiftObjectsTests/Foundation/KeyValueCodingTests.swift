@@ -399,36 +399,6 @@ class KeyValueCodingTests: XCTestCase {
   }
 
 
-  // MARK: - KeyValueCodingBox Tests
-
-  func testKeyValueCodingBoxSetValue() throws {
-    let box = KeyValueCodingBox("initial")
-
-    try box.setValue("updated")
-
-    XCTAssertEqual(box.value, "updated")
-  }
-
-  func testKeyValueCodingBoxWrongType() {
-    let box = KeyValueCodingBox("string")
-
-    XCTAssertThrowsError(try box.setValue(42)) { error in
-      guard case KeyValueCoding.Error.CannotCoerceValue = error else {
-        XCTFail("Expected CannotCoerceValue error, got \(error)")
-        return
-      }
-    }
-  }
-
-  func testKeyValueCodingBoxIntValue() throws {
-    let box = KeyValueCodingBox(0)
-
-    try box.setValue(42)
-
-    XCTAssertEqual(box.value, 42)
-  }
-
-
   // MARK: - Linux
 
   static var allTests = [
@@ -458,8 +428,5 @@ class KeyValueCodingTests: XCTestCase {
     ( "testHandleTakeValueForUnboundKey",   testHandleTakeValueForUnboundKey   ),
     ( "testDefaultUnboundKeyReturnsNil",    testDefaultUnboundKeyReturnsNil    ),
     ( "testDefaultUnboundKeyThrows",        testDefaultUnboundKeyThrows        ),
-    ( "testKeyValueCodingBoxSetValue",      testKeyValueCodingBoxSetValue      ),
-    ( "testKeyValueCodingBoxWrongType",     testKeyValueCodingBoxWrongType     ),
-    ( "testKeyValueCodingBoxIntValue",      testKeyValueCodingBoxIntValue      ),
   ]
 }

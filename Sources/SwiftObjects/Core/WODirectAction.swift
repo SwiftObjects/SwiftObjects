@@ -121,7 +121,7 @@ open class WODirectAction : WOAction, SmartDescription,
       return try handleTakeValue(value, forUnboundKey: k)
     }
 
-    if defaultTakeValueForKey(value, forKey: k) { return }
+    if try defaultTakeValueForKey(value, forKey: k) { return }
 
     variableDictionary[k] = value
   }

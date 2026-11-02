@@ -3,6 +3,7 @@ name: Build and Test
 on:
   push:
   pull_request:
+  workflow_dispatch:
   schedule:
     - cron: "0 13 * * 1"
 
@@ -17,7 +18,7 @@ jobs:
     container: ${{ matrix.image }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Build Swift Debug Package
         run: swift build -c debug
       - name: Build Swift Release Package

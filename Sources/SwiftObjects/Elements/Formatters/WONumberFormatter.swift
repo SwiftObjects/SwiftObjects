@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import class  Foundation.Formatter
@@ -14,15 +14,18 @@ import class Foundation.NumberFormatter
  * NumberFormatter documentation for the possible patterns.
  *
  * Examples:
+ * ```wod
+ * Text: WOString {
+ *     value        = product.price;
+ *     numberformat = "#,##0.00 ; (#,##0.00)"; // you need the ';' spaces
+ * }
+ * ```
  *
- *     Text: WOString {
- *         value        = product.price;
- *         numberformat = "#,##0.00 ; (#,##0.00)"; // you need the ';' spaces
- *     }
- *
- *     <wo:str value="$product.price" numberformat="#,##0.00" />
+ * ```xml
+ * <wo:str value="$product.price" numberformat="#,##0.00" />
+ * ```
  */
-open class WONumberFormatter : WOFormatter {
+open class WONumberFormatter : WOFormatter, @unchecked Sendable {
   
   let format : WOAssociation
   

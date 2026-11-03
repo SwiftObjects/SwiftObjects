@@ -15,7 +15,7 @@ import struct Foundation.UUID
  * Also used for saving pages for component actions.
  *
  * THREAD: this object should only be accessed from one thread at a time.
- *         Locking should be ensured by the WOSessionStore checkout/in
+ *         Locking should be ensured by the ``WOSessionStore`` checkout/in
  *         mechanism.
  */
 open class WOSession : WOLifecycle, WOResponder, SmartDescription,
@@ -49,8 +49,8 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
   public private(set) var isAwake : Bool = false
   
   /**
-   * Requests the termination of the WOSession. This is what you would call in
-   * a logout() method to finish a session.
+   * Requests the termination of the ``WOSession``. This is what you would call
+   * in a logout() method to finish a session.
    */
   open func terminate() {
     isTerminating = true
@@ -68,7 +68,8 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
    * The method calls the awake() method which should be used by client code
    * for per-request state setup.
    *
-   * @param _ctx - the WOContext the session is active in
+   * - Parameters:
+   *   - context: the ``WOContext`` the session is active in
    */
   internal func awake(in context: WOContext) {
     guard !isAwake else { return }
@@ -80,7 +81,8 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
    * Called by WOApp.handleRequest() to teardown sessions before they get
    * archived.
    *
-   * @param _ctx - the WOContext representing the current transaction
+   * - Parameters:
+   *   - context: the ``WOContext`` representing the current transaction
    */
   internal func sleep(in context: WOContext) {
     guard isAwake else { return }
@@ -170,8 +172,9 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
    * handled in the WOApp.handleRequest method which also adds the session-id
    * cookie.
    *
-   * @param _r   - the WOResponse object to generate to
-   * @param _ctx - the WOContext the generation takes place in
+   * - Parameters:
+   *   - response: the ``WOResponse`` object to generate to
+   *   - context:  the ``WOContext`` the generation takes place in
    */
   open func append(to response: WOResponse, in context: WOContext) throws {
     // TODO
@@ -205,16 +208,17 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
   var permanentPageCache = WOSessionPageCache()
   
   /**
-   * Restore a WOComponent from the session page caches. This first checks the
-   * permanent and then the transient cache for the given ID.
+   * Restore a ``WOComponent`` from the session page caches. This first checks
+   * the permanent and then the transient cache for the given ID.
    *
    * Remember that a ContextID identifies a certain state of the component. It
    * encapsulates the state the component had at rendering time. If a component
    * action is processed, we need to restore that state to properly process
    * component URLs.
    *
-   * @param _ctxId - the ID of the context which resulted in the required page
-   * @return null if the ID expired, or the stored WOComponent
+   * - Parameters:
+   *   - contextID: the ID of the context which resulted in the required page
+   * - Returns:     null if the ID expired, or the stored ``WOComponent``
    */
   open func restorePage(for contextID: String) -> WOComponent? {
     guard !contextID.isEmpty else { return nil }
@@ -229,11 +233,12 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
   }
   
   /**
-   * Returns the ID of the WOContext associated with the page. This just calls
-   * `_page.context?.contextID`.
+   * Returns the ID of the ``WOContext`` associated with the page. This just
+   * calls `_page.context?.contextID`.
    *
-   * @param _page - the page to retrieve the context id for
-   * @return a context-id or null if no context was associated with the page
+   * - Parameters:
+   *   - page:  the page to retrieve the context id for
+   * - Returns: a context-id or null if no context was associated with the page
    */
   open func contextID(for page: WOComponent) -> String? {
     return page.context?.contextID
@@ -250,7 +255,8 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
    * Note: this method is related to WO component actions which need to preserve
    * the component (/context) which generated a component action link.
    *
-   * @param _page - the page which shall be preserved
+   * - Parameters:
+   *   - page: the page which shall be preserved
    */
   open func savePage(_ page: WOComponent) {
     guard let ctxId = contextID(for: page) else { return }
@@ -271,7 +277,8 @@ open class WOSession : WOLifecycle, WOResponder, SmartDescription,
    * Note: this method is related to WO component actions which need to preserve
    * the component (/context) which generated a component action link.
    *
-   * @param _page - the save to be stored in the permanent cache
+   * - Parameters:
+   *   - page: the save to be stored in the permanent cache
    */
   open func savePageInPermanentCache(_ page: WOComponent) {
     guard let ctxId = contextID(for: page) else { return }

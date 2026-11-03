@@ -27,7 +27,8 @@ This is part of a blog entry, called:
 
 ## Install
 
-Note: Setup to work with Swift 6.2 aka Xcode 26.
+Note: Requires Swift 6.3 or later (Xcode 26.6), the package uses the
+Swift 6 language mode.
 
 **2026-01-11**: This can be used to install the Xcode templates for components,
 though swift-xcode itself probably won't work anymore? Untested as of today.

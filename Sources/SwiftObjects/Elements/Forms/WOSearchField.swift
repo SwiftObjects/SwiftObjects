@@ -11,42 +11,38 @@
  * search type textfields.
  *
  * Sample:
- *
- *     Searchfield: WOSearchField {
- *       name  = "searchfield";
- *       value = searchText;
- *     }
+ * ```wod
+ * Searchfield: WOSearchField {
+ *   name  = "searchfield";
+ *   value = searchText;
+ * }
+ * ```
  *
  * Renders:
  * ```
  * <input type="search" name="searchfield" value="Go" />
  * ```
  *
- * Bindings (WOInput):
- * ```
- *   id       [in] - string
- *   name     [in] - string
- *   value    [io] - object
- *   disabled [in] - boolean
- * ```
- * Bindings (WOTextField):
- * ```
- *   size     [in] - int
- * ```
+ * Bindings (``WOInput``):
+ * - id       [in] - string
+ * - name     [in] - string
+ * - value    [io] - object
+ * - disabled [in] - boolean
+ *
+ * Bindings (``WOTextField``):
+ * - size     [in] - int
+ *
  * Bindings:
- * ```
- *   isIncremental [in] - bool
- *   placeholder   [in] - string
- *   autosaveName  [in] - string
- *   resultCount   [in] - int
- * ```
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * - isIncremental [in] - bool
+ * - placeholder   [in] - string
+ * - autosaveName  [in] - string
+ * - resultCount   [in] - int
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOSearchField : WOTextField {
   

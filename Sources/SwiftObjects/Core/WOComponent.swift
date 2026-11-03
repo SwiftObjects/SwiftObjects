@@ -7,37 +7,39 @@
 //
 
 /**
- * Subclasses of WOComponent are used to represent template based pages or
+ * Subclasses of ``WOComponent`` are used to represent template based pages or
  * reusable components in Go. A component (usually) is a Swift subclass of
- * WOComponent plus a template. The exact format of the template depends on the
- * respective template builder, usually the WOWrapperTemplateBuilder is used.
+ * ``WOComponent`` plus a template. The exact format of the template depends on
+ * the respective template builder, usually the ``WOWrapperTemplateBuilder`` is
+ * used.
  *
- * ### WOComponent vs WODynamicElement
+ * ### ``WOComponent`` vs ``WODynamicElement``
  *
- * Both, WOComponent and WODynamicElement, inherit from the WOElement
- * superclass. The major conceptual difference is that WOComponent's have own
- * per-transaction or per-session state while WODynamicElement's have *no* own
- * instance variable state but retrieve state using WOAssociations from the
- * active component.
+ * Both, ``WOComponent`` and ``WODynamicElement``, inherit from the
+ * ``WOElement`` superclass. The major conceptual difference is that
+ * ``WOComponent``'s have own per-transaction or per-session state while
+ * ``WODynamicElement``'s have *no* own instance variable state but retrieve
+ * state using WOAssociations from the active component.
  *
  * Plus WODynamicElements almost always directly render HTML/XML/xyz in Swift
- * code while WOComponent's usually have an associated template. (both are not
- * exact requirements, a WOComponent can also directly render w/o a template and
- * a WODynamicElement could load a stateless sub-template).
+ * code while ``WOComponent``'s usually have an associated template. (both are
+ * not exact requirements, a ``WOComponent`` can also directly render w/o a
+ * template and a ``WODynamicElement`` could load a stateless sub-template).
  *
  * ### Subcomponents
  *
  * FIXME: Explain better how subcomponents work.
  *
  * Components can refer other components in the template, like:
+ * ```xml
+ * <#ZideBox title="Hello" />
+ * ```
  *
- *     <#ZideBox title="Hello" />
- *
- * This does two things: the template will get an WOChildComponentReference
+ * This does two things: the template will get an ``WOChildComponentReference``
  * dynamic element which represents the component in the template hierarchy,
  * AND upon instantiation the component will get an entry in its 'subcomponents'
- * Map. Usually the subcomponent will start out as a WOComponentFault. Only
- * if it is actually needed, a real WOComponent instance will be created.
+ * Map. Usually the subcomponent will start out as a ``WOComponentFault``. Only
+ * if it is actually needed, a real ``WOComponent`` instance will be created.
  *
  * Note: There are two hierarchies alongside each other: the stateless
  * template hierarchy of WODynamicElements and the stateful component hierarchy.
@@ -49,16 +51,16 @@
  * ### Stateless Components
  *
  * FIXME: Don't quite remember how those work. (hh 2014)
- * I think the idea is that a stateless component is like a WODynamicElement,
- * with the difference, that you can use pageWithName and such to look them up
- * and have a template associated with it.
+ * I think the idea is that a stateless component is like a
+ * ``WODynamicElement``, with the difference, that you can use pageWithName and
+ * such to look them up and have a template associated with it.
  *
- * ### Relationship to WOContext
+ * ### Relationship to ``WOContext``
  *
  * Unless it is a stateless component a component is always associated with a
- * WOContext. The WOContext tracks which components are awake and such, and it
- * tracks the current component activation chain (consider it the callstack
- * of the components).
+ * ``WOContext``. The ``WOContext`` tracks which components are awake and such,
+ * and it tracks the current component activation chain (consider it the
+ * callstack of the components).
  *
  * ### Differences to WebObjects
  *
@@ -68,35 +70,38 @@
  * default-constructor and initWithContext.<br>
  * FIXME: check what exactly.
  *
- * #### Go WOComponent's can be used as WODirectAction's
+ * #### Go ``WOComponent``'s can be used as ``WODirectAction``'s
  *
  * In Go components can be directly used as direct actions. In traditional WO
- * one usually has a direct action, which then instantiates a WOComponent,
+ * one usually has a direct action, which then instantiates a ``WOComponent``,
  * passes over rendering arguments and then returns it for rendering.
  *
  * This can be reduced in Go. In Go you can directly invoke a component like
  * a direct action, sample:
+ * ```swift
+ * class Main : WOComponent {
+ *   ...
+ *   func showAction() -> Any? { ...
+ * ```
+ * Invoke via:
+ * ```
+ * /MyApp/wa/Main/show?id=5
+ * ```
  *
- *   class Main extends WOComponent {
- *     ...
- *     public WOActionResults showAction() { ...
- *
- *   Invoke via:
- *     /MyApp/wa/Main/show?id=5
- *
- * All the rules of WODirectAction apply. Actions must be suffixed 'Action'
+ * All the rules of ``WODirectAction`` apply. Actions must be suffixed 'Action'
  * and if none is specified, defaultAction is invoked.
  *
- * #### Component specific WOResourceManager's
+ * #### Component specific ``WOResourceManager``'s
  *
- * In Go there is the concept of component-specific WOResourceManager's. WO
+ * In Go there is the concept of component-specific ``WOResourceManager``'s. WO
  * only has a global one (Go falls back to this if there is no local one).
  *
  * This is to support OFS and other hierarchical Go publishing setups. Example:
- *
- *     /MyApp/persons/person/index.wo
- *     /MyApp/persons/index.wo
- *     /MyApp/Frame.wo
+ * ```
+ * /MyApp/persons/person/index.wo
+ * /MyApp/persons/index.wo
+ * /MyApp/Frame.wo
+ * ```
  *
  * With the right resource manager the components can perform lookup of
  * resources relative to the position of the source component.
@@ -105,18 +110,19 @@
  *
  * Go has the convenience redirectToLocation() method.
  * To retrieve form values one can use the F() methods, sample:
- *
- *     /MyApp/wa/Persons/fetch?limit=50
- *     int fetchLimit = UObject.intValue(F("limit", 10));
+ * ```
+ * /MyApp/wa/Persons/fetch?limit=50
+ * int fetchLimit = UObject.intValue(F("limit", 10));
+ * ```
  *
  * ### Integration with the Zope-like Go publishing system
  *
  * FIXME: document more.
  *
- * A WOComponent is an IGoObject, an IGoObjectRenderer and an
+ * A ``WOComponent`` is an IGoObject, an IGoObjectRenderer and an
  * IGoObjectRendererFactory.
  *
- * FIXME: write about GoPageInvocation and how a WOComponent usually is not
+ * FIXME: write about GoPageInvocation and how a ``WOComponent`` usually is not
  * directly part of the traversal path.
  *
  * The IGoObject implementation supports lookup of direct action methods (as
@@ -124,11 +130,12 @@
  * Sample: 'lookupName("show");' will give you a GoCallable 'showAction'.
  *
  * Careful: If you invoke a page like this:
+ * ```
+ * /MyApp/wa/Main/show?id=5
+ * ```
  *
- *     /MyApp/wa/Main/show?id=5
- *
- * the Go method is 'wa', the WODirectActionRequestHandler.
- * This is why permissions on the WOComponent's are not checked here, the
+ * the Go method is 'wa', the ``WODirectActionRequestHandler``.
+ * This is why permissions on the ``WOComponent``'s are not checked here, the
  * component is not part of the Go lookup.
  */
 open class WOComponent : WOElement, WOActionResults, WOLifecycle,
@@ -146,8 +153,9 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
   var _wcName : String?
   
   /**
-   * Returns the WOContext the component was created in. The WOContext provides
-   * access to the request and response objects, to the session, and so on.
+   * Returns the ``WOContext`` the component was created in. The ``WOContext``
+   * provides access to the request and response objects, to the session, and so
+   * on.
    */
   public internal(set) weak var context : WOContext?
   
@@ -158,13 +166,14 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
   weak var parentComponent : WOComponent?
 
   /**
-   * Subclasses should not use the WOComponent constructor to initialize object
-   * state but rather use the initWithContext() method (do not forget to call
-   * super in this).
+   * Subclasses should not use the ``WOComponent`` constructor to initialize
+   * object state but rather use the initWithContext() method (do not forget to
+   * call super in this).
    *
    * Note that the constructor takes no arguments, hence the context or session
    * ivars are not setup yet! This was done to reduce the code required to
-   * write a WOComponent subclass (you do not need to provide a constructor).
+   * write a ``WOComponent`` subclass (you do not need to provide a
+   * constructor).
    */
   required public init() {
   }
@@ -178,8 +187,9 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * Initialize the component in the given context. Subclasses should override
    * this instead of the constructor to perform per object initialization.
    *
-   * @param _ctx - the WOContext
-   * @return the component this was invoked on, or optionally a replacement
+   * - Parameters:
+   *   - ctx:   the ``WOContext``
+   * - Returns: the component this was invoked on, or optionally a replacement
    */
   open func initWithContext(_ ctx: WOContext) -> WOComponent? {
     self.context = ctx
@@ -201,11 +211,13 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
   /**
    * Dirty convenience hack to return the value of a form parameter.
    * Sample:
+   * ```swift
+   * let fetchLimit = UObject.intValue(F("limit"))
+   * ```
    *
-   *     int fetchLimit = UObject.intValue(F("limit"));
-   *
-   * @param _fieldName - name of a form field or query parameter
-   * @return Object value of the field or null if it was not found
+   * - Parameters:
+   *   - name:  name of a form field or query parameter
+   * - Returns: value of the field or nil if it was not found
    */
   open func F(_ name: String, default: Any? = nil) -> Any? {
     return context?.request.formValue(for: name) ?? `default`
@@ -248,12 +260,13 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
   
 
   /**
-   * Internal method to ensure that the WOComponent received its awake() message
-   * and that the internal state of the component is properly setup.
+   * Internal method to ensure that the ``WOComponent`` received its awake()
+   * message and that the internal state of the component is properly setup.
    * This is called by other parts of the framework before the component is
    * used.
    *
-   * @param _ctx - the WOContext
+   * - Parameters:
+   *   - context: the ``WOContext``
    */
   public func ensureAwake(in context: WOContext) {
     // This is now public, so that external code can implement WORequestHandlers
@@ -282,7 +295,8 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * Eg this is called by ensureAwakeInContext() to awake the subcomponents of
    * a component.
    *
-   * @param _ctx - the WOContext to awake in
+   * - Parameters:
+   *   - context: the ``WOContext`` to awake in
    */
   func _awakeWithContext(_ context: WOContext) {
     // TBD: we do we have _awakeWithContext() and ensureAwakeInContext()?
@@ -324,7 +338,7 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
 
   /**
    * Looks up and instantiates a new component with the given name. The default
-   * implementation just forwards the call to the WOApplication object.
+   * implementation just forwards the call to the ``WOApplication`` object.
    */
   open func pageWithName(_ name: String) -> WOComponent? {
     guard let app = application else {
@@ -342,10 +356,11 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
   // MARK: - WOActionResults
   
   /**
-   * This method implements the WOActionResults protocol for WOComponent. It
-   * creates a new WOResponse and calls appendToResponse on that response.
+   * This method implements the ``WOActionResults`` protocol for
+   * ``WOComponent``. It creates a new ``WOResponse`` and calls appendToResponse
+   * on that response.
    *
-   * @return a WOResponse containing the rendering of the WOComponent
+   * - Returns: a ``WOResponse`` containing the rendering of the ``WOComponent``
    */
   open func generateResponse() throws -> WOResponse {
     // TBD: better create a new context?
@@ -430,10 +445,11 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * subcomponents can decide to return false and grab their bindings manually.
    *
    * Example:
-   *
-   *     Child: MyChildComponent {
-   *       name = title;
-   *     }
+   * ```wod
+   * Child: MyChildComponent {
+   *   name = title;
+   * }
+   * ```
    *
    * The 'title' value of the component will be copied into the 'name' value of
    * the child if the child is entered. And its copied back when the child is
@@ -477,7 +493,8 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * This method performs the actual binding synchronization. Its usually
    * not called directly but using pullValuesFromParent().
    *
-   * @param _parent - the parent component to copy values from
+   * - Parameters:
+   *   - parent: the parent component to copy values from
    */
   func sync(from parent: WOComponent) { /* SOPE method */
     for ( bindingName, binding ) in wocBindings {
@@ -495,7 +512,8 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * This method performs the actual binding synchronization. Its usually
    * not called directly but using pushValuesToParent().
    *
-   * @param _parent - the parent component to copy values to
+   * - Parameters:
+   *   - parent: the parent component to copy values to
    */
   func sync(to parent: WOComponent) { /* SOPE method */
     let lvalues = values(forKeys: Array(wocBindings.keys))
@@ -524,8 +542,9 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * this will sync back to the parent, invoke the method and then sync down to
    * the child.
    *
-   * @param _name - name of the bound parent method
-   * @return the result of the called method
+   * - Parameters:
+   *   - name:  name of the bound parent method
+   * - Returns: the result of the called method
    */
   open func performParentAction(_ name: String) -> Any? {
     let ctx = context
@@ -556,9 +575,9 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
   
   /**
    * Checks whether the component or the context associated with the component
-   * has an active WOSession.
+   * has an active ``WOSession``.
    *
-   * @return true if a session is active, false otherwise
+   * - Returns: true if a session is active, false otherwise
    */
   open var hasSession : Bool {
     if _session != nil { return true }
@@ -573,7 +592,7 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
    * If you do not want to autocreate a session, either check using `hasSession`
    * whether a session already exists or call `existingSession`
    *
-   * @return an old or new WOSession
+   * - Returns: an old or new ``WOSession``
    */
   open var session : WOSession? {
     if let sn = _session { return sn }
@@ -606,13 +625,14 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
      * or translations.
      *
      * Usually you do NOT have a specific resource manager but use the global
-     * WOApplication manager for all components.
+     * ``WOApplication`` manager for all components.
      */
     set { _resourceManager = newValue }
     
     /**
      * Returns the resourcemanager assigned to this component. If there is no
-     * specific RM assigned, it returns the global RM of the WOApplication object.
+     * specific RM assigned, it returns the global RM of the ``WOApplication``
+     * object.
      */
     get { return _resourceManager ?? application?.resourceManager }
   }
@@ -626,17 +646,17 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
 
   open var template : WOElement? {
     /**
-     * Sets a WOTemplate to be used with this component. Usually we don't assign
-     * a specific template to a component, but rather retrieve it dynamically
-     * from the WOResourceManager.
+     * Sets a ``WOTemplate`` to be used with this component. Usually we don't
+     * assign a specific template to a component, but rather retrieve it
+     * dynamically from the ``WOResourceManager``.
      */
     set { _template = newValue }
     /**
-     * Returns the WOElement which is being used for the component. If no
+     * Returns the ``WOElement`` which is being used for the component. If no
      * specific one is assigned using `template.set`, this will invoke
      * `templateWithName()` with the name of the component.
      *
-     * @return a WOElement to be used as the template
+     * - Returns: a ``WOElement`` to be used as the template
      */
     get {
       if let t = _template { return t }
@@ -647,12 +667,13 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
   }
   
   /**
-   * This returns the WOElement to be used as the components template with the
-   * given name. To do so it asks the resourceManager of the component for
-   * a template with the given name and with the languages activate in the ctx.
+   * This returns the ``WOElement`` to be used as the components template with
+   * the given name. To do so it asks the resourceManager of the component for a
+   * template with the given name and with the languages activate in the ctx.
    *
-   * @param _name - the name of the template
-   * @return a WOElement to be used as the template
+   * - Parameters:
+   *   - name:  the name of the template
+   * - Returns: a ``WOElement`` to be used as the template
    */
   func templateWithName(_ name: String) -> WOElement? {
     guard let rm = resourceManager
@@ -683,11 +704,12 @@ open class WOComponent : WOElement, WOActionResults, WOLifecycle,
 
   /**
    * This just takes the given object using the 'setRenderObject()' method and
-   * then lets the `GoDefaultRenderer` render the object as a component.
+   * then lets the ``GoDefaultRenderer`` render the object as a component.
    *
-   * @param _object - the object which shall be rendered
-   * @param _ctx    - the rendering context
-   * @return null if everything went fine, an Exception otherwise
+   * - Parameters:
+   *   - object:  the object which shall be rendered
+   *   - context: the rendering context
+   * - Returns:   null if everything went fine, an Exception otherwise
    */
   open func renderObject(_ object: Any?, in context: WOContext) throws {
     // TODO

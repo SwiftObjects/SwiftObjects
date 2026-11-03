@@ -14,12 +14,12 @@ import struct Foundation.URL
  * is WOHtmlParser.
  *
  * The parser is only responsibly for parsing the syntax. It does not even do
- * the WOElement object construction - this is done by the handler of the
+ * the ``WOElement`` object construction - this is done by the handler of the
  * parser (via the dynamicElementWithName() method).
  *
- * Do not confuse this class with WOTemplate*Builder*. The builder also
+ * Do not confuse this class with ``WOTemplate``*Builder*. The builder also
  * deals with the on-disk structure (eg .wo directory vs .xml file) and returns
- * a WOTemplate element.
+ * a ``WOTemplate`` element.
  *
  * P.S.: StaticCMS has additional parser for some specific XHTML syntax.
  */

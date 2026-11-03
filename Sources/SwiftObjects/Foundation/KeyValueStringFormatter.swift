@@ -11,14 +11,15 @@ import class Foundation.NSCoder
 
 /**
  * Sample formats:
- *
- *     "%(firstname)s %(lastname)s"
+ * ```
+ * "%(firstname)s %(lastname)s"
+ * ```
  *
  * Usage:
- *
- *     let s = KeyValueStringFormatter.format(
-                 "%(firstname)s %(lastname)s", person)
- *     print(s)
+ * ```swift
+ * let s = KeyValueStringFormatter.format("%(firstname)s %(lastname)s", person)
+ * print(s)
+ * ```
  *
  * Inefficient, crappy implementation, but worx ;-)
  */
@@ -261,8 +262,9 @@ fileprivate protocol KeyValueStringFormatterValueHandler: AnyObject {
    * only be called ONCE per pattern binding as some implementation have
    * sideeffects (eg advancing the array position cursor).
    *
-   * @param _key - the key to resolve, or null
-   * @return the value stored under the key, or the next value from an array
+   * - Parameters:
+   *   - forKey: the key to resolve, or null
+   * - Returns:  the value stored under the key, or the next value from an array
    */
   func value(forKey: String) -> Any?
 }

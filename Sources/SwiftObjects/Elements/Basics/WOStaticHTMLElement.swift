@@ -10,10 +10,10 @@ import struct Foundation.Data
 import class  Foundation.NSLock
 
 /**
- * Renders a string as-is to the output. Basically the same like a WOString with
- * escapeHTML=NO.
+ * Renders a string as-is to the output. Basically the same like a ``WOString``
+ * with escapeHTML=NO.
  *
- * This object is used by the WOHTMLParser for raw template content.
+ * This object is used by the ``WOHTMLParser`` for raw template content.
  */
 open class WOStaticHTMLElement : WOElement, SmartDescription {
   

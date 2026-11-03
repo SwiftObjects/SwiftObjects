@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 21.05.18.
-//  Copyright © 2018-2020 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -15,8 +15,9 @@
  * the object.
  *
  * Example URL:
- *
- *     /MyApp/wa/Main/default
+ * ```
+ * /MyApp/wa/Main/default
+ * ```
  *
  * This will instantiate the "Main" component and call the 'defaultAction'
  * inside the component.
@@ -107,11 +108,7 @@ open class WODirectActionRequestHandler : WORequestHandler {
     var actionName      : String? = nil
     
     if let s = request.formAction {
-      #if swift(>=5)
-        let sepIdx = s.firstIndex(of: "/")
-      #else
-        let sepIdx = s.index(of: "/")
-      #endif
+      let sepIdx = s.firstIndex(of: "/")
       if let idx = sepIdx {
         actionClassName = String(s[s.startIndex..<idx])
         actionName      = String(s[s.index(after: idx)..<s.endIndex])
@@ -149,15 +146,9 @@ open class WODirectActionRequestHandler : WORequestHandler {
     }
     
     /* discard everything after a point, to allow for better download URLs */
-    #if swift(>=5)
-      if let s = actionName, let idx = s.firstIndex(of: ".") {
-        actionName = String(s[s.startIndex..<idx])
-      }
-    #else
-      if let s = actionName, let idx = s.index(of: ".") {
-        actionName = String(s[s.startIndex..<idx])
-      }
-    #endif
+    if let s = actionName, let idx = s.firstIndex(of: ".") {
+      actionName = String(s[s.startIndex..<idx])
+    }
     
     return ( actionClassName ?? WODirectAction.defaultActionClassName,
              actionName      ?? WODirectAction.defaultActionName )

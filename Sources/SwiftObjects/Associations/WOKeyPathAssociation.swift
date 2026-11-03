@@ -9,7 +9,7 @@
 /**
  * Evaluates a KVC keypath against the current component.
  */
-public class WOKeyPathAssociation : WOAssociation, SmartDescription {
+public final class WOKeyPathAssociation : WOAssociation, SmartDescription {
   
   public let path : [ String ]
   

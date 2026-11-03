@@ -10,7 +10,7 @@
  * A marker interface which denotes objects which can store additional key/value
  * pairs in a HashMap via KVC (w/o declaring ivars).
  *
- * Examples are `WOComponent` and `WOSession`.
+ * Examples are ``WOComponent`` and ``WOSession``.
  */
 public protocol ExtraVariables : AnyObject {
   
@@ -23,8 +23,9 @@ public protocol ExtraVariables : AnyObject {
    *
    * Note: usually you want to access the slots using regular KVC.
    *
-   * @param _value - the value to be attached
-   * @param _key   - the key to store the value under
+   * - Parameters:
+   *   - o:   the value to be attached
+   *   - key: the key to store the value under
    */
   func setObject(_ o: Any?, for key: String)
   
@@ -34,7 +35,8 @@ public protocol ExtraVariables : AnyObject {
    *
    * Note: usually you want to access the slots using regular KVC.
    *
-   * @param _key - the key to remove
+   * - Parameters:
+   *   - key: the key to remove
    */
   func removeObject(for key: String)
   
@@ -43,8 +45,9 @@ public protocol ExtraVariables : AnyObject {
    * <p>
    * Note: usually you want to access the slots using regular KVC (valueForKey)
    *
-   * @param _key - the key to retrieve
-   * @return the value stored under the key, or null
+   * - Parameters:
+   *   - key:   the key to retrieve
+   * - Returns: the value stored under the key, or null
    */
   func object(for key: String) -> Any?
   
@@ -52,7 +55,7 @@ public protocol ExtraVariables : AnyObject {
    * Retrieves all extra slots from the object. This method is not always
    * implemented (or possible to implement). Use with care.
    *
-   * @return a Map containing all extra values
+   * - Returns: a Map containing all extra values
    */
   var variableDictionary : [ String : Any ] { get set }
 

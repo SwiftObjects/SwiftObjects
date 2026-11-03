@@ -11,19 +11,19 @@
  * proper content coders for the used response.
  *
  * Sample:
- *
- *     <#WOXmlPreamble></#WOXmlPreamble>
+ * ```xml
+ * <#WOXmlPreamble></#WOXmlPreamble>
+ * ```
  *
  * Renders:
- *
- *     <?xml version="1.0" encoding="UTF-8"?>
+ * ```xml
+ * <?xml version="1.0" encoding="UTF-8"?>
+ * ```
  *
  * Bindings:
- * ```
- *   version    [in] - string (default: "1.0")
- *   encoding   [in] - IANA charset to use, i.e. "UTF-8"
- *   standalone [in] - bool (default: empty)
- * ```
+ * - version    [in] - string (default: "1.0")
+ * - encoding   [in] - IANA charset to use, i.e. "UTF-8"
+ * - standalone [in] - bool (default: empty)
  */
 public class WOXmlPreamble : WOHTMLDynamicElement {
   

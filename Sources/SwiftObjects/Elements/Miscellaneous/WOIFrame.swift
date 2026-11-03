@@ -13,10 +13,10 @@
  *   Frame: WOIFrame {
  *     actionClass      = "LeftMenu";
  *     directActionName = "default";
- *   }</pre>
+ *   }
  * ```
  *
- * Renders:<pre>
+ * Renders:
  * ```
  *   <iframe src="/App/x/LeftMenu/default">
  *     [sub-template]
@@ -24,14 +24,12 @@
  * ```
  *
  * Bindings:
- * ```
- *   name             [in] - string
- *   href             [in] - string
- *   directActionName [in] - string
- *   actionClass      [in] - string
- *   pageName         [in] - string
- *   action           [in] - action
- * ```
+ * - name             [in] - string
+ * - href             [in] - string
+ * - directActionName [in] - string
+ * - actionClass      [in] - string
+ * - pageName         [in] - string
+ * - action           [in] - action
  */
 open class WOIFrame : WOFrame {
   

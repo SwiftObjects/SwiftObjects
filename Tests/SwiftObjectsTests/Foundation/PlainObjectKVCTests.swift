@@ -178,21 +178,4 @@ class PlainObjectKVCTests: XCTestCase {
 
     XCTAssertEqual(result as? String, "value")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testBasicAccessString",     testBasicAccessString     ),
-    ( "testBasicAccessInt",        testBasicAccessInt        ),
-    ( "testBasicAccessMissingKey", testBasicAccessMissingKey ),
-    ( "testOptionalPresent",       testOptionalPresent       ),
-    ( "testOptionalNil",           testOptionalNil           ),
-    ( "testSuperclassProperty",    testSuperclassProperty    ),
-    ( "testNestedObjectAccess",    testNestedObjectAccess    ),
-    ( "testNestedObjectNil",       testNestedObjectNil       ),
-    ( "testDefaultValueDirect",    testDefaultValueDirect    ),
-    ( "testDefaultValueNilObject", testDefaultValueNilObject ),
-    ( "testDictionaryAccess",      testDictionaryAccess      ),
-  ]
 }

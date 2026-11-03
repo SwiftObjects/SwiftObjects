@@ -3,9 +3,12 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
-open class WOResourceURLAssociation : WOAssociation, SmartDescription {
+open class WOResourceURLAssociation : WOAssociation, SmartDescription,
+                                      @unchecked Sendable
+{
   
   let filename : String
   

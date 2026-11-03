@@ -10,30 +10,28 @@
  * Render a subsection or not depending on some component state.
  *
  * Sample:
- *
- *     ShowIfRed: WOConditional {
- *         condition = currentColor;
- *         value     = "red";
- *     }
+ * ```wod
+ * ShowIfRed: WOConditional {
+ *     condition = currentColor;
+ *     value     = "red";
+ * }
+ * ```
  *
  * Renders:
- *
- *     This element does not render anything.
+ * This element does not render anything.
  *
  * Bindings:
+ * - condition   [in] - boolean or object if used with value binding
+ * - negate      [in] - boolean
+ * - value/v     [in] - object
+ * - match       [in] - object (Pattern or Matcher or Pattern-String)
+ * - q/qualifier [in] - EOQualifier to be used as condition
+ * - not         [in] - boolean (sets condition/negate=true)
+ *
+ * ``WOConditional`` is an aliased element:
+ * ```xml
+ * <wo:if var:value="obj.isTeam">...</wo:if>
  * ```
- *   condition   [in] - boolean or object if used with value binding
- *   negate      [in] - boolean
- *   value/v     [in] - object
- *   match       [in] - object (Pattern or Matcher or Pattern-String)
- *   q/qualifier [in] - EOQualifier to be used as condition
- *   not         [in] - boolean (sets condition/negate=true)
- * ```
- *
- * WOConditional is an aliased element:
- *
- *    <wo:if var:value="obj.isTeam">...</wo:if>
- *
  */
 open class WOConditional : WODynamicElement {
   

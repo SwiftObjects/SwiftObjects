@@ -11,7 +11,7 @@ import jQuery
 import SemanticUI
 
 @main
-final class WOShowcaseApp : WOApplication {
+final class WOShowcaseApp : WOApplication, @unchecked Sendable {
 
   override init() {
     super.init()

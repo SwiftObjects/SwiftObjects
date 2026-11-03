@@ -9,19 +9,18 @@
  * After a Go method associated with a request got run and returned a result,
  * Go will trigger a renderer to turn the result into a HTTP response.
  *
- * For regular WO like applications the result is usually a `WOComponent` which
- * itself does the actual rendering (the `GoDefaultRenderer` calls the
- * `append(to:in:)` method of WOComponent).
+ * For regular WO like applications the result is usually a ``WOComponent``
+ * which itself does the actual rendering (the ``GoDefaultRenderer`` calls the
+ * `append(to:in:)` method of ``WOComponent``).
  *
- * Note that the render directly renders into the `WOResponse` which is
- * contained in the `WOContext`.
+ * Note that the render directly renders into the ``WOResponse`` which is
+ * contained in the ``WOContext``.
  *
- * Renderers are triggered by the `WOApplication` object
+ * Renderers are triggered by the ``WOApplication`` object
  * (renderObject(_:in:) method).
  *
- * @see GoDefaultRenderer
- * @see WOApplication
- * @see GoObjectRendererFactory
+ * - SeeAlso: ``GoDefaultRenderer``, ``WOApplication``,
+ *            ``GoObjectRendererFactory``
  */
 public protocol GoObjectRenderer {
   
@@ -32,34 +31,33 @@ public protocol GoObjectRenderer {
   
   /**
    * Checks whether the renderer can render the given object in the given
-   * context. Eg a PDF renderer could return false if the `WORequest` of the
+   * context. Eg a PDF renderer could return false if the ``WORequest`` of the
    * _ctx does not contain an 'accept' handler which misses `application/pdf`.
    *
    * If a renderer returns 'false', Go will continue looking for other
-   * renderers or fallback to the GoDefaultRenderer.
+   * renderers or fallback to the ``GoDefaultRenderer``.
    *
-   * @param _object - the object to be rendered
-   * @param _ctx    - the context to render the object in
-   * @return true if the renderer can render the object, false otherwise
+   * - Parameters:
+   *   - object:  the object to be rendered
+   *   - context: the context to render the object in
+   * - Returns:   true if the renderer can render the object, false otherwise
    */
   func canRenderObject(_ object: Any?, in context: WOContext) -> Bool
   
 }
 
 /**
- * Instances returned by the factory should be GoObjectRenderer objects.
+ * Instances returned by the factory should be ``GoObjectRenderer`` objects.
  *
- * Unlike `GoObjectRenderer` objects `GoObjectRendererFactory` objects are
+ * Unlike ``GoObjectRenderer`` objects ``GoObjectRendererFactory`` objects are
  * usually part of the object traversal path. Eg they could be folder objects
  * which can contain special "master templates" (the actual root renderers).
  *
- * If the `WOApplication` cannot find a factory in the traversal path, it will
- * first resort to the product registry and then return the `GoDefaultRenderer`
- * (which is just fine for plenty of situations).
+ * If the ``WOApplication`` cannot find a factory in the traversal path, it will
+ * first resort to the product registry and then return the
+ * ``GoDefaultRenderer`` (which is just fine for plenty of situations).
  *
- * @see GoObjectRenderer
- * @see GoDefaultRenderer
- * @see WOApplication
+ * - SeeAlso: ``GoObjectRenderer``, ``GoDefaultRenderer``, ``WOApplication``
  */
 public protocol GoObjectRendererFactory {
   
@@ -67,18 +65,19 @@ public protocol GoObjectRendererFactory {
    * Returns a renderer which should be used to render the given _result object
    * in the given context.
    *
-   * @param _result - the object which shall be rendered
-   * @param _ctx    - the context in which the object lookup happened
-   * @return a renderer or null if the factory could not return one
+   * - Parameters:
+   *   - object:  the object which shall be rendered
+   *   - context: the context in which the object lookup happened
+   * - Returns:   a renderer or null if the factory could not return one
    */
   func rendererForObject(_ object: Any?, in context: WOContext)
        -> GoObjectRenderer?
   
 }
 
-open class GoDefaultRenderer : GoObjectRenderer {
+open class GoDefaultRenderer : GoObjectRenderer, @unchecked Sendable {
   
-  enum RenderError : WOHttpAwareError {
+  enum RenderError : WOHttpAwareError, @unchecked Sendable {
     case cannotRenderObject(Any?)
     case responseResultIsUnsuppored
     case notFound

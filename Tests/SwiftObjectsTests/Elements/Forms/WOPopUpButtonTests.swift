@@ -303,24 +303,4 @@ class WOPopUpButtonTests: FormTestCase {
     // Selection should NOT be updated
     XCTAssertEqual(testComponent.selection as? String, "A")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testSelectTagRendering",   testSelectTagRendering   ),
-    ( "testOptionRendering",      testOptionRendering      ),
-    ( "testSelectedOption",       testSelectedOption       ),
-    ( "testNoSelectionString",    testNoSelectionString    ),
-    ( "testEscapeHTML",           testEscapeHTML           ),
-    ( "testNoEscapeHTML",         testNoEscapeHTML         ),
-    ( "testDisabledBinding",      testDisabledBinding      ),
-    ( "testIdBinding",            testIdBinding            ),
-    ( "testStringBinding",        testStringBinding        ),
-    ( "testSelectionByIndex",     testSelectionByIndex     ),
-    ( "testNoSelectionSubmit",    testNoSelectionSubmit    ),
-    ( "testSelectedValueBinding", testSelectedValueBinding ),
-    ( "testSkipsWhenDisabled",    testSkipsWhenDisabled    ),
-    ( "testSkipsMissingFormValue", testSkipsMissingFormValue ),
-  ]
 }

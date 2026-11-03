@@ -9,10 +9,8 @@
  * Dynamically replace components in a template.
  *
  * Bindings:
- * ```
- *   WOComponentName - String [in]
- *   other bindings  - will be bindings for the instantiated component
- * ```
+ * - WOComponentName - String [in]
+ * - other bindings  - will be bindings for the instantiated component
  */
 open class WOSwitchComponent : WOHTMLDynamicElement {
   

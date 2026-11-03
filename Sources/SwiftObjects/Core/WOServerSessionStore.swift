@@ -9,7 +9,7 @@
 import class Foundation.NSLock
 
 /**
- * WOServerSessionStore
+ * ``WOServerSessionStore``
  *
  * This class keeps session in-memory.
  *

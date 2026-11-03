@@ -11,52 +11,59 @@
  * would render the frame HTML and the actual content can stay in the page.
  *
  * Parent Sample (HTML):
- *
- *     <wo:Child>renders this text</wo:Child>
+ * ```xml
+ * <wo:Child>renders this text</wo:Child>
+ * ```
  *
  * Child Sample (HTML):
- *
- *     <b>Content: <#Content/></b>
+ * ```xml
+ * <b>Content: <#Content/></b>
+ * ```
  *
  * Child Sample (WOD):
- *
- *     Content: WOComponentContent {}
+ * ```wod
+ * Content: WOComponentContent {}
+ * ```
  *
  * Renders:
- *
- *     <b>Content: renders this text</b>
+ * ```xml
+ * <b>Content: renders this text</b>
+ * ```
  *
  *
  * Copy bindings:
- *
- *     <div id="leftmenu">
- *         <#WOComponentContent section="menu" />
- *     </div>
- *     <div id="content">
- *         <#WOComponentContent section="content" />
- *     </div>
+ * ```xml
+ * <div id="leftmenu">
+ *     <#WOComponentContent section="menu" />
+ * </div>
+ * <div id="content">
+ *     <#WOComponentContent section="content" />
+ * </div>
+ * ```
  *
  * This will set the 'section' key in the parent component to 'a' prior entering
  * the template. You can then check in the parent template:
- *
- *     <wo:if var:condition="section" value="menu">a b c</wo:if>
+ * ```xml
+ * <wo:if var:condition="section" value="menu">a b c</wo:if>
+ * ```
  *
  * Fragments
  *
- *     <wo:WOComponentContent fragmentID="menu" />
- *     <wo:WOComponentContent fragmentID="content" />
+ * ```xml
+ * <wo:WOComponentContent fragmentID="menu" />
+ * <wo:WOComponentContent fragmentID="content" />
+ * ```
  *
- * And in the parent template:<pre>
- *
- *     <wo:WOFragment name="menu"> ... </wo:WOFragment>
+ * And in the parent template:
+ * ```xml
+ * <wo:WOFragment name="menu"> ... </wo:WOFragment>
+ * ```
  *
  * But be careful, this can interact with AJAX fragment processing.
  *
  * Bindings:
- * ```
- *   - fragmentID [in] - string   disable rendering and set fragment-id
- *   [extra]      [in] - object   copied into the parent component
- * ```
+ * - fragmentID   [in] - string   disable rendering and set fragment-id
+ * - [extra]      [in] - object   copied into the parent component
  */
 open class WOComponentContent : WODynamicElement {
   

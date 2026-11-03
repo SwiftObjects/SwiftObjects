@@ -95,13 +95,4 @@ class WOContextURLTests: XCTestCase {
     XCTAssert(rurl.hasPrefix("/MyApp/wo/"))
     XCTAssert(rurl.hasSuffix("10.rep.1"))
   }
-  
-  
-  // MARK: - Linux
-  
-  static var allTests = [
-    ( "testComponentAction",        testComponentAction   ),
-    ( "testQueryDictRedirect",      testQueryDictRedirect ),
-    ( "testRootComponentActionGen", testRootComponentActionGen ),
-  ]
 }

@@ -13,9 +13,9 @@
  *
  * There are four basic request handlers:
  *
- * - WODirectActionRequestHandler
- * - WOComponentRequestHandler
- * - WOResourceRequestHandler
+ * - ``WODirectActionRequestHandler``
+ * - ``WOComponentRequestHandler``
+ * - ``WOResourceRequestHandler``
  * - GoObjectRequestHandler
  *
  * Technically the first three are superflous in Go because of the

@@ -132,7 +132,7 @@ public extension MutableKeyValueCodingType where Self: AnyObject {
 
 public struct KeyValueCoding {
   
-  public enum Error : Swift.Error {
+  public enum Error : Swift.Error, @unchecked Sendable {
     case UnsupportedDictionaryKeyType(Any.Type)
     case CannotCoerceValueForKey(Any.Type, Any?, String)
     case CannotCoerceValue(Any.Type, Any?)
@@ -529,7 +529,7 @@ public extension KeyValueCodingType {
 
 /**
  * Cached metadata for a Swift type including its properties.
- * Private to this file - external code should use KeyValueCoding API.
+ * Private to this file - external code should use ``KeyValueCoding`` API.
  */
 fileprivate struct TypeInfo {
 
@@ -812,7 +812,7 @@ private let typeInfoCache = Mutex<[ ObjectIdentifier : TypeInfo ]>([:])
 
 /**
  * Get cached TypeInfo for a type.
- * Private to this file - external code should use KeyValueCoding API.
+ * Private to this file - external code should use ``KeyValueCoding`` API.
  */
 fileprivate func typeInfo(of type: Any.Type) -> TypeInfo {
   let key = ObjectIdentifier(type)
@@ -826,7 +826,7 @@ fileprivate func typeInfo(of type: Any.Type) -> TypeInfo {
 
 /**
  * Get cached TypeInfo for a value's type.
- * Private to this file - external code should use KeyValueCoding API.
+ * Private to this file - external code should use ``KeyValueCoding`` API.
  */
 fileprivate func typeInfo<T>(of value: T) -> TypeInfo {
   typeInfo(of: Swift.type(of: value as Any))

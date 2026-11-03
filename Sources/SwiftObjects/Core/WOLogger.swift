@@ -3,15 +3,15 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
  * A logger object.
  *
- * A concrete implementation is the `WOPrintLogger`.
+ * A concrete implementation is the ``WOPrintLogger``.
  */
-public protocol WOLogger {
+public protocol WOLogger : Sendable {
   
   typealias LogLevel = WOLogLevel
 
@@ -42,7 +42,7 @@ public extension WOLogger {
 /**
  * WO log levels.
  */
-public enum WOLogLevel : Int8 {
+public enum WOLogLevel : Int8, Sendable {
   case Error
   case Warn
   case Log

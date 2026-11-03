@@ -26,11 +26,4 @@ class WOGenericElementTests: DynamicElementTestCase {
     try e.append(to: response, in: context)
     XCTAssertEqual(response.contentString, "<li class=\"selected\">10</li>")
   }
-
-  
-  // MARK: - Linux
-  
-  static var allTests = [
-    ( "testLIWithClass", testLIWithClass ),
-  ]
 }

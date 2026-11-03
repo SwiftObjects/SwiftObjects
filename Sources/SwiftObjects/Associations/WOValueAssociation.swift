@@ -3,20 +3,23 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
  * Represents a constant value.
  *
  * For example:
+ * ```xml
+ * <wo:str value="Hello World" />
+ * ```
  *
- *     <wo:str value="Hello World" />
- *
- * Will result in a WOValueAssociation<String> with the constant value
+ * Will result in a `WOValueAssociation<String>` with the constant value
  * "Hello World".
  */
-public class WOValueAssociation<Element> : WOAssociation, SmartDescription {
+public final class WOValueAssociation<Element>: WOAssociation, SmartDescription,
+                                                @unchecked Sendable
+{
   
   public let value : Element
   

@@ -8,46 +8,43 @@
 
 /**
  * Sample:
- *
- *     Form: WOForm {
- *         directActionName = "postComment";
- *         actionClass      = "CommentPage";
- *     }
+ * ```wod
+ * Form: WOForm {
+ *     directActionName = "postComment";
+ *     actionClass      = "CommentPage";
+ * }
+ * ```
  *
  * Renders:
- *
- *     <form href="/servlet/app/wa/CommentPage/postComment?comment=blub">
- *       [sub-template]
- *     </form>
+ * ```xml
+ * <form href="/servlet/app/wa/CommentPage/postComment?comment=blub">
+ *   [sub-template]
+ * </form>
+ * ```
  *
  * Bindings:
- * ```
- *   id                 [in]  - string (elementID and HTML DOM id)
- *   target             [in]  - string
- *   method             [in]  - string (POST/GET)
- *   errorReport        [i/o] - WOErrorReport (autocreated when null) / bool
- *   forceTakeValues    [in]  - boolean (whether the form *must* run takeValues)
- * ```
- * Bindings (WOLinkGenerator):
- * ```
- *   href               [in] - string
- *   action             [in] - action
- *   pageName           [in] - string
- *   directActionName   [in] - string
- *   actionClass        [in] - string
- *   fragmentIdentifier [in] - string
- *   queryDictionary    [in] - Map<String,Object>
- *   ?wosid             [in] - boolean (constant!)
- *   - all bindings starting with a ? are stored as query parameters.
- * ```
+ * - id                 [in]  - string (elementID and HTML DOM id)
+ * - target             [in]  - string
+ * - method             [in]  - string (POST/GET)
+ * - errorReport        [i/o] - ``WOErrorReport`` (autocreated when null) / bool
+ * - forceTakeValues    [in]  - boolean (whether the form *must* run takeValues)
  *
- * Bindings (WOHTMLElementAttributes):<pre>
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * Bindings (``WOLinkGenerator``):
+ * - href               [in] - string
+ * - action             [in] - action
+ * - pageName           [in] - string
+ * - directActionName   [in] - string
+ * - actionClass        [in] - string
+ * - fragmentIdentifier [in] - string
+ * - queryDictionary    [in] - `Map<String,Object>`
+ * - ?wosid             [in] - boolean (constant!)
+ *   - all bindings starting with a ? are stored as query parameters.
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOForm : WOHTMLDynamicElement {
   
@@ -86,19 +83,21 @@ open class WOForm : WOHTMLDynamicElement {
   // MARK: - Responder
   
   /**
-   * Returns a new or existing WOErrorReport object for the given WOContext.
-   * This checks the 'errorReport' associations, which can have those values:
+   * Returns a new or existing ``WOErrorReport`` object for the given
+   * ``WOContext``. This checks the 'errorReport' associations, which can have
+   * those values:
    *
    * - null! - if the binding is set, but returns null, a NEW error report
    *       will be created and pushed to the binding
-   * - WOErrorReport - a specific object is given
+   * - ``WOErrorReport`` - a specific object is given
    * - Boolean true/false - if true, a new report will be created
    * - String evaluated as a Boolean (eg "true"/"false"), same like above
    *
-   * Note: This does NOT touch the WOContext's active errorReport. Its only
-   *       used to setup new reports using the 'errorReport' binding.
+   * Note: This does NOT touch the ``WOContext``'s active errorReport. Its only
+   * used to setup new reports using the 'errorReport' binding.
    *
-   * @param the active WOContext
+   * - Parameters:
+   *   - context: the active ``WOContext``
    */
   open func prepareErrorReportObject(in context: WOContext) -> WOErrorReport? {
     guard let errorReport = errorReport else { return nil }
@@ -284,7 +283,7 @@ open class WOForm : WOHTMLDynamicElement {
    * - action
    * - method
    * - target
-   * and those supported by {@link WOHTMLElementAttributes}.
+   * and those supported by ``WOHTMLElementAttributes``.
    */
   func appendCoreAttributes(id: String?,
                             to response: WOResponse, in context: WOContext)

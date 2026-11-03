@@ -10,8 +10,9 @@
  * This element just renders a named or numeric entity in HTML/XML syntax.
  *
  * Sample:
- *
- *     AUml: WOEntity { name = "auml"; }
+ * ```wod
+ * AUml: WOEntity { name = "auml"; }
+ * ```
  *
  * Renders:
  * ```
@@ -19,9 +20,7 @@
  * ```
  *
  * Bindings:
- * ```
- *   name [in] - string
- * ```
+ * - name [in] - string
  */
 open class WOEntity : WOHTMLDynamicElement {
   

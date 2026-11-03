@@ -9,15 +9,15 @@
 /**
  * This element is used to mark rendering fragments. If Go receives a URL
  * which contains the 'wofid' request parameter, it will disable rendering in
- * the WOContext. This element can be used to reenable rendering for a certain
- * template subsection.
+ * the ``WOContext``. This element can be used to reenable rendering for a
+ * certain template subsection.
  *
  * Note that request handling is NOT affected by fragments! This is necessary
  * to ensure a proper component state setup. If you wish, you can further
  * reduce processing overhead using WOConditionals in appropriate places (if
  * you know that those sections do not matter for processing)
  *
- * Fragments can be nested. WOFragment sections _never_ disable rendering or
+ * Fragments can be nested. ``WOFragment`` sections _never_ disable rendering or
  * change template control flow, they only enable rendering when fragment ids
  * match. This way it is ensured that "sub fragments" will get properly
  * accessed.
@@ -26,20 +26,19 @@
  * fragment id is set (in the request).
  *
  * Sample:
- *
- *     <wo:fragment name="tableview" />
+ * ```xml
+ * <wo:fragment name="tableview" />
+ * ```
  *
  * Renders:
- *
- *     This element can render a container tag if the elementName is specified.
+ * This element can render a container tag if the elementName is specified.
  *
  * Bindings:
- * ```
- *   name        [in] - string       name of fragment
- *   onlyOnMatch [in] - boolean      enable/disable processing for other frags
- *   elementName [in] - string       optional name of container element
- *   TBD: wrong?[all other bindings are extra-attrs for elementName]
- * ```
+ * - name        [in] - string       name of fragment
+ * - onlyOnMatch [in] - boolean      enable/disable processing for other frags
+ * - elementName [in] - string       optional name of container element
+ *
+ * TBD: wrong? [all other bindings are extra-attrs for elementName]
  */
 open class WOFragment : WODynamicElement {
   

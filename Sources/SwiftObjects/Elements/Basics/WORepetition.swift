@@ -12,37 +12,36 @@
  * list. This way the containing elements can refer to the current item.
  *
  * Sample:
- *
- *     Countries: WORepetition {
- *         list = countries;
- *         item = country;
- *     }
+ * ```wod
+ * Countries: WORepetition {
+ *     list = countries;
+ *     item = country;
+ * }
+ * ```
  *
  * Renders:
  *   This element does not render anything (well, a separator when available).
  *
- * WOListWalker Bindings:
- * ```
- *   list       [in]  - WOListWalkable
- *   count      [in]  - int
- *   item       [out] - object
- *   index      [out] - int
- *   index1     [out] - int (like index, but starts at 1, not 0)
- *   startIndex [in]  - int
- *   identifier [in]  - string (TODO: currently unescaped)
- *   sublist    [in]  - WOListWalkable
- *   isEven     [out] - boolean
- *   isFirst    [out] - boolean
- *   isLast     [out] - boolean
- *   filter     [in]  - EOQualifier/String
- *   sort       [in]  - EOSortOrdering/EOSortOrdering[]/Comparator/String/bool
- *   elementName[in]  - contents in the specified element (eg: 'div')
- * ```
+ * ``WOListWalker`` Bindings:
+ * - list       [in]  - ``WOListWalkable``
+ * - count      [in]  - int
+ * - item       [out] - object
+ * - index      [out] - int
+ * - index1     [out] - int (like index, but starts at 1, not 0)
+ * - startIndex [in]  - int
+ * - identifier [in]  - string (TODO: currently unescaped)
+ * - sublist    [in]  - ``WOListWalkable``
+ * - isEven     [out] - boolean
+ * - isFirst    [out] - boolean
+ * - isLast     [out] - boolean
+ * - filter     [in]  - EOQualifier/String
+ * - sort       [in]  - EOSortOrdering/EOSortOrdering[]/Comparator/String/bool
+ * - elementName[in]  - contents in the specified element (eg: 'div')
+ *
  * Bindings:
- * ```
- *   separator  [in]  - string
- *   elementName[in]  - string (name of a wrapper element)
- * ```
+ * - separator  [in]  - string
+ * - elementName[in]  - string (name of a wrapper element)
+ *
  * Extra Bindings are used in combination with 'elementName'.
  */
 open class WORepetition : WOHTMLDynamicElement {

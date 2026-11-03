@@ -24,12 +24,10 @@
  *   response.
  *
  * Bindings:
- * ```
- *   header|key|name [in] - string
- *   value           [in] - object
- *   addToExisting   [in] - boolean   (use appendHeader instead of setHeader)
- *   object          [in] - WOMessage (defaults to context.response)
- * ```
+ * - header|key|name [in] - string
+ * - value           [in] - object
+ * - addToExisting   [in] - boolean   (use appendHeader instead of setHeader)
+ * - object          [in] - WOMessage (defaults to context.response)
  */
 open class WOSetHeader : WOHTMLDynamicElement {
   

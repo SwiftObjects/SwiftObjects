@@ -179,27 +179,4 @@ class WOAssociationFactoryTests: XCTestCase {
     XCTAssert(assoc?.isValueConstant ?? false)
     XCTAssertEqual(assoc?.stringValue(in: nil), "some value")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testKeyPathWithDot",       testKeyPathWithDot       ),
-    ( "testKeyPathWithoutDot",    testKeyPathWithoutDot    ),
-    ( "testEmptyKeyPath",         testEmptyKeyPath         ),
-    ( "testValueAssociationWithString", testValueAssociationWithString ),
-    ( "testValueAssociationWithInt",    testValueAssociationWithInt    ),
-    ( "testValueAssociationWithBool",   testValueAssociationWithBool   ),
-    ( "testVarPrefix",            testVarPrefix            ),
-    ( "testVarPrefixSimpleKey",   testVarPrefixSimpleKey   ),
-    ( "testConstPrefix",          testConstPrefix          ),
-    ( "testLabelPrefix",          testLabelPrefix          ),
-    ( "testNotPrefix",            testNotPrefix            ),
-    ( "testPlistPrefixArray",     testPlistPrefixArray     ),
-    ( "testPlistPrefixDictionary", testPlistPrefixDictionary ),
-    ( "testVarpatPrefix",         testVarpatPrefix         ),
-    ( "testRsrcPrefix",           testRsrcPrefix           ),
-    ( "testRsrcpatPrefix",        testRsrcpatPrefix        ),
-    ( "testUnknownPrefixDefault", testUnknownPrefixDefault ),
-  ]
 }

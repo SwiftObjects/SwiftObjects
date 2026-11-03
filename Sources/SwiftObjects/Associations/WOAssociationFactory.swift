@@ -33,32 +33,33 @@ public enum WOAssociationFactory {
   }
  
   /**
-   * Create an WOAssociation object for the given namespace prefix. This is
+   * Create an ``WOAssociation`` object for the given namespace prefix. This is
    * called when the parser encounters element attributes in the HTML file,
    * its not called from the WOD parser.
    *
    * Prefixes:
+   * - `const`   - ``WOAssociationFactory/associationWithValue(_:)``
+   * - `go`      - GoPathAssociation
+   * - `jo`      - GoPathAssociation (legacy name, use 'go' instead)
+   * - `label`   - WOLabelAssociation
+   * - `ognl`    - WOOgnlAssociation
+   * - `plist`   - ``WOAssociationFactory/associationWithValue(_:)``
+   * - `q`       - WOQualifierAssociation
+   * - `regex`   - WORegExAssociation
+   * - `role`    - WOCheckRoleAssociation
+   * - `rsrc`    - ``WOResourceURLAssociation``
+   * - `rsrcpat` - ``WOResourcePatternAssociation``
+   * - `var`     - ``WOAssociationFactory/associationWithKeyPath(_:)``
+   * - `varpat`  - ``WOKeyPathPatternAssociation``
+   * - `not`     - WONegateAssociation on ``WOKeyPathAssociation``
    *
-   * - const   - WOAssociation.associationWithValue
-   * - go      - GoPathAssociation
-   * - jo      - GoPathAssociation (legacy name, use 'go' instead)
-   * - label   - WOLabelAssociation
-   * - ognl    - WOOgnlAssociation
-   * - plist   - WOAssociation.associationWithValue
-   * - q       - WOQualifierAssociation
-   * - regex   - WORegExAssociation
-   * - role    - WOCheckRoleAssociation
-   * - rsrc    - WOResourceURLAssociation
-   * - rsrcpat - WOResourceURLAssociation
-   * - var     - WOAssociation.associationWithKeyPath
-   * - varpat  - WOKeyPathPatternAssociation
-   * - not     - WONegateAssociation on WOKeyPathAssociation
+   * If no prefix matches, ``WOAssociationFactory/associationWithValue(_:)``
+   * will be used.
    *
-   * If no prefix matches, associationWithValue will be used.
-   *
-   * @param _prefix - the parsed prefix which denotes the association class
-   * @param _name   - the name of the binding (not relevant in this imp)
-   * @param _value  - the value which needs to be put into the context
+   * - Parameters:
+   *   - prefix: the parsed prefix which denotes the association class
+   *   - name:   the name of the binding (not relevant in this imp)
+   *   - value:  the value which needs to be put into the context
    */
   public static func associationForPrefix(_ prefix: String, name: String,
                                           value: String) throws

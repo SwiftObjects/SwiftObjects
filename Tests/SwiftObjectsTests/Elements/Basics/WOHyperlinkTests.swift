@@ -231,25 +231,4 @@ class WOHyperlinkTests: FormTestCase {
 
     XCTAssertFalse(testComponent.actionCalled)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testSimpleHref",              testSimpleHref              ),
-    ( "testStringContent",           testStringContent           ),
-    ( "testValueAsContent",          testValueAsContent          ),
-    ( "testTemplateContent",         testTemplateContent         ),
-    ( "testTargetAttribute",         testTargetAttribute         ),
-    ( "testIdAttribute",             testIdAttribute             ),
-    ( "testDisabledRendersContentOnly", testDisabledRendersContentOnly ),
-    ( "testDisableOnMissingLink",    testDisableOnMissingLink    ),
-    ( "testDirectActionURL",         testDirectActionURL         ),
-    ( "testDirectActionWithActionClass", testDirectActionWithActionClass ),
-    ( "testActionWithActionClass",   testActionWithActionClass   ),
-    ( "testHrefWithFragment",        testHrefWithFragment        ),
-    ( "testActionLinkRendering",     testActionLinkRendering     ),
-    ( "testNoActionWhenSenderIDDoesNotMatch",
-                                     testNoActionWhenSenderIDDoesNotMatch ),
-  ]
 }

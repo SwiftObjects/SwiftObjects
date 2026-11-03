@@ -10,22 +10,19 @@
  * Abstract superclass for elements which participate in FORM processing.
  *
  * Bindings:
- * ```
- *   id         [in]  - string
- *   name       [in]  - string
- *   value      [io]  - object
- *   readValue  [in]  - object (different value for generation)
- *   writeValue [out] - object (different value for takeValues)
- *   disabled   [in]  - boolean
- *   idname     [in]  - string   - set id and name bindings in one step
- * ```
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
- *   .key   [in]  - 'class' parameters (eg `<input class="selected">`)
- * ```
+ * - id         [in]  - string
+ * - name       [in]  - string
+ * - value      [io]  - object
+ * - readValue  [in]  - object (different value for generation)
+ * - writeValue [out] - object (different value for takeValues)
+ * - disabled   [in]  - boolean
+ * - idname     [in]  - string   - set id and name bindings in one step
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOInput : WOHTMLDynamicElement {
   
@@ -71,8 +68,9 @@ open class WOInput : WOHTMLDynamicElement {
    * Checks whether the name binding is set. If so, the name is returned. If
    * not, the current element-id is returned.
    *
-   * @param _ctx - the WOContext to operate in
-   * @return a 'name' for the form element
+   * - Parameters:
+   *   - context: the ``WOContext`` to operate in
+   * - Returns:   a 'name' for the form element
    */
   func elementName(in context: WOContext) -> String {
     return name?.stringValue(in: context.cursor) ?? context.elementID
@@ -84,11 +82,11 @@ open class WOInput : WOHTMLDynamicElement {
   /**
    * This method is called by takeValuesFromRequest() to convert the given
    * value to the internal representation. Which is usually done by a
-   * WOFormatter subclass.
+   * ``WOFormatter`` subclass.
    *
    * If the method throws an exception, handleParseException() will get called
    * to deal with it. The default implementation either adds the error to an
-   * WOErrorReport, or throws the exception as a runtime exception.
+   * ``WOErrorReport``, or throws the exception as a runtime exception.
    */
   open func parseFormValue(_ value: Any?, in context: WOContext) throws -> Any?
   {
@@ -101,11 +99,12 @@ open class WOInput : WOHTMLDynamicElement {
    * a String). For example a user entered some string in a textfield which has
    * a numberformat attached.
    *
-   * @param _formName  - name of the form field
-   * @param _formValue - value transmitted by the browser
-   * @param _e         - the exception which was caught (ParseException)
-   * @param _ctx       - the WOContext
-   * @return true if the caller should stop processing
+   * - Parameters:
+   *   - formName:  name of the form field
+   *   - formValue: value transmitted by the browser
+   *   - error:     the exception which was caught (ParseException)
+   *   - context:   the ``WOContext``
+   * - Returns:     true if the caller should stop processing
    */
   open func handleParseError(inField formName: String,
                              with formValue: Any?,

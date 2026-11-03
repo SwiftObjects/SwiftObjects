@@ -3,7 +3,7 @@
 //  SwiftObjectsTests
 //
 //  Created by Helge Hess on 28.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import XCTest
@@ -40,11 +40,4 @@ class WORequestFormDecoderTests: XCTestCase {
     
     XCTAssertEqual(s, "My First Component")
   }
-  
-  // MARK: - Linux
-  
-  static var allTests = [
-    ( "testQueryParameterDecoder", testQueryParameterDecoder ),
-    ( "testPostBodyDecoder",       testPostBodyDecoder ),
-  ]
 }

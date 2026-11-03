@@ -18,7 +18,7 @@
  * not explicitly grabbed (removed from the '_assocs' ctor Map) by subclasses.
  * What is done with those extra bindings depends on the subclass, usually
  * they are added to the HTML tag which is managed by the dynamic element.
- * For example extra-attrs in a WOHyperlink are (usually) added to the <a>
+ * For example extra-attrs in a ``WOHyperlink`` are (usually) added to the <a>
  * tag.
  *
  * Further 'extra bindings' can be `%(key)s` style patterns IF
@@ -42,10 +42,11 @@ open class WODynamicElement : WOElement, SmartDescription {
   }
   
   /**
-   * Usually called by the WOWrapperTemplateBuilder to apply bindings which
+   * Usually called by the ``WOWrapperTemplateBuilder`` to apply bindings which
    * did not get grabbed in the constructor of the element.
    *
-   * @param _attrs - the bindings map (often empty)
+   * - Parameters:
+   *   - associations: the bindings map (often empty)
    */
   public func setExtraAttributes(_ associations: inout Bindings) {
     otherTagString = associations.removeValue(forKey: "otherTagString")
@@ -60,9 +61,10 @@ open class WODynamicElement : WOElement, SmartDescription {
    * sign, the value of the key is treated as pattern for the
    * KeyValueStringFormatter.format() function.
    *
-   * @param _r - the WOResponse
-   * @param _c - the WOContext
-   * @param _patObject - the pattern object, usually the active WOComponent
+   * - Parameters:
+   *   - response:      the ``WOResponse``
+   *   - context:       the ``WOContext``
+   *   - patternObject: the pattern object, usually the active ``WOComponent``
    */
   func appendExtraAttributes(to response   : WOResponse,
                              in context    : WOContext,
@@ -116,14 +118,16 @@ open class WODynamicElement : WOElement, SmartDescription {
   }
 
   /**
-   * Utility function to add WOAssociation ivar info to a description string.
-   * Example:
+   * Utility function to add ``WOAssociation`` ivar info to a description
+   * string. Example:
+   * ```
+   * appendAssocToDescription(_d, "id", this.idBinding)
+   * ```
    *
-   *     appendAssocToDescription(_d, "id", this.idBinding)
-   *
-   * @param _d    - the String to add the description to
-   * @param _name - name of the binding
-   * @param _a    - WOAssociation object used as the binding value
+   * - Parameters:
+   *   - ms:    the String to add the description to
+   *   - name:  name of the binding
+   *   - assoc: ``WOAssociation`` object used as the binding value
    */
   public static func appendBindingToDescription(_ ms    : inout String,
                                                 _ name  : String,

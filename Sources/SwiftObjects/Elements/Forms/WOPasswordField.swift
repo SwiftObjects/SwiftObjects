@@ -22,27 +22,22 @@
  *   <input type="password" name="password" value="abc123" />
  * ```
  *
- * Bindings (WOInput):
- * ```
- *   id         [in]  - string
- *   name       [in]  - string
- *   value      [io]  - object
- *   readValue  [in]  - object (different value for generation)
- *   writeValue [out] - object (different value for takeValues)
- *   disabled   [in]  - boolean
- * ```
- * Bindings:<pre>
- * ```
- *   size       [in]  - int
- * ```
+ * Bindings (``WOInput``):
+ * - id         [in]  - string
+ * - name       [in]  - string
+ * - value      [io]  - object
+ * - readValue  [in]  - object (different value for generation)
+ * - writeValue [out] - object (different value for takeValues)
+ * - disabled   [in]  - boolean
  *
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * Bindings:
+ * - size       [in]  - int
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg <input style="color:red;">)
+ * - .key   [in]  - 'class' parameters (eg <input class="selected">)
  */
 open class WOPasswordField : WOInput {
   

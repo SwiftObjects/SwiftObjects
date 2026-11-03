@@ -6,7 +6,7 @@
 //  Copyright © 2018 ZeeZide. All rights reserved.
 //
 
-public class WOKeyAssociation : WOAssociation, SmartDescription {
+public final class WOKeyAssociation : WOAssociation, SmartDescription {
   
   public let key : String
   

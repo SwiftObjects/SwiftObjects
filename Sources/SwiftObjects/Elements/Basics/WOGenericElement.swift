@@ -8,15 +8,16 @@
 
 /**
  * This renders an arbitrary (HTML) tag. It allows you to make attributes of the
- * tag dynamic. WOGenericElement is for "empty" elements (like <br/>), for
- * elements with subelements use WOGenericContainer.
+ * tag dynamic. ``WOGenericElement`` is for "empty" elements (like <br/>), for
+ * elements with subelements use ``WOGenericContainer``.
  *
  * Sample:
- *
- *     DynHR: WOGenericElement {
- *         elementName = "hr";
- *         border      = currentBorderWidth;
- *     }
+ * ```wod
+ * DynHR: WOGenericElement {
+ *     elementName = "hr";
+ *     border      = currentBorderWidth;
+ * }
+ * ```
  *
  * Renders:
  * ```
@@ -24,41 +25,39 @@
  * ```
  *
  * Bindings:
- * ```
- *   tagName [in] - string
+ * - tagName [in] - string
  *   - all other bindings are mapped to tag attributes
- * ```
  *
- * Special +/- binding hack (NOTE: clases with WOHTMLElementAttributes)
+ * Special +/- binding hack (NOTE: clases with ``WOHTMLElementAttributes``)
  *
  * This element treats all bindings starting with either + or - as conditions
  * which decide whether a value should be rendered.
  * For example:
+ * ```wod
+ * Font: WOGenericElement {
+ *     elementName = "span";
  *
- *     Font: WOGenericElement {
- *         elementName = "span";
- *
- *         +style = isCurrent;
- *         style  = "current"; // only applied if isCurrent is true
- *     }
+ *     +style = isCurrent;
+ *     style  = "current"; // only applied if isCurrent is true
+ * }
+ * ```
  *
  * Further, this hack treats constant string conditions as
  * WOQualifierConditions allowing stuff like this:
+ * ```wod
+ * FontOfScheduler: WOGenericElement {
+ *     elementName = "span";
  *
- *     FontOfScheduler: WOGenericElement {
- *         elementName = "span";
- *
- *         +style = "context.page.name = 'Scheduler'";
- *         style  = "current"; // only applied if isCurrent is true
- *     }
- *
- * Bindings (WOHTMLElementAttributes):
+ *     +style = "context.page.name = 'Scheduler'";
+ *     style  = "current"; // only applied if isCurrent is true
+ * }
  * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOGenericElement : WOHTMLDynamicElement {
   // TODO: maybe this doesn't make a lot of sense, but we need some mechanism

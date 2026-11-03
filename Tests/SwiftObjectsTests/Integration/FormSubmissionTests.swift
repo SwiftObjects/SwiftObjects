@@ -255,18 +255,4 @@ class FormSubmissionTests: FormTestCase {
     // Value should NOT be updated because field is disabled
     XCTAssertEqual(testComponent.stringValue, "original")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testSimpleFormSubmit",        testSimpleFormSubmit        ),
-    ( "testFormWithMultipleFields",  testFormWithMultipleFields  ),
-    ( "testCheckboxInForm",          testCheckboxInForm          ),
-    ( "testCheckboxUncheckedInForm", testCheckboxUncheckedInForm ),
-    ( "testPopUpButtonSelection",    testPopUpButtonSelection    ),
-    ( "testFormRendersAllFields",    testFormRendersAllFields    ),
-    ( "testFormWithRepetition",      testFormWithRepetition      ),
-    ( "testDisabledFieldsNotUpdated", testDisabledFieldsNotUpdated ),
-  ]
 }

@@ -45,26 +45,29 @@ public extension WOAction {
  *        specific thing. (i.e. something static)
  *
  * This is what I want (leaving alone proper Reflection in Swift):
- *
- *     init(context: WOContext) {
- *       expose(defaultAction, as: "default")
- *     }
+ * ```swift
+ * init(context: WOContext) {
+ *   expose(defaultAction, as: "default")
+ * }
+ * ```
  *
  * An issue is that using `self.abc` returns a bound function (captures self).
  *
  * An ugly option is this:
- *
- *     init(context: WOContext) {
- *       expose({ [weak self] in self?.defaultAction(), as: "default")
- *     }
+ * ```swift
+ * init(context: WOContext) {
+ *   expose({ [weak self] in self?.defaultAction(), as: "default")
+ * }
+ * ```
  *
  * But this is not really what we'd do in WO, but more like a route.
  *
  * So for now this does:
- *
- *     init(context: WOContext) {
- *       expose(DirectAction.defaultAction, as: "default")
- *     }
+ * ```swift
+ * init(context: WOContext) {
+ *   expose(DirectAction.defaultAction, as: "default")
+ * }
+ * ```
  *
  * Well, actually we can break cycles in `sleep` or after performing an action,
  * they have definite life times.
@@ -79,19 +82,21 @@ public protocol WOActionMapper : AnyObject {
    * Explicitly expose an action method to the Web.
    *
    * Example DirectAction:
-   *
-   *     init(context: WOContext) {
-   *         super.init(context: context)
-   *         expose(defaultAction, as: "default")
-   *         expose(sayHello,      as: "hello")
-   *     }
+   * ```swift
+   * init(context: WOContext) {
+   *     super.init(context: context)
+   *     expose(defaultAction, as: "default")
+   *     expose(sayHello,      as: "hello")
+   * }
+   * ```
    *
    * Component:
-   *
-   *     override func awake() {
-   *         super.awake()
-   *         expose(defaultAction, as: "default")
-   *     }
+   * ```swift
+   * override func awake() {
+   *     super.awake()
+   *     expose(defaultAction, as: "default")
+   * }
+   * ```
    */
   func expose(_ cb: @escaping WOActionCallback, as name: String)
   

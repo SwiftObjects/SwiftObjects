@@ -7,9 +7,9 @@
 //
 
 /**
- * A WODirectAction object is pretty much like a servlet, it can accept
+ * A ``WODirectAction`` object is pretty much like a servlet, it can accept
  * requests and is responsible for producing a result. The result can be
- * either a WOResponse or a WOComponent or anything else which can be
+ * either a ``WOResponse`` or a ``WOComponent`` or anything else which can be
  * rendered by Go.
  */
 open class WODirectAction : WOAction, SmartDescription,
@@ -40,21 +40,23 @@ open class WODirectAction : WOAction, SmartDescription,
   
   /**
    * Implements the "direct action" request handling / method lookup. This is
-   * a static method because its reused by WOComponent.
+   * a static method because its reused by ``WOComponent``.
    *
    * This implementation checks for a method with a name which ends in "Action"
    * and which has no parameters, eg:
-   *
-   *     defaultAction
-   *     viewAction
+   * ```
+   * defaultAction
+   * viewAction
+   * ```
    *
    * Hence only methods ending in "Action" are exposed (automagically) to the
    * web.
    *
-   * @param _o    - the WODirectAction or WOComponent
-   * @param _name - the name of the action to invoke
-   * @param _ctx  - the WOContext to run the action in
-   * @return the result, eg a WOComponent or WOResponse
+   * - Parameters:
+   *   - name:    the name of the action to invoke
+   *   - object:  the ``WODirectAction`` or ``WOComponent``
+   *   - context: the ``WOContext`` to run the action in
+   * - Returns:   the result, eg a ``WOComponent`` or ``WOResponse``
    */
   public static func performActionNamed(_ name: String, on object: Any,
                                         in context: WOContext) throws -> Any?

@@ -269,26 +269,4 @@ class WOCheckBoxTests: FormTestCase {
 
     XCTAssertNil(testComponent.selection)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testInputTypeCheckbox",         testInputTypeCheckbox         ),
-    ( "testNameBinding",               testNameBinding               ),
-    ( "testCheckedAttributeWhenTrue",  testCheckedAttributeWhenTrue  ),
-    ( "testNotCheckedWhenFalse",       testNotCheckedWhenFalse       ),
-    ( "testSafeguardField",            testSafeguardField            ),
-    ( "testValueBinding",              testValueBinding              ),
-    ( "testDefaultValue",              testDefaultValue              ),
-    ( "testDisabledBinding",           testDisabledBinding           ),
-    ( "testIdBinding",                 testIdBinding                 ),
-    ( "testCheckboxChecked",           testCheckboxChecked           ),
-    ( "testCheckboxUnchecked",         testCheckboxUnchecked         ),
-    ( "testNoUpdateWithoutSafeguard",  testNoUpdateWithoutSafeguard  ),
-    ( "testSkipsWhenDisabled",         testSkipsWhenDisabled         ),
-    ( "testSelectionBinding",          testSelectionBinding          ),
-    ( "testSelectionClearedWhenUnchecked",
-                                       testSelectionClearedWhenUnchecked ),
-  ]
 }

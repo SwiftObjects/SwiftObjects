@@ -8,8 +8,8 @@
 
 /**
  * This helper objects manages "WO Component Actions". To generate URLs it
- * calls the WOContext' componentActionURL() method. To trigger the action
- * it just evaluates the 'action' association (since the calling WOElement
+ * calls the ``WOContext``' componentActionURL() method. To trigger the action
+ * it just evaluates the 'action' association (since the calling ``WOElement``
  * already checks whether the link should be triggered, eg by comparing the
  * senderID).
  */
@@ -42,15 +42,16 @@ open class WOActionLinkGenerator : WOLinkGenerator {
   }
   
   /**
-   * Invoke the action for the action link. Eg this is called by WOHyperlink
+   * Invoke the action for the action link. Eg this is called by ``WOHyperlink``
    * if its element-id matches the senderid, hence its action should be
    * triggered.
    * Therefore this method just evaluates its associated method (by evaluating
    * the binding, which in turn calls the unary method) and returns the value.
    *
-   * @param _rq  - the WORequest representing the call
-   * @param _ctx - the active WOContext
-   * @return the result of the action
+   * - Parameters:
+   *   - request: the ``WORequest`` representing the call
+   *   - context: the active ``WOContext``
+   * - Returns:   the result of the action
    */
   override
   open func invokeAction(for request: WORequest, in context: WOContext) throws
@@ -60,15 +61,17 @@ open class WOActionLinkGenerator : WOLinkGenerator {
   }
   
   /**
-   * Checks whether a WOForm should call takeValuesFromRequest() on its
+   * Checks whether a ``WOForm`` should call takeValuesFromRequest() on its
    * subtemplate tree.
    * 
-   * This implementation checks whether the senderID() of the WOContext matches
-   * the current elementID().
+   * This implementation checks whether the senderID() of the ``WOContext``
+   * matches the current elementID().
    *
-   * @param _rq  - the WORequest containing the form values
-   * @param _ctx - the active WOContext
-   * @return true if the WOForm should trigger its childrens, false otherwise
+   * - Parameters:
+   *   - request: the ``WORequest`` containing the form values
+   *   - context: the active ``WOContext``
+   * - Returns:   true if the ``WOForm`` should trigger its childrens, false
+   *              otherwise
    */
   override open func shouldFormTakeValues(from request: WORequest,
                                           in context: WOContext) -> Bool

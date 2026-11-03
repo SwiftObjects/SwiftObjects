@@ -9,9 +9,9 @@
 /**
  * Generates links which can trigger direct action methods. The basic link
  * scheme is:
- *
- *     /AppName/ActionClass/ActionName[?parameters[&wosid]]
- *
+ * ```
+ * /AppName/ActionClass/ActionName[?parameters[&wosid]]
+ * ```
  */
 open class WODirectActionLinkGenerator : WOLinkGenerator {
   
@@ -79,10 +79,10 @@ open class WODirectActionLinkGenerator : WOLinkGenerator {
   }
 
   /**
-   * Checks whether a WOForm should call takeValuesFromRequest() on its
+   * Checks whether a ``WOForm`` should call takeValuesFromRequest() on its
    * subtemplate tree.
    *
-   * The WODirectActionLinkGenerator implementation of this method asks the
+   * The ``WODirectActionLinkGenerator`` implementation of this method asks the
    * page which is active in the given context.
    */
   override open func shouldFormTakeValues(from request: WORequest,

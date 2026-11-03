@@ -161,21 +161,4 @@ class ArrayKVCTests: XCTestCase {
     XCTAssertNotNil(result)
     XCTAssertEqual(result?.count, 3)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testArrayCountOperator",           testArrayCountOperator           ),
-    ( "testArrayCountOperatorEmpty",      testArrayCountOperatorEmpty      ),
-    ( "testArrayCountOperatorStrings",    testArrayCountOperatorStrings    ),
-    ( "testArrayMapsKeyToElements",       testArrayMapsKeyToElements       ),
-    ( "testArrayMapsKeyToElementsEmpty",  testArrayMapsKeyToElementsEmpty  ),
-    ( "testArrayMapsKeyMissingProperty",  testArrayMapsKeyMissingProperty  ),
-    ( "testArrayViaKeyValueCoding",       testArrayViaKeyValueCoding       ),
-    ( "testNestedArrayKeypath",           testNestedArrayKeypath           ),
-    ( "testArrayOfDictionariesKeypath",   testArrayOfDictionariesKeypath   ),
-    ( "testDeepNestedArrayAccess",        testDeepNestedArrayAccess        ),
-    ( "testArrayUnknownAtOperator",       testArrayUnknownAtOperator       ),
-  ]
 }

@@ -9,9 +9,9 @@
 import struct Foundation.TimeInterval
 
 /**
- * Superclass for "session stores". A WOSessionStore manages the WOSession
- * objects which are not in use by requests. It maintains a checkin/checkout
- * queue to ensure that access to the sessions is serialized.
+ * Superclass for "session stores". A ``WOSessionStore`` manages the
+ * ``WOSession`` objects which are not in use by requests. It maintains a
+ * checkin/checkout queue to ensure that access to the sessions is serialized.
  */
 public protocol WOSessionStore {
   

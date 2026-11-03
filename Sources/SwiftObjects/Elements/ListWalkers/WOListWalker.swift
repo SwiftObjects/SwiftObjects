@@ -7,20 +7,20 @@
 //
 
 /**
- * This is a helper object used by WORepetition to walk over a list.
+ * This is a helper object used by ``WORepetition`` to walk over a list.
  *
  * A special feature is that the 'list' binding can contain DOM nodes, NodeList
  * and EODataSource's (fetchObjects will get called).
  *
  * Bindings:
- * - list       [in]  - WOListWalkable
+ * - list       [in]  - ``WOListWalkable``
  * - count      [in]  - int
  * - item       [out] - object
  * - index      [out] - int
  * - index1     [out] - int (like index, but starts at 1, not 0)
  * - startIndex [in]  - int
  * - identifier [in]  - string (TODO: currently unescaped)
- * - sublist    [in]  - WOListWalkable
+ * - sublist    [in]  - ``WOListWalkable``
  * - isEven     [out] - boolean
  * - isFirst    [out] - boolean
  * - isLast     [out] - boolean
@@ -98,8 +98,8 @@ extension Set : WOListWalkable {
 public enum WOListWalkerFactory {
   
   /**
-   * Creates a new WOListWalker instance for the given associations.
-   * WOListWalker itself is an abstract class, this method returns the
+   * Creates a new ``WOListWalker`` instance for the given associations.
+   * ``WOListWalker`` itself is an abstract class, this method returns the
    * appropriate (optimized) subclass.
    */
   public static func newListWalker(bindings: inout WOListWalker.Bindings)

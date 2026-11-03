@@ -120,20 +120,4 @@ class WODirectActionRequestHandlerTests: XCTestCase {
 
     XCTAssertNil(response)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testDefaultActionName",           testDefaultActionName           ),
-    ( "testSinglePathComponent",         testSinglePathComponent         ),
-    ( "testTwoPathComponents",           testTwoPathComponents           ),
-    ( "testActionWithExtension",         testActionWithExtension         ),
-    ( "testThreePathComponents",         testThreePathComponents         ),
-    ( "testHandlerHasApplication",       testHandlerHasApplication       ),
-    ( "testMissingResourceManagerReturnsNil",
-                                         testMissingResourceManagerReturnsNil ),
-    ( "testRenderStringResult",          testRenderStringResult          ),
-    ( "testRenderNilResult",             testRenderNilResult             ),
-  ]
 }

@@ -235,23 +235,4 @@ class WOTextFieldTests: FormTestCase {
     XCTAssertEqual(testComponent.stringValue, "readValue") // unchanged
     XCTAssertEqual(testComponent.selection as? String, "writeValue")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testInputTypeText",         testInputTypeText         ),
-    ( "testNameBinding",           testNameBinding           ),
-    ( "testValueBinding",          testValueBinding          ),
-    ( "testSizeBinding",           testSizeBinding           ),
-    ( "testDisabledBinding",       testDisabledBinding       ),
-    ( "testReadonlyBinding",       testReadonlyBinding       ),
-    ( "testIdBinding",             testIdBinding             ),
-    ( "testIdNameShortcut",        testIdNameShortcut        ),
-    ( "testTakeValueFromForm",     testTakeValueFromForm     ),
-    ( "testTrimBinding",           testTrimBinding           ),
-    ( "testSkipsWhenDisabled",     testSkipsWhenDisabled     ),
-    ( "testSkipsMissingFormValue", testSkipsMissingFormValue ),
-    ( "testReadWriteValueBindings", testReadWriteValueBindings ),
-  ]
 }

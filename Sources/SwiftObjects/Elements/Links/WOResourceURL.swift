@@ -28,12 +28,10 @@
  * ```
  *
  * Bindings:
- * ```
- *   src              [in] - string
- *   directActionName [in] - string
- *   actionClass      [in] - string
- *   filename         [in] - string
- * ```
+ * - src              [in] - string
+ * - directActionName [in] - string
+ * - actionClass      [in] - string
+ * - filename         [in] - string
  *
  * TODO: document
  */

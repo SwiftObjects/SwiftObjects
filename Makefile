@@ -9,7 +9,7 @@ CONFIGURATION=release
 
 # docker config
 DOCKER_BUILD_DIR=.docker.build
-SWIFT_BUILD_IMAGE=swift:6.2
+SWIFT_BUILD_IMAGE=swift:6.4
 #SWIFT_BUILD_IMAGE="helje5/swift-dev:6.2.3"
 DOCKER_BUILD_DIR=".docker.build"
 SWIFT_DOCKER_BUILD_DIR="$(DOCKER_BUILD_DIR)/aarch64-unknown-linux/$(CONFIGURATION)"

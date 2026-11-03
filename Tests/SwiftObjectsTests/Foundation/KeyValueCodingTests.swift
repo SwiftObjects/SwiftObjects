@@ -397,36 +397,4 @@ class KeyValueCodingTests: XCTestCase {
       XCTAssertEqual(key, "unknown")
     }
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testValueForKeySimple",              testValueForKeySimple              ),
-    ( "testValueForKeyNilObject",           testValueForKeyNilObject           ),
-    ( "testValueForKeyMissing",             testValueForKeyMissing             ),
-    ( "testTakeValueForKey",                testTakeValueForKey                ),
-    ( "testTakeValueForKeyNilValue",        testTakeValueForKeyNilValue        ),
-    ( "testTakeValueForKeyNilObject",       testTakeValueForKeyNilObject       ),
-    ( "testValueForKeyPathSimple",          testValueForKeyPathSimple          ),
-    ( "testValueForKeyPathNested",          testValueForKeyPathNested          ),
-    ( "testValueForKeyPathDeep",            testValueForKeyPathDeep            ),
-    ( "testValueForKeyPathNilIntermediate", testValueForKeyPathNilIntermediate ),
-    ( "testValueForKeyPathArrayForm",       testValueForKeyPathArrayForm       ),
-    ( "testTakeValueForKeyPath",            testTakeValueForKeyPath            ),
-    ( "testTakeValueForKeyPathArrayForm",   testTakeValueForKeyPathArrayForm   ),
-    ( "testTakeValueForKeyPathNilIntermediate",
-                                         testTakeValueForKeyPathNilIntermediate ),
-    ( "testValuesForKeys",                  testValuesForKeys                  ),
-    ( "testValuesForKeysNilObject",         testValuesForKeysNilObject         ),
-    ( "testValuesForKeysMissingKeys",       testValuesForKeysMissingKeys       ),
-    ( "testTakeValuesForKeys",              testTakeValuesForKeys              ),
-    ( "testEmptyKeyPathError",              testEmptyKeyPathError              ),
-    ( "testEmptyKeyPathArrayError",         testEmptyKeyPathArrayError         ),
-    ( "testCannotTakeValueForKeyError",     testCannotTakeValueForKeyError     ),
-    ( "testHandleQueryWithUnboundKey",      testHandleQueryWithUnboundKey      ),
-    ( "testHandleTakeValueForUnboundKey",   testHandleTakeValueForUnboundKey   ),
-    ( "testDefaultUnboundKeyReturnsNil",    testDefaultUnboundKeyReturnsNil    ),
-    ( "testDefaultUnboundKeyThrows",        testDefaultUnboundKeyThrows        ),
-  ]
 }

@@ -32,12 +32,13 @@ final class WOComponentFault : WOComponent {
    * If it got a resource manager, it invokes pageWithName() on it to locate
    * the component and transfers the bindings from the fault to that component.
    *
-   * This method is called by WOComponent's childComponentWithName method to
+   * This method is called by ``WOComponent``'s childComponentWithName method to
    * replace a fault if it gets used by some template element (usually this is
-   * triggered by WOChildComponentReference).
+   * triggered by ``WOChildComponentReference``).
    *
-   * @param _parent - the parent component
-   * @return the resolved child component, or null if something went wrong
+   * - Parameters:
+   *   - parent: the parent component
+   * - Returns:  the resolved child component, or null if something went wrong
    */
   func resolve(with parent: WOComponent) -> WOComponent? {
     let context = self.context ?? parent.context

@@ -192,21 +192,4 @@ class WOFormTests: FormTestCase {
     XCTAssertNotNil(testComponent.selection)
     XCTAssert(testComponent.selection is WOErrorReport)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testFormTagRendering",     testFormTagRendering     ),
-    ( "testMethodBinding",        testMethodBinding        ),
-    ( "testIdBinding",            testIdBinding            ),
-    ( "testTargetBinding",        testTargetBinding        ),
-    ( "testActionAttribute",      testActionAttribute      ),
-    ( "testDirectActionURL",      testDirectActionURL      ),
-    ( "testTakeValuesFromPOST",   testTakeValuesFromPOST   ),
-    ( "testSkipsTakeValuesOnGET", testSkipsTakeValuesOnGET ),
-    ( "testForceTakeValues",      testForceTakeValues      ),
-    ( "testIsInFormFlag",         testIsInFormFlag         ),
-    ( "testErrorReportBinding",   testErrorReportBinding   ),
-  ]
 }

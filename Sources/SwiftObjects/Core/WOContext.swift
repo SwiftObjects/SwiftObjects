@@ -7,12 +7,13 @@
 //
 
 /**
- * The WOContext is the context for one HTTP transaction, that is, one
+ * The ``WOContext`` is the context for one HTTP transaction, that is, one
  * request/response cycle. It provides access to all objects required for
  * handling the requests, this includes request, response, the session,
  * the current page and so on.
  *
- * THREAD: WOContext is not threadsafe, its supposed to be used from one thread
+ * THREAD: ``WOContext`` is not threadsafe, its supposed to be used from one
+ * thread
  *         only (the one processing the HTTP request).
  */
 public protocol WOContext : WOCoreContext, WOLifecycle,
@@ -44,7 +45,7 @@ public protocol WOContext : WOCoreContext, WOLifecycle,
    *
    * Unlike SOPE the Go/So element id does NOT include the context-id.
    *
-   * @return a unique identifier for the current element (in page scope)
+   * - Returns: a unique identifier for the current element (in page scope)
    */
   var elementID           : String     { get set }
   
@@ -55,8 +56,8 @@ public protocol WOContext : WOCoreContext, WOLifecycle,
   func setNewSession(_ sn: WOSession)
   
   /**
-   * Returns the WOQuerySession attached to the context. This calls the
-   * WOApplication's restoreQuerySessionInContext() on demand to set up
+   * Returns the ``WOQuerySession`` attached to the context. This calls the
+   * ``WOApplication``'s restoreQuerySessionInContext() on demand to set up
    * the query session.
    */
   var querySession        : WOQuerySession   { get }
@@ -64,7 +65,7 @@ public protocol WOContext : WOCoreContext, WOLifecycle,
   /**
    * This method uses the query session to determine which query parameters
    * should be included in a URL. The method is called by URL generating dynamic
-   * elements (eg WOHyperlink).
+   * elements (eg ``WOHyperlink``).
    */
   var allQuerySessionValues : [ String : Any ] { get }
 
@@ -77,52 +78,55 @@ public protocol WOContext : WOCoreContext, WOLifecycle,
   var componentContent    : WOElement?   { get }
   
   /**
-   * If a WOForm is entered, it calls this method to remember the fact. Remember
-   * that forms must not be nested.
+   * If a ``WOForm`` is entered, it calls this method to remember the fact.
+   * Remember that forms must not be nested.
    */
   var isInForm            : Bool         { get set }
   
   /**
-   * This method is called during the takeValues() phase by WOInput elements to
-   * register an element as the active one. Eg if a WOSubmitButton encounters
-   * that its value is set during takeValues() it will set itself as the active
-   * form element (since only the values of the pressed submit button are
-   * transmitted, hence can be used to detect the action).
+   * This method is called during the takeValues() phase by ``WOInput`` elements
+   * to register an element as the active one. Eg if a ``WOSubmitButton``
+   * encounters that its value is set during takeValues() it will set itself as
+   * the active form element (since only the values of the pressed submit button
+   * are transmitted, hence can be used to detect the action).
    *
    * This basically moves the invoke step to the take values process for form
    * values. Actually this should not be strictly necessary?
    *
-   * @param _element - the WOElement for the action (usually an WOInput object)
+   * - Parameters:
+   *   - element: the ``WOElement`` for the action (usually an ``WOInput``
+   *              object)
    */
   func addActiveFormElement(_ element: WOElement)
   
   /**
-   * Returns the element (usually an WOInput) which registered itself as the
+   * Returns the element (usually an ``WOInput``) which registered itself as the
    * active one during the takeValues() phase.
    */
   var activeFormElement : WOElement? { get }
 
   /**
-   * Returns the currently active WOErrorReport. This method is called by
-   * dynamic elements (eg WOInput) which want to attach errors.
+   * Returns the currently active ``WOErrorReport``. This method is called by
+   * dynamic elements (eg ``WOInput``) which want to attach errors.
    * The value can be null (in this case the elements usually throw an
    * exception).
    *
-   * Error reports are pushed to the WOContext using the pushErrorReport()
-   * method. For example this is called by WOForm if the errorReport binding
+   * Error reports are pushed to the ``WOContext`` using the pushErrorReport()
+   * method. For example this is called by ``WOForm`` if the errorReport binding
    * is set.
    *
-   * @return the active WOErrorReport object
+   * - Returns: the active ``WOErrorReport`` object
    */
   var errorReport : WOErrorReport? { get }
   
   /**
-   * This method is used to push a new WOErrorReport object to the stack of
+   * This method is used to push a new ``WOErrorReport`` object to the stack of
    * error reports. New error reports will be attached to their parent report,
    * so that a hierarchy of reports can be built.
-   * E.g. it is called by WOForm if the 'errorReport' binding is set.
+   * E.g. it is called by ``WOForm`` if the 'errorReport' binding is set.
    *
-   * @param _report - the new WOErrorReport object
+   * - Parameters:
+   *   - report: the new ``WOErrorReport`` object
    */
   func pushErrorReport(_ report : WOErrorReport)
   func popErrorReport () -> WOErrorReport?
@@ -214,11 +218,12 @@ public extension WOContext {
    *
    * Important: this does *not* embed a session id! Session ids or query
    * session parameters are added to the queryDict by the respective
-   * WODynamicElement class (usually WOLinkGenerator).
+   * ``WODynamicElement`` class (usually ``WOLinkGenerator``).
    *
-   * @param _name      - a direct action name, eg "Main/default"
-   * @param _queryDict - set of query parameters to be included in the URL
-   * @return a URL
+   * - Parameters:
+   *   - name:            a direct action name, eg "Main/default"
+   *   - queryDictionary: set of query parameters to be included in the URL
+   * - Returns:           a URL
    */
   func directActionURLForActionNamed(_ name: String,
                                      with queryDictionary: [ String : Any? ]?)
@@ -234,10 +239,11 @@ public extension WOContext {
    *
    * Important: this does *not* embed a session id! Session ids or query
    * session parameters are added to the queryDict by the respective
-   * WODynamicElement class (usually WOLinkGenerator).
+   * ``WODynamicElement`` class (usually ``WOLinkGenerator``).
    *
-   * @param _name      - a direct action name, eg "Main/default"
-   * @return a URL
+   * - Parameters:
+   *   - name:  a direct action name, eg "Main/default"
+   * - Returns: a URL
    */
   func directActionURLForActionNamed(_ name: String) -> String {
     return urlWithRequestHandlerKey(application.directActionRequestHandlerKey,
@@ -250,11 +256,12 @@ public extension WOContext {
    * query dictionary with the query session parameters and the session-id (if
    * one is active).
    *
-   * @param _name            - name of the direct action (eg Main/default)
-   * @param _queryDict       - query parameters
-   * @param _addSnId         - whether to include the session id (?wosid)
-   * @param _incQuerySession - whether to include the query session
-   * @return a URL pointing to the direct action
+   * - Parameters:
+   *   - name:                name of the direct action (eg Main/default)
+   *   - queryDictionary:     query parameters
+   *   - addSessionID:        whether to include the session id (?wosid)
+   *   - includeQuerySession: whether to include the query session
+   * - Returns:               a URL pointing to the direct action
    */
   func directActionURLForActionNamed(_ name: String,
                                      with queryDictionary : [ String : Any? ]?,
@@ -305,10 +312,10 @@ public extension WOContext {
 
   /**
    * Adds a zero to the element ID. Example:
-   *
-   *     "2.3.4.5" => "2.3.4.5.0"
-   *     ""        => "0"
-   *
+   * ```
+   * "2.3.4.5" => "2.3.4.5.0"
+   * ""        => "0"
+   * ```
    */
   func appendZeroElementIDComponent() {
     if elementID.isEmpty { elementID +=  "0" }
@@ -318,9 +325,10 @@ public extension WOContext {
   /**
    * Increments the last part of the element-id. Example
    *
-   *     "2.3.4.5" => "2.3.4.6"
-   *     "2"       => "3"
-   *
+   * ```
+   * "2.3.4.5" => "2.3.4.6"
+   * "2"       => "3"
+   * ```
    */
   func incrementLastElementIDComponent(by value: Int = 1) {
     if let r = elementID.range(of: ".", options: .backwards) {
@@ -338,9 +346,10 @@ public extension WOContext {
   /**
    * Deletes the last part of the element-id. Example
    *
-   *     "2.3.4.5" => "2.3.4"
-   *     "2"       => ""
-   *
+   * ```
+   * "2.3.4.5" => "2.3.4"
+   * "2"       => ""
+   * ```
    */
   func deleteLastElementIDComponent() {
     if let r = elementID.range(of: ".", options: .backwards) {
@@ -410,7 +419,7 @@ open class WOAppContext : WOCoreContextBase, WOContext, ExtraVariables {
      * Returns the List of languages associated with this request. This method is
      * checked for localization.
      *
-     * @return a List of language codes (eg ['en', 'de'])
+     * - Returns: a List of language codes (eg ['en', 'de'])
      */
     get {
       if let langs = _languages { return langs }

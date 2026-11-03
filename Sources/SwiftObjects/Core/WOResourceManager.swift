@@ -12,17 +12,17 @@ import struct Foundation.Locale
 import class  Foundation.Bundle
 import class  Foundation.NSLock
 
-/*
- * Manages access to resources associated with WOApplication.
+/**
+ * Manages access to resources associated with ``WOApplication``.
  *
  * ## Component Discovery and Page Creation in SOPE
  *
- * All WO code uses either directly or indirectly the WOResourceManager's
+ * All WO code uses either directly or indirectly the ``WOResourceManager``'s
  * `-pageWithName:languages:` method to instantiate WO components.
  *
  * This methods works in three steps:
  * - discovery of files associated with the component
- * - creation of a proper WOComponentDefinition, which is some kind
+ * - creation of a proper ``WOComponentDefinition``, which is some kind
  *   of 'blueprint' or 'class' for components
  * - component instantiation using the definition
  *
@@ -31,12 +31,13 @@ import class  Foundation.NSLock
  * resources.
  *
  * If you want to customize component creation, you can supply your
- * own WOComponentDefinition in a subclass of WOResourceManager by
+ * own ``WOComponentDefinition`` in a ``WOResourceManager`` implementation by
  * overriding:
- *
- *     - (WOComponentDefinition *)definitionForComponent:(id)_name
- *       inFramework:(NSString *)_frameworkName
- *       languages:(NSArray *)_languages</pre>
+ * ```swift
+ * func definitionForComponent(_ name: String, languages: [ String ],
+ *                             using resourceManager: WOResourceManager)
+ *      -> WOComponentDefinition?
+ * ```
  *
  * THREAD: TODO
  */
@@ -49,28 +50,30 @@ public protocol WOResourceManager {
   /**
    * Locates the component definition for the given component name and
    * instantiates that definition. No other magic involved.
-   * Note that the WOComponent will (per default) use templateWithName() to
-   * locate its template, which involves the same WOComponentDefinition.
+   * Note that the ``WOComponent`` will (per default) use templateWithName() to
+   * locate its template, which involves the same ``WOComponentDefinition``.
    *
    * This method gets called by WOApplication.pageWithName(), but also by
-   * the WOComponentFault. (TBD: when to use this method directly?)
+   * the ``WOComponentFault``. (TBD: when to use this method directly?)
    *
-   * @param _name - name of page to lookup and instantiate
-   * @param _ctx  - the WOContext to instantiate the page in
-   * @return an instantiated WOComponent, or nil on error
+   * - Parameters:
+   *   - name:    name of page to lookup and instantiate
+   *   - context: the ``WOContext`` to instantiate the page in
+   * - Returns:   an instantiated ``WOComponent``, or nil on error
    */
   func pageWithName(_ name: String, in context: WOContext?) -> WOComponent?
 
   /**
    * Locates the component definition for the given component name and
    * returns the associated dynamic element tree.
-   * This is called by WOComponent when it requests its template for request
+   * This is called by ``WOComponent`` when it requests its template for request
    * processing or rendering.
    *
-   * @param _name  - name of template (same like the components name)
-   * @param _langs - languages to check
-   * @param _rm    - class context in which to parse template class names
-   * @return the parsed template
+   * - Parameters:
+   *   - name:            name of template (same like the components name)
+   *   - languages:       languages to check
+   *   - resourceManager: class context in which to parse template class names
+   * - Returns:           the parsed template
    */
   func templateWithName(_ name: String, languages: [ String ],
                         using resourceManager: WOResourceManager) -> WOElement?
@@ -80,18 +83,20 @@ public protocol WOResourceManager {
 
   /**
    * This is the primary method to locate a component and return a
-   * WOComponentDefinition describing it. The definition is just a blueprint,
-   * not an actual instance of the component.
+   * ``WOComponentDefinition`` describing it. The definition is just a
+   * blueprint, not an actual instance of the component.
    *
    * The method calls load() on the definition, this will actually load the
    * template of the component.
    *
    * All the caching is done by the wrapping method.
    *
-   * @param _name  - the name of the component to load (eg 'Main')
-   * @param _langs - the languages to check
-   * @param _rm    - the RM used to lookup classes
-   * @return a WOComponentDefinition which represents the specific component
+   * - Parameters:
+   *   - name:            the name of the component to load (eg 'Main')
+   *   - languages:       the languages to check
+   *   - resourceManager: the RM used to lookup classes
+   * - Returns:           a ``WOComponentDefinition`` which represents the
+   *                      specific component
    */
   func templateWithName(_ name: String, languages: [ String ],
                         using resourceManager: WOResourceManager)
@@ -99,18 +104,20 @@ public protocol WOResourceManager {
 
   /**
    * This is the primary method to locate a component and return a
-   * WOComponentDefinition describing it. The definition is just a blueprint,
-   * not an actual instance of the component.
+   * ``WOComponentDefinition`` describing it. The definition is just a
+   * blueprint, not an actual instance of the component.
    *
    * The method calls load() on the definition, this will actually load the
    * template of the component.
    *
    * All the caching is done by the wrapping method.
    *
-   * @param _name  - the name of the component to load (eg 'Main')
-   * @param _langs - the languages to check
-   * @param _rm    - the RM used to lookup classes
-   * @return a WOComponentDefinition which represents the specific component
+   * - Parameters:
+   *   - name:            the name of the component to load (eg 'Main')
+   *   - languages:       the languages to check
+   *   - resourceManager: the RM used to lookup classes
+   * - Returns:           a ``WOComponentDefinition`` which represents the
+   *                      specific component
    */
   func definitionForComponent(_ name: String, languages: [ String ],
                                using resourceManager: WOResourceManager)
@@ -140,9 +147,11 @@ public protocol WOResourceManager {
    * Opens a stream to the given resource and loads the content into a byte
    * array.
    *
-   * @param _name  - name of the resource to be opened
-   * @param _langs - array of language codes (eg [ 'de', 'en' ])
-   * @return byte array with the contents, or null if the resource is missing
+   * - Parameters:
+   *   - name:      name of the resource to be opened
+   *   - languages: array of language codes (eg [ 'de', 'en' ])
+   * - Returns:     byte array with the contents, or null if the resource is
+   *                missing
    */
   func dataForResourceNamed(_ name: String, languages: [ String ]) -> Data?
 
@@ -153,11 +162,13 @@ public protocol WOResourceManager {
    *
    * This method is used to resolve 'filename' bindings in dynamic elements.
    *
-   * @param _name   - name of the resource
-   * @param _fwname - unused by the default implementation, a framework name
-   * @param _langs  - a set of language codes
-   * @param _ctx    - a WOContext, this will be asked to construct the URL
-   * @return a URL which allows the browser to retrieve the given resource
+   * - Parameters:
+   *   - name:      name of the resource
+   *   - bundle:    unused by the default implementation, a framework name
+   *   - languages: a set of language codes
+   *   - context:   a ``WOContext``, this will be asked to construct the URL
+   * - Returns:     a URL which allows the browser to retrieve the given
+   *                resource
    */
   func urlForResourceNamed(_ name: String, bundle: String?,
                            languages: [ String ],
@@ -173,8 +184,9 @@ public protocol WOResourceManager {
    *
    * This method is called by the WOContext.deriveLocale() method.
    *
-   * @param _langs - languages to check
-   * @return the Locale object for the given languages, or Locale.US
+   * - Parameters:
+   *   - languages: languages to check
+   * - Returns:     the Locale object for the given languages, or Locale.US
    */
   func localeForLanguages(_ languages: [ String ]) -> Locale
 
@@ -186,12 +198,13 @@ public protocol WOResourceManager {
    * to resolve the key. If the key could not be found, the _default is returned
    * instead.
    *
-   * @param _key     - string to lookup (eg: 05_private)
-   * @param _table   - name of table, eg null, LocalizableStrings, or Main
-   * @param _default - string to use if the key could not be resolved
-   * @param _fwname  - name of framework containing the resource, or null
-   * @param _langs   - languages to check for the key
-   * @return the resolved string, or the the _default
+   * - Parameters:
+   *   - key:       string to lookup (eg: 05_private)
+   *   - table:     name of table, eg null, LocalizableStrings, or Main
+   *   - default:   string to use if the key could not be resolved
+   *   - framework: name of framework containing the resource, or null
+   *   - languages: languages to check for the key
+   * - Returns:     the resolved string, or the the _default
    */
   func stringForKey(_ key: String, in table: String?, default: String?,
                     framework: String?, languages: [ String ]) -> String?
@@ -210,8 +223,9 @@ public protocol WOResourceManager {
    *
    * Note: this method is ONLY used for WOComponents.
    *
-   * @param _name - the name of the component to lookup
-   * @return a Class responsible for the component with the given name
+   * - Parameters:
+   *   - name:  the name of the component to lookup
+   * - Returns: a Class responsible for the component with the given name
    */
   func lookupComponentClass(_ name: String) -> WOComponent.Type?
 
@@ -221,23 +235,25 @@ public protocol WOResourceManager {
    * However, the default implementation just calls lookupClass() with the
    * given name :-)
    *
-   * Note: this method is used for WODynamicElement classes only.
+   * Note: this method is used for ``WODynamicElement`` classes only.
    *
-   * @param _name - the name of the element to lookup
-   * @return a Class responsible for the element with the given name
+   * - Parameters:
+   *   - name:  the name of the element to lookup
+   * - Returns: a Class responsible for the element with the given name
    */
   func lookupDynamicElementClass(_ name: String) -> WODynamicElement.Type?
 
   /**
    * This is invoked by code which wants to instantiate a "direct action". This
-   * can be a WOAction subclass, or a WOComponent.
+   * can be a ``WOAction`` subclass, or a ``WOComponent``.
    *
    * Note that the context is different to lookupComponentClass(), which
-   * can return a WOComponent or WODynamicElement. This method usually returns a
-   * WOComponent or a WOAction.
+   * can return a ``WOComponent`` or ``WODynamicElement``. This method usually
+   * returns a ``WOComponent`` or a ``WOAction``.
    *
-   * @param _name - the name of the action or class to lookup
-   * @return a Class to be used for instantiating the given action object
+   * - Parameters:
+   *   - name:  the name of the action or class to lookup
+   * - Returns: a Class to be used for instantiating the given action object
    */
   func lookupDirectActionClass(_ name: String) -> WODirectAction.Type?
   
@@ -290,7 +306,7 @@ public extension WOResourceManager { // default implementation
   }
 
   /**
-   * This manages the caching of WOComponentDefinition's. When asked for a
+   * This manages the caching of ``WOComponentDefinition``'s. When asked for a
    * definition it checks the cache and if it does not find one, it will call
    * the primary load method: definitionForComponent().
    */
@@ -316,18 +332,20 @@ public extension WOResourceManager { // default implementation
 
   /**
    * This is the primary method to locate a component and return a
-   * WOComponentDefinition describing it. The definition is just a blueprint,
-   * not an actual instance of the component.
+   * ``WOComponentDefinition`` describing it. The definition is just a
+   * blueprint, not an actual instance of the component.
    *
    * The method calls load() on the definition, this will actually load the
    * template of the component.
    *
    * All the caching is done by the wrapping method.
    *
-   * @param _name  - the name of the component to load (eg 'Main')
-   * @param _langs - the languages to check
-   * @param _rm    - the RM used to lookup classes
-   * @return a WOComponentDefinition which represents the specific component
+   * - Parameters:
+   *   - name:            the name of the component to load (eg 'Main')
+   *   - languages:       the languages to check
+   *   - resourceManager: the RM used to lookup classes
+   * - Returns:           a ``WOComponentDefinition`` which represents the
+   *                      specific component
    */
   func templateWithName(_ name: String, languages: [ String ],
                         using resourceManager: WOResourceManager)

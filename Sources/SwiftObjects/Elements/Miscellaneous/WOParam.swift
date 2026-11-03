@@ -9,11 +9,9 @@
 /**
  * Parameter value for applets.
  *
- * Bindings (WOLinkGenerator for image resource):
- * ```
- *   name  [in] - string
- *   value [in] - string
- * ```
+ * Bindings (``WOLinkGenerator`` for image resource):
+ * - name  [in] - string
+ * - value [in] - string
  */
 public class WOParam : WOHTMLDynamicElement {
   // TODO: document

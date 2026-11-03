@@ -33,11 +33,9 @@
  * - html5
  *
  * Bindings:
- * ```
- *   doctype|type  [in] - string (empty string for no doctype, default: quirks)
- *   language|lang [in] - language
- *   namespace|ns  [in] - default XML namespace
- * ```
+ * - doctype|type  [in] - string (empty string for no doctype, default: quirks)
+ * - language|lang [in] - language
+ * - namespace|ns  [in] - default XML namespace
  */
 public class WOHtml : WOHTMLDynamicElement {
   

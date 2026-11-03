@@ -13,8 +13,9 @@
  *   /AppName/ActionClass/@ActionName[?parameters[&wosid]]
  *
  * Example:
- *
- *     <wo:a id="double" @action="doDouble" string="double" />
+ * ```xml
+ * <wo:a id="double" @action="doDouble" string="double" />
+ * ```
  *
  * The example would call the 'doDouble' method in the page which currently
  * renders the template. The 'id' specifies the element-id (it's also the JS DOM
@@ -77,15 +78,16 @@ open class WOAtActionLinkGenerator : WOLinkGenerator {
   }
 
   /**
-   * Invoke the action for the at-action link. Eg this is called by WOHyperlink
-   * if its element-id matches the senderid, hence its action should be
-   * triggered.
-   * Therefore this method just evaluates its associated method (by evaluating
-   * the binding, which in turn calls the unary method) and returns the value.
+   * Invoke the action for the at-action link. Eg this is called by
+   * ``WOHyperlink`` if its element-id matches the senderid, hence its action
+   * should be triggered. Therefore this method just evaluates its associated
+   * method (by evaluating the binding, which in turn calls the unary method)
+   * and returns the value.
    *
-   * @param _rq  - the WORequest representing the call
-   * @param _ctx - the active WOContext
-   * @return the result of the action
+   * - Parameters:
+   *   - request: the ``WORequest`` representing the call
+   *   - context: the active ``WOContext``
+   * - Returns:   the result of the action
    */
   override
   open func invokeAction(for request: WORequest, in context: WOContext) throws
@@ -95,11 +97,11 @@ open class WOAtActionLinkGenerator : WOLinkGenerator {
   }
 
   /**
-   * Checks whether a WOForm should call takeValuesFromRequest() on its
+   * Checks whether a ``WOForm`` should call takeValuesFromRequest() on its
    * subtemplate tree.
    *
-   * This implementation checks whether the senderID() of the WOContext matches
-   * the current elementID().
+   * This implementation checks whether the senderID() of the ``WOContext``
+   * matches the current elementID().
    */
   override open func shouldFormTakeValues(from request: WORequest,
                                           in context: WOContext) -> Bool

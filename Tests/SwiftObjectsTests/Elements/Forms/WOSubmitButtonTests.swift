@@ -141,20 +141,4 @@ class WOSubmitButtonTests: FormTestCase {
 
     XCTAssertFalse(testComponent.actionCalled)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testInputTypeSubmit",             testInputTypeSubmit             ),
-    ( "testNameBinding",                 testNameBinding                 ),
-    ( "testValueAsLabel",                testValueAsLabel                ),
-    ( "testDisabledBinding",             testDisabledBinding             ),
-    ( "testIdBinding",                   testIdBinding                   ),
-    ( "testRegistersAsActiveFormElement", testRegistersAsActiveFormElement ),
-    ( "testSkipsTakeValuesWhenDisabled", testSkipsTakeValuesWhenDisabled ),
-    ( "testNotActiveWhenNotSubmitted",   testNotActiveWhenNotSubmitted   ),
-    ( "testNoActionWhenSenderIDDoesNotMatch",
-                                         testNoActionWhenSenderIDDoesNotMatch ),
-  ]
 }

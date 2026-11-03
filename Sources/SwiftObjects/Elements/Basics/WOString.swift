@@ -213,9 +213,10 @@ open class WOString : WOHTMLDynamicElement {
    * Rewrites `\n` characters to `<br />` tags. Note: the result must not be
    * escaped in subsequent processing.
    *
-   * @param _s        - String to rewrite
-   * @param _doEscape - whether the parts need to be escaped
-   * @return the rewritten string
+   * - Parameters:
+   *   - s:        String to rewrite
+   *   - doEscape: whether the parts need to be escaped
+   * - Returns:    the rewritten string
    */
   func handleInsertBR(_ s: String, doEscape: Bool, tag: String = "<br />")
        -> String
@@ -223,44 +224,23 @@ open class WOString : WOHTMLDynamicElement {
     /* Note: we can't use replace() because we need to escape the individual
      *       parts.
      */
-    #if swift(>=5) // 4.2 really?
-      if doEscape {
-        return s.components(separatedBy: "\n")
-                .map { $0.htmlEscaped }.joined(separator: tag)
-      }
-      else {
-        return s.replacingOccurrences(of: "\n", with: tag)
-      }
-    #elseif swift(>=4.1)
-      if doEscape {
-        return s.lazy.split(separator: "\n", omittingEmptySubsequences: false)
-                     .map { $0.htmlEscaped }
-                     .joined(separator: tag)
-      }
-      else {
-        return s.lazy.split(separator: "\n", omittingEmptySubsequences: false)
-                     .joined(separator: tag)
-      }
-    #else
-      if doEscape {
-        return s.split(separator: "\n", omittingEmptySubsequences:false)
-                .map { $0.htmlEscaped }
-                .joined(separator: tag)
-      }
-      else {
-        return s.split(separator: "\n", omittingEmptySubsequences: false)
-                .joined(separator: tag)
-      }
-    #endif
+    if doEscape {
+      return s.components(separatedBy: "\n")
+              .map { $0.htmlEscaped }.joined(separator: tag)
+    }
+    else {
+      return s.replacingOccurrences(of: "\n", with: tag)
+    }
   }
   
   /**
    * Embeds the String in an HTML tag, &lt;span&gt; per default.
    *
-   * @param _r       - the WOResponse to add to
-   * @param _ctx     - the WOContext in which the operation runs
-   * @param s        - the already formatted string to render
-   * @param doEscape - whether to use appendContentHTMLString() or not
+   * - Parameters:
+   *   - response: the ``WOResponse`` to add to
+   *   - context:  the ``WOContext`` in which the operation runs
+   *   - s:        the already formatted string to render
+   *   - doEscape: whether to use appendContentHTMLString() or not
    */
   func appendWrappedString(to response: WOResponse, in context: WOContext,
                            value s: String, doEscape: Bool) throws

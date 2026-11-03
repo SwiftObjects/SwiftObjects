@@ -10,21 +10,21 @@ import struct Foundation.Date
 import Synchronization
 
 /**
- * WOCoreContext
+ * ``WOCoreContext``
  *
- * The WOCoreContext is the context for one HTTP transaction, that is, one
+ * The ``WOCoreContext`` is the context for one HTTP transaction, that is, one
  * request/response cycle. The core context provides access to the minimal set
  * of objects required for handling the requests, this includes the request and
  * the response.
  *
- * You will usually want to use a WOContext, which adds page tracking and
+ * You will usually want to use a ``WOContext``, which adds page tracking and
  * session handling.
  *
  * Its possible to assign additional, context-specific values to a context using
- * KVC. The object has an extraAttributes Map just like WOComponent or
- * WOSession.
+ * KVC. The object has an extraAttributes Map just like ``WOComponent`` or
+ * ``WOSession``.
  *
- * THREAD: WOCoreContext is not threadsafe, its supposed to be used from one
+ * THREAD: ``WOCoreContext`` is not threadsafe, its supposed to be used from one
  *         thread only.
  */
 public protocol WOCoreContext : AnyObject, SmartDescription {
@@ -34,14 +34,14 @@ public protocol WOCoreContext : AnyObject, SmartDescription {
   var application : WOApplication { get }
   
   /**
-   * Returns the WORequest associated with the context. Its not strictly
+   * Returns the ``WORequest`` associated with the context. Its not strictly
    * required that a context has a request, e.g. if its just used for plain
    * rendering.
    */
   var request     : WORequest { get }
 
   /**
-   * Returns the WOResponse associated with the context. Its not strictly
+   * Returns the ``WOResponse`` associated with the context. Its not strictly
    * required that a context has a response, eg when its used to run just
    * the takeValues and/or invokeAction phases.
    */

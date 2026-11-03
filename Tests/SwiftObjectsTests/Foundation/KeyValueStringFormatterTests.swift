@@ -402,43 +402,4 @@ class KeyValueStringFormatterTests: XCTestCase {
 
     XCTAssertEqual(result, "<nil>")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testSimpleStringFormat",             testSimpleStringFormat             ),
-    ( "testStringFormatAlternate",          testStringFormatAlternate          ),
-    ( "testMultipleStringFormats",          testMultipleStringFormats          ),
-    ( "testStringFormatNilValue",           testStringFormatNilValue           ),
-    ( "testIntegerFormat",                  testIntegerFormat                  ),
-    ( "testIntegerFormatNilValue",          testIntegerFormatNilValue          ),
-    ( "testURLEncodedFormat",               testURLEncodedFormat               ),
-    ( "testURLEncodedFormatNonString",      testURLEncodedFormatNonString      ),
-    ( "testURLEncodedFormatNilValue",       testURLEncodedFormatNilValue       ),
-    ( "testNestedKeypath",                  testNestedKeypath                  ),
-    ( "testNestedKeypathNilIntermediate",   testNestedKeypathNilIntermediate   ),
-    ( "testEscapedPercent",                 testEscapedPercent                 ),
-    ( "testEscapedPercentWithFormat",       testEscapedPercentWithFormat       ),
-    ( "testNoPatterns",                     testNoPatterns                     ),
-    ( "testEmptyFormat",                    testEmptyFormat                    ),
-    ( "testRequiresAllObjectBased",         testRequiresAllObjectBased         ),
-    ( "testRequiresAllPresent",             testRequiresAllPresent             ),
-    ( "testRequiresAllArrayMissing",        testRequiresAllArrayMissing        ),
-    ( "testRequiresAllArrayPresent",        testRequiresAllArrayPresent        ),
-    ( "testArrayPositional",                testArrayPositional                ),
-    ( "testArrayPositionalMultiple",        testArrayPositionalMultiple        ),
-    ( "testArrayPositionalInteger",         testArrayPositionalInteger         ),
-    ( "testArrayPositionalMixed",           testArrayPositionalMixed           ),
-    ( "testArrayCountKey",                  testArrayCountKey                  ),
-    ( "testArrayLengthKey",                 testArrayLengthKey                 ),
-    ( "testArraySizeKey",                   testArraySizeKey                   ),
-    ( "testArrayIndexedAccess",             testArrayIndexedAccess             ),
-    ( "testArrayIndexedAccessOutOfBounds",  testArrayIndexedAccessOutOfBounds  ),
-    ( "testDictionaryObject",               testDictionaryObject               ),
-    ( "testTrailingPercent",                testTrailingPercent                ),
-    ( "testUnknownFormatSpecifier",         testUnknownFormatSpecifier         ),
-    ( "testIncompletePattern",              testIncompletePattern              ),
-    ( "testNilObject",                      testNilObject                      ),
-  ]
 }

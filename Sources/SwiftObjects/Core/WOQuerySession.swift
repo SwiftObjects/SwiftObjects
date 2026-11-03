@@ -9,8 +9,9 @@
 /**
  * This object represents objects which got unarchived from the form values,
  * eg in the query parameters of a string, eg:
- *
- *     /myAction?dg_batchindex=2
+ * ```
+ * /myAction?dg_batchindex=2
+ * ```
  *
  * The query session can be manipulated in templates using the
  * WOChangeQuerySession dynamic element.

@@ -1,4 +1,4 @@
-// swift-tools-version:6.2
+// swift-tools-version:6.3
 //
 //  Package.swift
 //  SwiftObjects
@@ -39,12 +39,10 @@ let package = Package(
               .product(name: "NIOFoundationCompat", package: "swift-nio"),
             ],
             exclude:
-              fm.filesWithExtension("api", at: targetURL("SwiftObjects")),
-            swiftSettings: [ .swiftLanguageMode(.v5) ]),
+              fm.filesWithExtension("api", at: targetURL("SwiftObjects"))),
     
     .testTarget(name: "SwiftObjectsTests",
-                dependencies: [ "SwiftObjects" ],
-                swiftSettings: [ .swiftLanguageMode(.v5) ]),
+                dependencies: [ "SwiftObjects" ]),
     
     .executableTarget(name: "WOShowcaseApp",
                       dependencies: [

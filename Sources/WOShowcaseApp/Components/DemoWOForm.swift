@@ -3,7 +3,7 @@
 //  WOShowcaseApp
 //
 //  Created by Helge Hess on 01.06.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import SwiftObjects
@@ -22,11 +22,7 @@ class DemoWOForm : WOComponent {
     """
     
     var isNew : Bool {
-      #if swift(>=5)
-        return store.cows.firstIndex(where: { $0 === cow }) == nil
-      #else
-        return store.cows.index(where: { $0 === cow }) == nil
-      #endif
+      return store.cows.firstIndex(where: { $0 === cow }) == nil
     }
   
     override func awake() {

@@ -10,34 +10,31 @@
  * Create HTML form reset button (input type=reset).
  *
  * Sample:
- *
- *     Firstname: WOResetButton {
- *         name  = "reset";
- *         value = "Reset";
- *     }
+ * ```wod
+ * Firstname: WOResetButton {
+ *     name  = "reset";
+ *     value = "Reset";
+ * }
+ * ```
  *
  * Renders:
  * ```
  *   <input type="reset" name="reset" value="Reset" />
  * ```
  *
- * Bindings (WOInput):
- * ```
- *   id         [in]  - string
- *   name       [in]  - string
- *   value      [io]  - object
- *   readValue  [in]  - object (different value for generation)
- *   writeValue [out] - object (different value for takeValues)
- *   disabled   [in]  - boolean
- * ```
+ * Bindings (``WOInput``):
+ * - id         [in]  - string
+ * - name       [in]  - string
+ * - value      [io]  - object
+ * - readValue  [in]  - object (different value for generation)
+ * - writeValue [out] - object (different value for takeValues)
+ * - disabled   [in]  - boolean
  *
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOResetButton : WOInput {
   

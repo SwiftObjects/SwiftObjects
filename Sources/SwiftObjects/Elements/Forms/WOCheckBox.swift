@@ -20,11 +20,12 @@
  * binding.
  *
  * Sample:
- *
- *     IsAdmin: WOCheckBox {
- *         name    = "isadmin";
- *         checked = account.isAdmin;
- *     }
+ * ```wod
+ * IsAdmin: WOCheckBox {
+ *     name    = "isadmin";
+ *     checked = account.isAdmin;
+ * }
+ * ```
  *
  * Renders:
  * ```
@@ -33,29 +34,23 @@
  * ```
  *
  * Bindings:
- * ```
- *   selection [io] - object / Collection
- *   checked   [io] - boolean
- *   safeGuard [in] - boolean (def: true, submit unchecked state)
- * ```
+ * - selection [io] - object / Collection
+ * - checked   [io] - boolean
+ * - safeGuard [in] - boolean (def: true, submit unchecked state)
  *
- * Bindings (WOInput):
- * ```
- *   id         [in]  - string
- *   name       [in]  - string
- *   value      [io]  - object
- *   readValue  [in]  - object (different value for generation)
- *   writeValue [out] - object (different value for takeValues)
- *   disabled   [in]  - boolean
- * ```
+ * Bindings (``WOInput``):
+ * - id         [in]  - string
+ * - name       [in]  - string
+ * - value      [io]  - object
+ * - readValue  [in]  - object (different value for generation)
+ * - writeValue [out] - object (different value for takeValues)
+ * - disabled   [in]  - boolean
  *
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOCheckBox : WOInput {
   // TBD: should we support a label? (<label for=id>label</label>)

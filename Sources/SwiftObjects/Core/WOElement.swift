@@ -9,29 +9,31 @@
 public protocol WOResponder { // TODO: better name for this
   
   /**
-   * Triggers the take-values phase on the WOElement, usually a WOComponent
-   * (stateful) or a WODynamicElement (w/o state, retrieves values using
-   * bindings). Objects of the latter kind push WORequest form values into the
-   * active component using their 'bindings' (WOAssociations).
+   * Triggers the take-values phase on the ``WOElement``, usually a
+   * ``WOComponent`` (stateful) or a ``WODynamicElement`` (w/o state, retrieves
+   * values using bindings). Objects of the latter kind push ``WORequest`` form
+   * values into the active component using their 'bindings' (WOAssociations).
    *
-   * @param _rq  - the request to take values from
-   * @param _ctx - the context in which all this happens
+   * - Parameters:
+   *   - request: the request to take values from
+   *   - ctx:     the context in which all this happens
    */
   func takeValues(from request: WORequest, in ctx: WOContext) throws
   
   /**
-   * Triggers the invoke action phase on the WOElement, usually a WOComponent
-   * (stateful) or a WODynamicElement (w/o state, retrieves values using
-   * bindings).
+   * Triggers the invoke action phase on the ``WOElement``, usually a
+   * ``WOComponent`` (stateful) or a ``WODynamicElement`` (w/o state, retrieves
+   * values using bindings).
    *
    * This method is processed for requests which specify the action in terms of
    * an element id (that is, component actions and at-actions).
    * Direct actions never invoke the invokeAction phase since the URL already
    * specifies the intended target object.
    *
-   * @param _rq  - the request to invoke an action for
-   * @param _ctx - the context in which all this happens
-   * @return the result of the action, usually a WOComponent
+   * - Parameters:
+   *   - request: the request to invoke an action for
+   *   - ctx:     the context in which all this happens
+   * - Returns:   the result of the action, usually a ``WOComponent``
    */
   func invokeAction(for request: WORequest, in ctx: WOContext) throws -> Any?
   
@@ -39,12 +41,13 @@ public protocol WOResponder { // TODO: better name for this
   /* generating response */
   
   /**
-   * Triggers the response generation phase on the WOElement, usually a
-   * WOComponent (stateful) or a WODynamicElement (w/o state, retrieves values
-   * using bindings).
+   * Triggers the response generation phase on the ``WOElement``, usually a
+   * ``WOComponent`` (stateful) or a ``WODynamicElement`` (w/o state, retrieves
+   * values using bindings).
    *
-   * @param _r   - the WOResponse the element should append content to
-   * @param _ctx - the WOContext in which the HTTP transaction takes place
+   * - Parameters:
+   *   - response: the ``WOResponse`` the element should append content to
+   *   - ctx:      the ``WOContext`` in which the HTTP transaction takes place
    */
   func append(to response: WOResponse, in ctx: WOContext) throws
   
@@ -70,29 +73,31 @@ public protocol WOElement : AnyObject, WOResponder {
   typealias Bindings = [ String : WOAssociation ]
   
   /**
-   * Triggers the take-values phase on the WOElement, usually a WOComponent
-   * (stateful) or a WODynamicElement (w/o state, retrieves values using
-   * bindings). Objects of the latter kind push WORequest form values into the
-   * active component using their 'bindings' (WOAssociations).
+   * Triggers the take-values phase on the ``WOElement``, usually a
+   * ``WOComponent`` (stateful) or a ``WODynamicElement`` (w/o state, retrieves
+   * values using bindings). Objects of the latter kind push ``WORequest`` form
+   * values into the active component using their 'bindings' (WOAssociations).
    *
-   * @param _rq  - the request to take values from
-   * @param _ctx - the context in which all this happens
+   * - Parameters:
+   *   - request: the request to take values from
+   *   - ctx:     the context in which all this happens
    */
   func takeValues(from request: WORequest, in ctx: WOContext) throws
   
   /**
-   * Triggers the invoke action phase on the WOElement, usually a WOComponent
-   * (stateful) or a WODynamicElement (w/o state, retrieves values using
-   * bindings).
+   * Triggers the invoke action phase on the ``WOElement``, usually a
+   * ``WOComponent`` (stateful) or a ``WODynamicElement`` (w/o state, retrieves
+   * values using bindings).
    *
    * This method is processed for requests which specify the action in terms of
    * an element id (that is, component actions and at-actions).
    * Direct actions never invoke the invokeAction phase since the URL already
    * specifies the intended target object.
    *
-   * @param _rq  - the request to invoke an action for
-   * @param _ctx - the context in which all this happens
-   * @return the result of the action, usually a WOComponent
+   * - Parameters:
+   *   - request: the request to invoke an action for
+   *   - ctx:     the context in which all this happens
+   * - Returns:   the result of the action, usually a ``WOComponent``
    */
   func invokeAction(for request: WORequest, in ctx: WOContext) throws -> Any?
   
@@ -100,12 +105,13 @@ public protocol WOElement : AnyObject, WOResponder {
   /* generating response */
   
   /**
-   * Triggers the response generation phase on the WOElement, usually a
-   * WOComponent (stateful) or a WODynamicElement (w/o state, retrieves values
-   * using bindings).
+   * Triggers the response generation phase on the ``WOElement``, usually a
+   * ``WOComponent`` (stateful) or a ``WODynamicElement`` (w/o state, retrieves
+   * values using bindings).
    *
-   * @param _r   - the WOResponse the element should append content to
-   * @param _ctx - the WOContext in which the HTTP transaction takes place
+   * - Parameters:
+   *   - response: the ``WOResponse`` the element should append content to
+   *   - ctx:      the ``WOContext`` in which the HTTP transaction takes place
    */
   func append(to response: WOResponse, in ctx: WOContext) throws
   
@@ -118,10 +124,12 @@ public protocol WOElement : AnyObject, WOResponder {
    * If not, it should continue down by invoking the _template.walkTemplate()
    * method (which will then call processTemplate() on its template, and so on).
    *
-   * @param _cursor   - the current element
-   * @param _template - the template (children) of the current element
-   * @param _ctx      - the context in which the phase happens
-   * @return true if the template walking should continue, false otherwise
+   * The walker is called with:
+   * - the current element (the cursor)
+   * - the template (children) of the current element
+   * - the context in which the phase happens
+   *
+   * It returns true if the template walking should continue, false otherwise.
    */
   typealias WOElementWalker = ( WOElement, WOElement, WOContext ) throws -> Bool
   
@@ -134,8 +142,9 @@ public protocol WOElement : AnyObject, WOResponder {
    * to collect data before you can run a content generation phase (eg because
    * you need to know the count of the contained objects).
    *
-   * @param _walkr - the object implementing the operation of the phase
-   * @param _ctx   - the WOContext in which the phase takes place
+   * - Parameters:
+   *   - walker: the object implementing the operation of the phase
+   *   - ctx:    the ``WOContext`` in which the phase takes place
    */
   func walkTemplate(using walker: WOElementWalker, in ctx: WOContext) throws
 

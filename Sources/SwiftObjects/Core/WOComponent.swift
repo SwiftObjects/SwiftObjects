@@ -8,12 +8,12 @@
 
 /**
  * Subclasses of ``WOComponent`` are used to represent template based pages or
- * reusable components in Go. A component (usually) is a Swift subclass of
- * ``WOComponent`` plus a template. The exact format of the template depends on
- * the respective template builder, usually the ``WOWrapperTemplateBuilder`` is
- * used.
+ * reusable components in SwiftObjects.
+ * A component (usually) is a Swift subclass of ``WOComponent`` plus a template.
+ * The exact format of the template depends on the respective template builder,
+ * usually the ``WOWrapperTemplateBuilder`` is used (html/wod in .wo bundle).
  *
- * ### ``WOComponent`` vs ``WODynamicElement``
+ * ### ``WOComponent`` vs. ``WODynamicElement``
  *
  * Both, ``WOComponent`` and ``WODynamicElement``, inherit from the
  * ``WOElement`` superclass. The major conceptual difference is that
@@ -80,7 +80,12 @@
  * a direct action, sample:
  * ```swift
  * class Main : WOComponent {
- *   ...
+ *
+ *   override func awake() {
+ *     super.awake()
+ *     expose(showAction, as: "show")
+ *   }
+ *
  *   func showAction() -> Any? { ...
  * ```
  * Invoke via:
@@ -88,8 +93,8 @@
  * /MyApp/wa/Main/show?id=5
  * ```
  *
- * All the rules of ``WODirectAction`` apply. Actions must be suffixed 'Action'
- * and if none is specified, defaultAction is invoked.
+ * All the rules of ``WODirectAction`` apply. Actions must be exposed using
+ * `expose(_:as:)` and if none is specified, `defaultAction` is invoked.
  *
  * #### Component specific ``WOResourceManager``'s
  *

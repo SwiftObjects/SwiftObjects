@@ -10,7 +10,7 @@
  * A ``WODirectAction`` object is pretty much like a servlet, it can accept
  * requests and is responsible for producing a result. The result can be
  * either a ``WOResponse`` or a ``WOComponent`` or anything else which can be
- * rendered by Go.
+ * rendered by SwiftObjects.
  */
 open class WODirectAction : WOAction, SmartDescription,
                             KeyValueCodingType, MutableKeyValueCodingType,
@@ -42,15 +42,11 @@ open class WODirectAction : WOAction, SmartDescription,
    * Implements the "direct action" request handling / method lookup. This is
    * a static method because its reused by ``WOComponent``.
    *
-   * This implementation checks for a method with a name which ends in "Action"
-   * and which has no parameters, eg:
-   * ```
-   * defaultAction
-   * viewAction
-   * ```
-   *
-   * Hence only methods ending in "Action" are exposed (automagically) to the
-   * web.
+   * If the object is a ``WOActionMapper``, the action is looked up in the
+   * actions it exposed using `expose(_:as:)`. Otherwise the implementation
+   * falls back to a KVC lookup of the key `name + "Action"`, which only
+   * resolves stored closure properties.
+   * Actions must be exposed explicitly, only `defaultAction` is in by default.
    *
    * - Parameters:
    *   - name:    the name of the action to invoke

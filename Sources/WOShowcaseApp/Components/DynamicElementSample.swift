@@ -7,6 +7,6 @@
 
 import SwiftObjects
 
-class DynamicElementSample : WOComponent {
+@WOComponent final class DynamicElementSample {
   // FIXME: this should perform the rendering of the code passed in.
 }

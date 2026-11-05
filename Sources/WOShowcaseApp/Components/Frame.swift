@@ -7,12 +7,11 @@
 
 import SwiftObjects
 
-class Frame : WOComponent {
+@WOComponent final class Frame {
   
   var homepageLink : String? = nil
   
-  override func awake() {
-    super.awake()
+  func awake() {
     
     guard let ctx = context else { return }
     homepageLink = ctx.directActionURLForActionNamed("default")

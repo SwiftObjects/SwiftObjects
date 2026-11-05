@@ -3,22 +3,19 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 15.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
  * This class is used for child components which where not accessed yet. Its
  * required to avoid lookup cycles in the template.
  */
-final class WOComponentFault : WOComponent {
-  
+@WOComponent
+final class WOComponentFault {
+
   var cfName : String? = nil
-  
-  required init() {
-    super.init()
-  }
-  
-  override public var name : String {
+
+  var name : String {
     set { cfName = newValue }
     get { return cfName ?? "ERROR:FaultWithoutName" }
   }
@@ -78,33 +75,30 @@ final class WOComponentFault : WOComponent {
   
   // MARK: Override some methods which should never be called on a fault
 
-  override public func performActionNamed(_ name: String) -> Any? {
+  func performActionNamed(_ name: String) -> Any? {
     log.error("called performActionNamed('\(name)') on WOComponentFault!")
     return nil
   }
-  
-  override
-  public func takeValues(from request: WORequest, in context: WOContext) throws
-  {
+
+  func takeValues(from request: WORequest, in context: WOContext) throws {
     // TODO: throw
     log.error("called \(#function) on WOComponentFault!")
   }
-  
-  override public func invokeAction(for request : WORequest,
-                                    in  context : WOContext) throws -> Any?
+
+  func invokeAction(for request: WORequest, in context: WOContext) throws
+       -> Any?
   {
     // TODO: throw
     log.error("called \(#function) on WOComponentFault!")
     return nil
   }
-  
-  override
-  public func append(to response: WOResponse, in context: WOContext) throws {
+
+  func append(to response: WOResponse, in context: WOContext) throws {
     // TODO: throw
     log.error("called \(#function) on WOComponentFault!")
   }
-  override public func walkTemplate(using walker : WOElementWalker,
-                                    in   context : WOContext) throws
+  func walkTemplate(using walker: WOElementWalker, in context: WOContext)
+         throws
   {
     // TODO: throw
     log.error("called \(#function) on WOComponentFault!")
@@ -112,10 +106,10 @@ final class WOComponentFault : WOComponent {
   
   
   // MARK: - Description
-  
-  override public func appendToDescription(_ ms: inout String) {
-    super.appendToDescription(&ms)
-    
+
+  func appendToDescription(_ ms: inout String) {
+    woAppendToDescription(&ms)
+
     if let n = cfName { ms += " fault=\(n)" }
     else              { ms += " fault"      }
   }

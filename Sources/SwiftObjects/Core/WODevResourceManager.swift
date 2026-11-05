@@ -85,7 +85,7 @@ open class WODevResourceManager : WOResourceManagerBase {
     lookupDirectory = fn.deletingLastPathComponent()
     
     let appModule = defaultFramework ?? SOGetPackageName(sourceType)
-    let ownModule = SOGetPackageName(WOComponent.self)
+    let ownModule = SOGetPackageName(WOApplication.self)
     var lookupModules = [ String ]()
     for module in [ appModule ] + modules + [ ownModule ]
     where !module.isEmpty && !lookupModules.contains(module)

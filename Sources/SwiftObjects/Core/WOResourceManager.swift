@@ -369,7 +369,7 @@ public extension WOResourceManager { // default implementation
         return nil /* did not find a template */
       }
       
-      cls = WOComponent.self
+      cls = WOTemplateComponent.self
     }
     
     let cdef = WODefaultComponentDefinition(name: name, componentClass: cls!)
@@ -524,7 +524,7 @@ open class WOResourceManagerBase : WOResourceManager, SmartDescription {
     }
     
     let cdef = WODefaultComponentDefinition(
-                 name: name, componentClass: cls ?? WOComponent.self)
+                 name: name, componentClass: cls ?? WOTemplateComponent.self)
     
     if let templateData = templateData {
       let type = "WOWrapper" // vs WOx
@@ -568,7 +568,12 @@ open class WOResourceManagerBase : WOResourceManager, SmartDescription {
   }
 
   open func lookupComponentClass(_ name: String) -> WOComponent.Type? {
-    return lookupClass(name, type: WOComponent.self)
+    guard let cls = lookupClass(name) else { return nil }
+    guard let tcls = cls as? WOComponent.Type else {
+      log.trace("found class, but it is not a WOComponent:", name)
+      return nil
+    }
+    return tcls
   }
   
   open func lookupDynamicElementClass(_ name: String) -> WODynamicElement.Type?
@@ -578,7 +583,12 @@ open class WOResourceManagerBase : WOResourceManager, SmartDescription {
   }
   
   open func lookupDirectActionClass(_ name: String) -> WODirectAction.Type? {
-    return lookupClass(name, type: WODirectAction.self)
+    guard let cls = lookupClass(name) else { return nil }
+    guard let tcls = cls as? WODirectAction.Type else {
+      log.trace("found class, but it is not a WODirectAction:", name)
+      return nil
+    }
+    return tcls
   }
   
   

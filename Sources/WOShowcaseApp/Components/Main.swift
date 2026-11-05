@@ -9,15 +9,14 @@
 import Foundation
 import SwiftObjects
 
-class Main : WOComponent {
+@WOComponent final class Main {
   
   let componentFileURL = URL(fileURLWithPath: #filePath)
   var demos = [ String ]()
   
   public var demo : String? = nil
   
-  override func awake() {
-    super.awake()
+  func awake() {
 
     let fm  = FileManager.default
     let dir = componentFileURL.deletingLastPathComponent()
@@ -31,12 +30,5 @@ class Main : WOComponent {
     return t.replacingOccurrences(of: "Demo",  with: "")
   }
   
-  override func value(forKey k: String) -> Any? {
-    switch k { // not having reflection is a pita
-      case "demoTitle": return demoTitle
-      
-      default: return super.value(forKey: k)
-    }
-  }
 }
 

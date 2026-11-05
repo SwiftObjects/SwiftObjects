@@ -40,7 +40,7 @@ open class WODirectActionLinkGenerator : WOLinkGenerator {
     
     if let actionClass = actionClass {
       if let lac = actionClass.stringValue(in: cursor), !lac.isEmpty {
-        lda = lac + "/" + (lda ?? WODirectAction.defaultActionName)
+        lda = lac + "/" + (lda ?? WODirectActionRequestHandler.defaultActionName)
       }
     }
     
@@ -53,7 +53,7 @@ open class WODirectActionLinkGenerator : WOLinkGenerator {
     }()
 
     return context.directActionURLForActionNamed(
-      lda ?? WODirectAction.defaultActionName, // TBD
+      lda ?? WODirectActionRequestHandler.defaultActionName, // TBD
       with: qd, addSessionID: addSessionID, includeQuerySession: false
     )
   }

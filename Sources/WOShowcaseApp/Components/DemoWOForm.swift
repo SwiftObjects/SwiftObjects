@@ -8,7 +8,7 @@
 
 import SwiftObjects
 
-class DemoWOForm : WOComponent {
+@WOComponent final class DemoWOForm {
   
     let store = CowStore.shared
     var cow   : Cow = Cow()
@@ -25,13 +25,6 @@ class DemoWOForm : WOComponent {
       return store.cows.firstIndex(where: { $0 === cow }) == nil
     }
   
-    override func awake() {
-        super.awake()
-      
-        // Use this to expose your methods
-        expose(saveAction, as: "save")
-    }
-    
     func saveAction() -> Any? {
         // validation can be done in better ways, but it'll do here
         guard let n = cow.name, !n.isEmpty else {
@@ -54,9 +47,4 @@ class DemoWOForm : WOComponent {
         return nil
     }
 
-    // Help out Swift ...
-    override func value(forKey k: String) -> Any? {
-        if k == "isNew" { return isNew }
-        return super.value(forKey: k)
-    }
 }

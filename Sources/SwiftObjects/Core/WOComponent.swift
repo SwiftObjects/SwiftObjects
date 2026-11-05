@@ -93,14 +93,15 @@
  * assigned afterwards using ``initWithContext(_:)``. Override that method to
  * perform per object initialization which needs the context.
  *
- * #### Go ``WOComponent``'s can be used as ``WODirectAction``'s
+ * #### SwiftObjects ``WOComponent``'s can be used as ``WODirectAction``'s
  *
- * In Go components can be directly used as direct actions. In traditional WO
+ * In SwiftObjects components can be directly used as direct actions. In
+ * traditional WO
  * one usually has a direct action, which then instantiates a ``WOComponent``,
  * passes over rendering arguments and then returns it for rendering.
  *
- * This can be reduced in Go. In Go you can directly invoke a component like
- * a direct action, sample:
+ * This can be reduced in SwiftObjects. Here you can directly invoke a
+ * component like a direct action, sample:
  * ```swift
  * @WOComponent
  * final class Main {
@@ -120,8 +121,9 @@
  *
  * #### Component specific ``WOResourceManager``'s
  *
- * In Go there is the concept of component-specific ``WOResourceManager``'s. WO
- * only has a global one (Go falls back to this if there is no local one).
+ * In SwiftObjects there is the concept of component-specific
+ * ``WOResourceManager``'s. WO only has a global one (SwiftObjects falls back
+ * to this if there is no local one).
  *
  * This is to support OFS and other hierarchical Go publishing setups. Example:
  * ```
@@ -135,7 +137,7 @@
  *
  * #### Redirect and F()
  *
- * Go has the convenience redirectToLocation() method.
+ * GETobjects has the convenience redirectToLocation() method.
  * To retrieve form values one can use the F() methods, sample:
  * ```
  * /MyApp/wa/Persons/fetch?limit=50

@@ -71,7 +71,8 @@ open class WOForm : WOHTMLDynamicElement {
     link          = WOLinkGenerator.linkGenerator(for: &bindings)
     self.template = template
 
-    bindings.removeValue(forKey: "multipleSubmit") /* not required in Go? */
+    // not required in GETobjects?
+    bindings.removeValue(forKey: "multipleSubmit")
 
     coreAttributes = WOHTMLElementAttributes
       .buildIfNecessary(name: name + "_core", bindings: &bindings)

@@ -7,7 +7,8 @@
 //
 
 /**
- * This element is used to mark rendering fragments. If Go receives a URL
+ * This element is used to mark rendering fragments. If SwiftObjects receives
+ * a URL
  * which contains the 'wofid' request parameter, it will disable rendering in
  * the ``WOContext``. This element can be used to reenable rendering for a
  * certain template subsection.

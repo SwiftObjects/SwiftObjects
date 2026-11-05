@@ -11,7 +11,7 @@ import NIOHTTP1
 
 open class WONIOAdaptor : @unchecked Sendable {
   // TODO: you create WOApplication objects, and *those* have the adaptors.
-  // though in Go, the Servlet maintains the app object.
+  // though in GETobjects, the Servlet maintains the app object.
   
   open class Configuration {
     open var logger         : WOLogger        = WOPrintLogger(logLevel: .Log)

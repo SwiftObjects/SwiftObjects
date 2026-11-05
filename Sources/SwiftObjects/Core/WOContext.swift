@@ -43,7 +43,7 @@ public protocol WOContext : WOCoreContext, WOLifecycle,
    * added/removed by elements like repetitions or conditions! (the contents of
    * a repetition need own IDs, not their index in the tree)
    *
-   * Unlike SOPE the Go/So element id does NOT include the context-id.
+   * Unlike SOPE the SwiftObjects element id does NOT include the context-id.
    *
    * - Returns: a unique identifier for the current element (in page scope)
    */

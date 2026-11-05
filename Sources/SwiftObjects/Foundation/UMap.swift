@@ -43,7 +43,7 @@ public extension Dictionary where Key == String {
     for ( key, value ) in self {
       if !sb.isEmpty { sb += "&" }
       
-      // FIXME: Go also supports arrays of values etc
+      // FIXME: GETobjects also supports arrays of values etc
       let vs : String
       
       if let sv = value as? QueryDictionaryStringValue {

@@ -7,7 +7,8 @@
 
 /**
  * After a Go method associated with a request got run and returned a result,
- * Go will trigger a renderer to turn the result into a HTTP response.
+ * SwiftObjects will trigger a renderer to turn the result into a HTTP
+ * response.
  *
  * For regular WO like applications the result is usually a ``WOComponent``
  * which itself does the actual rendering (the ``GoDefaultRenderer`` calls the
@@ -34,7 +35,7 @@ public protocol GoObjectRenderer {
    * context. Eg a PDF renderer could return false if the ``WORequest`` of the
    * _ctx does not contain an 'accept' handler which misses `application/pdf`.
    *
-   * If a renderer returns 'false', Go will continue looking for other
+   * If a renderer returns 'false', SwiftObjects will continue looking for other
    * renderers or fallback to the ``GoDefaultRenderer``.
    *
    * - Parameters:

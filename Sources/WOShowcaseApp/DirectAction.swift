@@ -8,25 +8,21 @@
 import SwiftObjects
 import SemanticUI
 
-final class DirectAction : WODirectAction {
+@WODirectAction final class DirectAction {
   
   var age : Int = 1337
   
-  required init(context: WOContext) {
-    super.init(context: context)
-    expose(doIt,     as: "doIt")
-    expose(semantic, as: "semantic")
-  }
-  
+  @WOAction
   func doIt() -> Any? {
     takeFormValuesForKeys("age")
     return "Hello String World"
   }
   
-  override func defaultAction() -> WOActionResults? {
+  func defaultAction() -> WOActionResults? {
     return pageWithName("Main")
   }
   
+  @WOAction
   func semantic() -> WOResponse? {
     let r = WOResponse()
     if let ct = WOExtensionToMimeType["css"] {

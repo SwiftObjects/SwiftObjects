@@ -18,7 +18,7 @@
  * - ``WOResourceRequestHandler``
  * - GoObjectRequestHandler
  *
- * Technically the first three are superflous in Go because of the
+ * Technically the first three are superflous in SwiftObjects because of the
  * GoObjectRequestHandler. They are left in place for compatibility
  * reasons.
  */

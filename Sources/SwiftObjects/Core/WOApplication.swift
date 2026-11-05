@@ -13,9 +13,10 @@ import class  Foundation.UserDefaults
 import Synchronization
 
 /**
- * This is the main entry class for Go web applications. You usually
- * start writing a Go app by subclassing this class. It then provides all
- * the setup of the Go infrastructure (creation of session and resource
+ * This is the main entry class for SwiftObjects web applications. You usually
+ * start writing a SwiftObjects app by subclassing this class. It then
+ * provides all the setup of the SwiftObjects infrastructure (creation of
+ * session and resource
  * managers, handling of initial requests, etc etc)
  *
  * The default name for the subclass is 'Application', alongside 'Context'
@@ -48,7 +49,8 @@ import Synchronization
  *
  * #### QuerySession
  *
- * In addition to Context and Session subclasses, Go has the concept of a
+ * In addition to Context and Session subclasses, SwiftObjects has the concept
+ * of a
  * 'QuerySession'. The baseclass is ``WOQuerySession`` and an application can
  * subclass this.
  * FIXME: document more
@@ -62,7 +64,8 @@ import Synchronization
  *
  * #### pageWithName()
  *
- * In Go this supports component specific resource managers, not just the
+ * In SwiftObjects this supports component specific resource managers, not
+ * just the
  * global one. The ``WOApplication`` pageWithName takes this into account, it
  * is NOT the fallback root lookup (and thus can be used in all contexts).
  * It first checks the active ``WOComponent`` for the resource manager.

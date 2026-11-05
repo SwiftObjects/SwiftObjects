@@ -8,7 +8,7 @@
 
 import SwiftObjects
 
-final class DemoWOHyperlink : WOComponent {
+@WOComponent final class DemoWOHyperlink {
   
   var counter = 0
   
@@ -17,28 +17,11 @@ final class DemoWOHyperlink : WOComponent {
   var counter = 0
   """.trimmingCharacters(in: .whitespacesAndNewlines)
   
-  override func awake() {
-    super.awake()
-    
-    expose(increment, as: "increment")
-    expose(decrement, as: "decrement")
-    expose(doDouble,  as: "double")
-    expose(jumpToStringSample, as: "jumpToStringSample")
-  }
+  @WOAction func increment() { counter += 1 }
+  @WOAction func decrement() { counter -= 1 }
+  @WOAction func double() { counter *= 2 }
   
-  func increment() -> WOComponent? {
-    counter += 1
-    return nil
-  }
-  func decrement() -> WOComponent? {
-    counter -= 1
-    return nil
-  }
-  func doDouble() -> WOComponent? {
-    counter *= 2
-    return nil
-  }
-  
+  @WOAction
   func jumpToStringSample() -> WOComponent? {
     // This is a little like a UIViewController transition.
     let newPage = DemoWOString()

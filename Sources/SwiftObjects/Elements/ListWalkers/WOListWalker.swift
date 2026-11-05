@@ -45,7 +45,7 @@ public protocol WOListWalker {
 // Cannot do this, at least in 4.0:
 // public extension WOListWalker {
 internal func listForValue(_ value: Any?) -> WOListWalkable? {
-  // In Go we 'instanceof' this. Here we just use a protocol anyone can
+  // In GETobjects we 'instanceof' this. Here we just use a protocol anyone can
   // theoretically adopt.
   return value as? WOListWalkable
 }

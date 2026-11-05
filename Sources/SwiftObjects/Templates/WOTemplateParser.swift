@@ -10,8 +10,8 @@ import struct Foundation.URL
 
 /**
  * Interface which represents a template parser.
- * The only class (and hence the only template syntax) implementing this in Go
- * is WOHtmlParser.
+ * The only class (and hence the only template syntax) implementing this in
+ * SwiftObjects is WOHtmlParser.
  *
  * The parser is only responsibly for parsing the syntax. It does not even do
  * the ``WOElement`` object construction - this is done by the handler of the

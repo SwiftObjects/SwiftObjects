@@ -9,7 +9,7 @@
 import Foundation
 import SwiftObjects
 
-final class DemoWOString : WOComponent {
+@WOComponent final class DemoWOString {
   
   let fourtyTwo = 42
   let pi        = 3.1415

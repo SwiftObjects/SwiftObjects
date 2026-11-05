@@ -10,7 +10,7 @@
   <binding name="multiple" defaults="YES/NO"/>
   <binding name="size" />
 
-  <!-- WO4.5, not implemented in Go
+  <!-- WO4.5, not implemented in SwiftObjects
   <binding name="selectedValues" />
   -->
 

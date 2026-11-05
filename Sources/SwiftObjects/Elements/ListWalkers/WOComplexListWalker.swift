@@ -127,7 +127,7 @@ public struct WOComplexListWalker : WOListWalker, SmartDescription {
       else             { context.appendElementIDComponent(startIdx)}
     }
     
-    // TODO: Go has another version of this
+    // TODO: GETobjects has another version of this
     let goUntil = (aCount > (startIdx + goCount)) ? startIdx + goCount : aCount
     
     /* repeat */
@@ -209,7 +209,7 @@ public struct WOComplexListWalker : WOListWalker, SmartDescription {
       else             { context.appendElementIDComponent(startIdx)}
     }
     
-    // TODO: Go has another version of this
+    // TODO: GETobjects has another version of this
     let goUntil = (aCount > (startIdx + goCount)) ? startIdx + goCount : aCount
     
     /* repeat */

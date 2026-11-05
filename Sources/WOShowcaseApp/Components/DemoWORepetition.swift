@@ -7,7 +7,7 @@
 
 import SwiftObjects
 
-final class DemoWORepetition : WOComponent {
+@WOComponent final class DemoWORepetition {
   
     let store       = CowStore.shared
     var selectedCow : Cow? = nil
@@ -20,14 +20,6 @@ final class DemoWORepetition : WOComponent {
     var cow         : Cow? = nil
     """
 
-    override func awake() {
-        super.awake()
-      
-        // Use this to expose your methods
-        expose(showCowAction, as: "showCow")
-        expose(editAction,    as: "edit")
-    }
-    
     func showCowAction() -> Any? {
         selectedCow = cow // the cursor will point to the active cow!
         log.log("selected cow:", cow as Any?)
@@ -43,9 +35,4 @@ final class DemoWORepetition : WOComponent {
   
     var isCowSelected : Bool { return selectedCow === cow }
 
-    // Help out Swift ...
-    override func value(forKey k: String) -> Any? {
-        if k == "isCowSelected" { return isCowSelected }
-        return super.value(forKey: k)
-    }
 }

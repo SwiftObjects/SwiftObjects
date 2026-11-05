@@ -26,7 +26,7 @@ enum TypeIndexProbeScopeB {
   final class TypeIndexProbeDup : TypeIndexProbeOtherBase {}
 }
 
-final class TypeIndexProbeComponent : WOComponent {}
+@WOComponent final class TypeIndexProbeComponent {}
 
 
 // MARK: - Tests
@@ -78,9 +78,9 @@ final class SwiftTypeIndexTests: XCTestCase {
   }
   
   func testFindsClassesInOtherModules() {
-    let entries = SwiftTypeIndex.classes(named: "WOComponent")
+    let entries = SwiftTypeIndex.classes(named: "WOApplication")
     XCTAssertTrue(entries.contains { $0.module == "SwiftObjects" })
-    let component = ObjectIdentifier(WOComponent.self)
+    let component = ObjectIdentifier(WOApplication.self)
     XCTAssertTrue(entries.contains {
       $0.resolve().map { ObjectIdentifier($0) } == component
     })
@@ -121,7 +121,7 @@ final class SwiftTypeIndexTests: XCTestCase {
     assertSameClass(rm.lookupClass("TypeIndexProbeClass"),
                     TypeIndexProbeClass.self)
     assertSameClass(rm.lookupClass("TypeIndexProbeNested"), Nested.self)
-    assertSameClass(rm.lookupClass("WOComponent"), WOComponent.self)
+    assertSameClass(rm.lookupClass("WOApplication"), WOApplication.self)
     assertSameClass(rm.lookupComponentClass("TypeIndexProbeComponent"),
                     TypeIndexProbeComponent.self)
     XCTAssertNil(rm.lookupClass("TypeIndexProbeMissing"))
@@ -133,7 +133,7 @@ final class SwiftTypeIndexTests: XCTestCase {
     
     assertSameClass(rm.lookupClass("TypeIndexProbeClass"),
                     TypeIndexProbeClass.self)
-    assertSameClass(rm.lookupClass("WOComponent"), WOComponent.self)
+    assertSameClass(rm.lookupClass("WOApplication"), WOApplication.self)
   }
   
   func testResourceManagerPrefersRegisteredClasses() {

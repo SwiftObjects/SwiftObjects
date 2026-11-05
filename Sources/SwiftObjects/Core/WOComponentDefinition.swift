@@ -177,7 +177,7 @@ open class WODefaultComponentDefinition : WOComponentDefinition,
     ms += " "
     ms += name
 
-    if componentClass != WOComponent.self {
+    if componentClass != WOTemplateComponent.self {
       ms += "(\(componentClass))"
     }
     

@@ -13,8 +13,8 @@ import struct Foundation.URL
  * ``WOElement`` hierarchy from that (plus component instantiation info).
  *
  * The prominent implementation is ``WOWrapperTemplateBuilder`` which
- * handles various template setups (eg wrappers or straight .html Go
- * templates).
+ * handles various template setups (eg wrappers or straight .html
+ * SwiftObjects templates).
  */
 public protocol WOTemplateBuilder {
   

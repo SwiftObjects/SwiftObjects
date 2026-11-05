@@ -63,7 +63,7 @@ open class WODateFormatter : WOFormatter, @unchecked Sendable {
   }
 
   open func formatter(in context: WOContext) -> Foundation.Formatter? {
-    // TODO: cache, like in Go
+    // TODO: cache, like in GETobjects
     let nf     = Foundation.DateFormatter()
     let cursor = context.cursor
     

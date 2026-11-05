@@ -7,5 +7,5 @@
 
 import SwiftObjects
 
-final class ComponentBindingInfo : WOComponent {
+@WOComponent final class ComponentBindingInfo {
 }

@@ -3,6 +3,7 @@
 //  WOShowcaseApp
 //
 //  Created by Helge Hess on 30.05.18.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import SwiftObjects
@@ -12,7 +13,6 @@ import SwiftObjects
   var homepageLink : String? = nil
   
   func awake() {
-    
     guard let ctx = context else { return }
     homepageLink = ctx.directActionURLForActionNamed("default")
   }

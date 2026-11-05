@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import Foundation
@@ -17,7 +17,6 @@ import SwiftObjects
   public var demo : String? = nil
   
   func awake() {
-
     let fm  = FileManager.default
     let dir = componentFileURL.deletingLastPathComponent()
     demos = ((try? fm.contentsOfDirectory(atPath: dir.path)) ?? [])
@@ -31,4 +30,3 @@ import SwiftObjects
   }
   
 }
-

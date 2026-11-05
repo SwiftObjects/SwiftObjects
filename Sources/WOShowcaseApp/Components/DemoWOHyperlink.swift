@@ -3,7 +3,7 @@
 //  WOShowcaseApp
 //
 //  Created by Helge Hess on 31.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2016 ZeeZide. All rights reserved.
 //
 
 import SwiftObjects
@@ -19,7 +19,7 @@ import SwiftObjects
   
   @WOAction func increment() { counter += 1 }
   @WOAction func decrement() { counter -= 1 }
-  @WOAction func double() { counter *= 2 }
+  @WOAction func double()    { counter *= 2 }
   
   @WOAction
   func jumpToStringSample() -> WOComponent? {

@@ -18,24 +18,26 @@
  * bindings starting with a dot (.).
  *
  * Example:
- *
- *     <wo:div !display='none' style="color: red;">
+ * ```xml
+ * <wo:div !display='none' style="color: red;">
+ * ```
  *
  * produces
  *
- *     <div style="color: red; display: none;">
+ * ```xml
+ * <div style="color: red; display: none;">
+ * ```
  *
  * A very common usecase is dynamically adding classes, eg:
- *
- *     <wo:li .selected="$isSelectedPage">Customers</wo:li>
- *
- * Bindings (WOHTMLElementAttributes):
+ * ```xml
+ * <wo:li .selected="$isSelectedPage">Customers</wo:li>
  * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;>)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;>`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOHTMLElementAttributes : WODynamicElement {
 
@@ -82,12 +84,14 @@ open class WOHTMLElementAttributes : WODynamicElement {
   
   /**
    * This element checks whether the associations Map contains any dynamic
-   * class or style bindings. If yes, it creates a new WOHTMLElementAttributes
-   * instances to generate those, if not, it returns null.
+   * class or style bindings. If yes, it creates a new
+   * ``WOHTMLElementAttributes`` instances to generate those, if not, it returns
+   * null.
    *
-   * @param _name  - the name of the new element (no internal use)
-   * @param _assoc - the associations to be scanned for class/tyle
-   * @return a dynamic element to generate the class/style attributes
+   * - Parameters:
+   *   - name:     the name of the new element (no internal use)
+   *   - bindings: the associations to be scanned for class/tyle
+   * - Returns:    a dynamic element to generate the class/style attributes
    */
   public static func buildIfNecessary(name: String, bindings: inout Bindings)
                      -> WOHTMLElementAttributes?
@@ -120,15 +124,17 @@ open class WOHTMLElementAttributes : WODynamicElement {
   /**
    * This evaluates each !style binding and returns the values in a Map.
    * For example:
-   *
-   *     !color = "red";
-   *     !font  = "bold";
-   *     !high  = null;
+   * ```wod
+   * !color = "red";
+   * !font  = "bold";
+   * !high  = null;
+   * ```
    *
    * Will be returned as `{ color = "red"; font = "bold"; }`.
    *
-   * @param _cursor - the component for the evaluation of bindings
-   * @return a Map containing the bindings, or null if none were found
+   * - Parameters:
+   *   - cursor: the component for the evaluation of bindings
+   * - Returns:  a Map containing the bindings, or null if none were found
    */
   func extractExtStyles(using cursor: Any?) -> [ String : Any ]? {
     guard let dynStyles = self.dynStyles else { return nil }
@@ -143,8 +149,9 @@ open class WOHTMLElementAttributes : WODynamicElement {
   /**
    * This method evaluates the .class bindings. The value of a .class binding
    * is a BOOLEAN, eg:
-   *
-   *     .selected = isPageSelected
+   * ```wod
+   * .selected = isPageSelected
+   * ```
    *
    * This will only ADD the 'selected' class if the isPageSelected binding
    * returns `true`.
@@ -153,8 +160,9 @@ open class WOHTMLElementAttributes : WODynamicElement {
    * with the class. If it returns `false` it will actually REMOVE
    * the class from the list.
    *
-   * @param _cursor - the component for the evaluation of bindings
-   * @return a List of CSS classnames
+   * - Parameters:
+   *   - cursor: the component for the evaluation of bindings
+   * - Returns:  a List of CSS classnames
    */
   func extractExtClasses(using cursor: Any?) -> Set<String>? {
     guard let dynClasses = dynClasses else { return nil }
@@ -228,9 +236,10 @@ open class WOHTMLElementAttributes : WODynamicElement {
    *     the value can be a Boolean, it will render as 'visible'/'hidden',
    *     'block'/'none' and 'both'/'none'
    *
-   * @param _key   - name of the style element, eg 'visibility'
-   * @param _value - value to render
-   * @param _sb    - the output buffer
+   * - Parameters:
+   *   - v:   value to render
+   *   - key: name of the style element, eg 'visibility'
+   *   - sb:  the output buffer
    */
   func appendStyleValue(_ v: Any, for key: String, to sb: inout String) {
     if let s = v as? String {

@@ -19,22 +19,21 @@ public extension Dictionary where Key == String {
    * Foundation because links are useful everywhere, not just in appserver.
    *
    * Example:
-   *
-   *     { city = Magdeburg;
-   *       companies = [ Skyrix, SWM ]; }
+   * ```plist
+   * { city = Magdeburg; companies = [ Skyrix, SWM ]; }
+   * ```
    *
    * will be converted into:
-   *
-   *     city=Magdeburg&companiens=Skyrix&companies=SWM
+   * ```
+   * city=Magdeburg&companiens=Skyrix&companies=SWM
+   * ```
    *
    * Each key and each value will be converted to URL encoding using the
    * URLEncoder class.
    *
    * The reverse function is UString.mapForQueryString().
    *
-   * @param _qp      - Map containing the values to be generated
-   * @param _charset - charset used for encoding (%20 like values) (def: UTF-8)
-   * @return a query string, or null if _qp was null or empty
+   * - Returns: the query string, empty if the dictionary is empty
    */
   func stringForQueryDictionary() -> String {
     var sb = ""
@@ -44,7 +43,7 @@ public extension Dictionary where Key == String {
     for ( key, value ) in self {
       if !sb.isEmpty { sb += "&" }
       
-      // FIXME: Go also supports arrays of values etc
+      // FIXME: GETobjects also supports arrays of values etc
       let vs : String
       
       if let sv = value as? QueryDictionaryStringValue {

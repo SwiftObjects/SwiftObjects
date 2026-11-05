@@ -8,15 +8,16 @@
 
 /**
  * This renders an arbitrary (HTML) tag. It allows you to make attributes of the
- * tag dynamic. WOGenericContainer is for elements which have close tags (like
- * font), for empty elements use WOGenericElement (like `<br/>`).
+ * tag dynamic. ``WOGenericContainer`` is for elements which have close tags
+ * (like font), for empty elements use ``WOGenericElement`` (like `<br/>`).
  *
  * Sample:
- *
- *     MyFont: WOGenericContainer {
- *         elementName = "font";
- *         color       = currentColor;
- *     }
+ * ```wod
+ * MyFont: WOGenericContainer {
+ *     elementName = "font";
+ *     color       = currentColor;
+ * }
+ * ```
  *
  * Renders:
  * ```
@@ -24,10 +25,8 @@
  * ```
  *
  * Bindings:
- * ```
- *   tagName [in] - string
- *   - all other bindings are mapped to tag attributes</pre>
- * ```
+ * - tagName [in] - string
+ *   - all other bindings are mapped to tag attributes
  */
 open class WOGenericContainer : WOGenericElement {
   

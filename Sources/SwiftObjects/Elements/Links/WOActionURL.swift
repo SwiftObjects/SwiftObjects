@@ -7,31 +7,32 @@
 
 /**
  * Can be used to generate a dynamic link which returns a page (or some other
- * WOActionResults).
+ * ``WOActionResults``).
  *
  * Sample .html:
- *
- *     <a href="<wo:Link/>">login</a>
+ * ```xml
+ * <a href="<wo:Link/>">login</a>
+ * ```
  *
  * Sample .wod:
- *
- *     Link: WOActionURL {
- *         actionClass      = "Main";
- *         directActionName = "login";
- *     }
+ * ```wod
+ * Link: WOActionURL {
+ *     actionClass      = "Main";
+ *     directActionName = "login";
+ * }
+ * ```
  *
  * Renders:
- *
- *     <a href="/App/x/LeftMenu/default">[sub-template]</a>
+ * ```xml
+ * <a href="/App/x/LeftMenu/default">[sub-template]</a>
+ * ```
  *
  * Bindings:
- * ```
- *   href             [in] - string
- *   directActionName [in] - string
- *   actionClass      [in] - string
- *   pageName         [in] - string
- *   action           [in] - action
- * ```
+ * - href             [in] - string
+ * - directActionName [in] - string
+ * - actionClass      [in] - string
+ * - pageName         [in] - string
+ * - action           [in] - action
  */
 open class WOActionURL : WOHTMLDynamicElement {
   

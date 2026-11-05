@@ -11,26 +11,25 @@
  * browsers but IE.
  *
  * Sample:
- *
- *     ShowIfIE5: WOConditionalComment {
- *         expression = "IE 5";
- *     }
+ * ```wod
+ * ShowIfIE5: WOConditionalComment {
+ *     expression = "IE 5";
+ * }
+ * ```
  *
  * Renders:
  * ```
  *   <!--[if IE 5]>
  *     <p>Welcome to Internet Explorer 5.</p>
- *   <![endif]--&gt;</pre>
+ *   <![endif]-->
  * ```
  *
  * Bindings:
- * ```
- *   expression [in] - string
- *   feature    [in] - string
- *   value      [in] - string
- *   comparison [in] - string
- *   operator   [in] - string
- * ```
+ * - expression [in] - string
+ * - feature    [in] - string
+ * - value      [in] - string
+ * - comparison [in] - string
+ * - operator   [in] - string
  */
 open class WOConditionalComment : WOHTMLDynamicElement {
   

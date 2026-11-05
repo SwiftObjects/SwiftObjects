@@ -3,24 +3,24 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2021 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
- * Associations define how dynamic elements (stateless, non-WOComponent
+ * Associations define how dynamic elements (stateless, non-``WOComponent``
  * template elements) pull and push their 'bindings'.
  *
  * The most common implementors are:
- * `WOKeyPathAssociation`, which pushes/pulls values into/from the current
+ * ``WOKeyPathAssociation``, which pushes/pulls values into/from the current
  * component in the context, and
- * `WOValueAssociation`, which just wraps a constant value in the WOAssociation
- * API.
+ * ``WOValueAssociation``, which just wraps a constant value in the
+ * ``WOAssociation`` API.
  *
  * But in addition there are associations which evaluate OGNL expressions,
  * which resolve their value as localization keys or which resolve string
  * patterns in a certain context. etc etc
  */
-public protocol WOAssociation : AnyObject {
+public protocol WOAssociation : AnyObject, Sendable {
   
   // MARK: - Reflection
   
@@ -29,7 +29,8 @@ public protocol WOAssociation : AnyObject {
    * used by dynamic elements to cache the value (and discard the association
    * wrapper).
    *
-   * @return true if the value of the association never changes, false otherwise
+   * - Returns: true if the value of the association never changes, false
+   *            otherwise
    */
   var isValueConstant : Bool { get }
   
@@ -39,7 +40,7 @@ public protocol WOAssociation : AnyObject {
    * target which does not have a <code>set</code> accessor could also return
    * false (but currently does not ...).
    *
-   * @return true if the value of the association can be set, false otherwise
+   * - Returns: true if the value of the association can be set, false otherwise
    */
   var isValueSettable : Bool { get }
 
@@ -48,16 +49,16 @@ public protocol WOAssociation : AnyObject {
    * specified cursor (usually a component). This can be used by dynamic
    * elements to cache the value.
    *
-   * @return true if the value of the association does not change
+   * - Returns: true if the value of the association does not change
    */
   func isValueConstantInComponent(_ cursor: Any?) -> Bool
 
   /**
    * Returns true if the association can accept new values for the given cursor
-   * (usually a WOComponent). A KVC association to a target which does not have
-   * a `set` accessor could also return false.
+   * (usually a ``WOComponent``). A KVC association to a target which does not
+   * have a `set` accessor could also return false.
    *
-   * @return true if the value of the association can be set, false otherwise
+   * - Returns: true if the value of the association can be set, false otherwise
    */
   func isValueSettableInComponent(_ cursor: Any?) -> Bool
   

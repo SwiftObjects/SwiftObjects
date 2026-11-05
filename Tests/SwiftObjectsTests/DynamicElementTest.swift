@@ -24,7 +24,7 @@ class DynamicElementTestCase: XCTestCase {
     context     = WOAppContext(application: application, request: request)
     response    = context.response
     
-    let page = WOComponent()
+    let page = WOTemplateComponent()
     try? page.takeValue("Hello", forKey: "hello")
     try? page.takeValue("World", forKey: "world")
     try? page.takeValue(Date(), forKey: "now")

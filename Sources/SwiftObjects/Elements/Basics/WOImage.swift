@@ -11,32 +11,30 @@
  * generated URLs.
  *
  * Sample:
- *
- *     Banner: WOImage {
- *         src    = "/images/banner.gif";
- *         border = 0;
- *     }
+ * ```wod
+ * Banner: WOImage {
+ *     src    = "/images/banner.gif";
+ *     border = 0;
+ * }
+ * ```
  *
  * Renders:
- *
- *     <img src="/images/banner.gif" border="0" />
- *
- * Bindings (WOLinkGenerator for image resource):
+ * ```xml
+ * <img src="/images/banner.gif" border="0" />
  * ```
- *   src              [in] - string
- *   filename         [in] - string
- *   framework        [in] - string
- *   actionClass      [in] - string
- *   directActionName [in] - string
- *   queryDictionary  [in] - Map<String,String>
- *   ?wosid           [in] - boolean (constant!)
+ *
+ * Bindings (``WOLinkGenerator`` for image resource):
+ * - src              [in] - string
+ * - filename         [in] - string
+ * - framework        [in] - string
+ * - actionClass      [in] - string
+ * - directActionName [in] - string
+ * - queryDictionary  [in] - `Map<String,String>`
+ * - ?wosid           [in] - boolean (constant!)
  *   - all bindings starting with a ? are stored as query parameters.
- * ```
  *
  * Regular bindings:
- * ```
- *   disableOnMissingLink [in] - boolean
- * ```
+ * - disableOnMissingLink [in] - boolean
  */
 open class WOImage : WOHTMLDynamicElement {
   // TBD: support 'data' binding URLs (also needs mimeType and should have 'key'

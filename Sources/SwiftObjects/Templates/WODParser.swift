@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 18.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Data
@@ -62,21 +62,22 @@ open class WODParser : PropertyListParser {
   /**
    * This function parses a single WOD entry from the source, that is a
    * construct like:
-   *
-   *     Frame: MyFrame {
-   *         title = "Welcome to Hola";
-   *     }
+   * ```wod
+   * Frame: MyFrame {
+   *     title = "Welcome to Hola";
+   * }
+   * ```
    *
    * The entry contains:
    *
    * - The element name ("Frame") which is used to refer to
    *   the entry from the html template file (eg <#Frame> or
    *   <WEBOBJECT NAME="Frame">).
-   * - The component name ("MyFrame"). This refers to either a WOComponent
-   *   or to a WODynamicElement. Its usually the name of the class
+   * - The component name ("MyFrame"). This refers to either a ``WOComponent``
+   *   or to a ``WODynamicElement``. Its usually the name of the class
    *   implementing the component.
    * - The bindings Map. The key is the name of the binding
-   *   (`title`), the value is the `WOAssociation`
+   *   (`title`), the value is the ``WOAssociation``
    *   object representing the binding.
    *
    * Note that the parser tracks all entries in the `entries`
@@ -279,11 +280,7 @@ open class WODParser : PropertyListParser {
           return nil
         }
         if allowNilValues { return makeValue(array) }
-        #if swift(>=4.1)
-          return makeValue(array.compactMap { $0 })
-        #else
-          return makeValue(array.flatMap { $0 })
-        #endif
+        return makeValue(array.compactMap { $0 })
       
       case tokens.openData:
         guard let s = parseData() else {
@@ -345,16 +342,18 @@ open class WODParser : PropertyListParser {
   
   /**
    * This represents an entry in a WOD file, eg:
+   * ```wod
+   * A: WOString {
+   *     value = abc;
+   * }
+   * ```
    *
-   *     A: WOString {
-   *         value = abc;
-   *     }
-   *
-   * Notably the class-name (`WOString`) is a relative name which needs to be
+   * Notably the class-name (``WOString``) is a relative name which needs to be
    * resolved against the component lookup path.
    *
-   * Further, the class can be either a WOComponent or a WODynamicElement (and
-   * its not really a class, eg pageWithName might return a scripted component).
+   * Further, the class can be either a ``WOComponent`` or a
+   * ``WODynamicElement`` (and its not really a class, eg pageWithName might
+   * return a scripted component).
    *
    * WOWrapperBuilder is a class which creates WODFileEntry objects (as part of
    * implementing WODParserHandler.makeDefinitionForComponentNamed()).

@@ -22,26 +22,21 @@
  *   <textarea name="firstname" value="abc" />
  * ```
  *
- * Bindings (WOInput):
- * ```
- *   id       [in] - string
- *   name     [in] - string
- *   value    [io] - object
- *   disabled [in] - boolean
- * ```
- * Bindings:<pre>
- * ```
- *   rows     [in] - int
- *   cols     [in] - int
- * ```
+ * Bindings (``WOInput``):
+ * - id       [in] - string
+ * - name     [in] - string
+ * - value    [io] - object
+ * - disabled [in] - boolean
  *
- * Bindings (WOHTMLElementAttributes):<pre>
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * Bindings:
+ * - rows     [in] - int
+ * - cols     [in] - int
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg <input style="color:red;">)
+ * - .key   [in]  - 'class' parameters (eg <input class="selected">)
  */
 open class WOText : WOInput {
   

@@ -7,8 +7,8 @@
 
 /**
  * Create HTML form single or multi-selection 'select' elements. This is very
- * similiar to WOPopUpButton. The difference is that it does not create a popup
- * but a select-list.
+ * similiar to ``WOPopUpButton``. The difference is that it does not create a
+ * popup but a select-list.
  *
  * Sample:
  * ```wod

@@ -60,13 +60,4 @@ class WOStringTests: DynamicElementTestCase {
     try e.append(to: response, in: context)
     XCTAssertEqual(response.contentString, "Hello World")
   }
-  
-  // MARK: - Linux
-  
-  static var allTests = [
-    ( "testSimpleRendering", testSimpleRendering ),
-    ( "testEscaping",        testEscaping        ),
-    ( "testEscapingOff",     testEscapingOff     ),
-    ( "testInsertBR",        testInsertBR        ),
-  ]
 }

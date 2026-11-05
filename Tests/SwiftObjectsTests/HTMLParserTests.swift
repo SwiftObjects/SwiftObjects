@@ -367,19 +367,4 @@ class HTMLParserTests: XCTestCase {
   
   class TestWrapperBuilderHandler : WOWrapperTemplateBuilder {
   }
-  
-
-  // MARK: - Linux
-  
-  static var allTests = [
-    ( "testStaticHTML",                  testStaticHTML                  ),
-    ( "testEmptyHTML",                   testEmptyHTML                   ),
-    ( "testSimpleWOElement",             testSimpleWOElement             ),
-    ( "testSimpleHashElement",           testSimpleHashElement           ),
-    ( "testSimpleHashAttributedElement", testSimpleHashAttributedElement ),
-    ( "testHomePage",                    testHomePage                    ),
-    ( "testHomePageWithUnclosedTag",     testHomePageWithUnclosedTag     ),
-    ( "testGenericWOElement",            testGenericWOElement            ),
-    ( "testConditionalWOElement",        testConditionalWOElement        ),
-  ]
 }

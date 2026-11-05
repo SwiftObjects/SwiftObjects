@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import class Foundation.Formatter
@@ -12,14 +12,14 @@ import class Foundation.Formatter
  * This formatter formats using an arbitrary Foundation.Formatter object.
  *
  * Example:
- *
- *     Text: WOString {
- *         value  = event.startDate;
- *         format = session.userDateFormatter;
- *     }
- *
+ * ```wod
+ * Text: WOString {
+ *     value  = event.startDate;
+ *     format = session.userDateFormatter;
+ * }
+ * ```
  */
-open class WOObjectFormatter : WOFormatter {
+open class WOObjectFormatter : WOFormatter, @unchecked Sendable {
   
   let formatter : WOAssociation
   

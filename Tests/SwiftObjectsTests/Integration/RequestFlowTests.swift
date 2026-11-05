@@ -224,20 +224,4 @@ class RequestFlowTests: FormTestCase {
     // Value should be updated because condition is true
     XCTAssertEqual(testComponent.stringValue, "updated")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testTakeValuesPhase",             testTakeValuesPhase             ),
-    ( "testAppendPhase",                 testAppendPhase                 ),
-    ( "testFullRequestCycle",            testFullRequestCycle            ),
-    ( "testElementIDGeneration",         testElementIDGeneration         ),
-    ( "testNestedElementIDs",            testNestedElementIDs            ),
-    ( "testContextSetup",                testContextSetup                ),
-    ( "testComponentCursor",             testComponentCursor             ),
-    ( "testConditionalSkipsTakeValues",  testConditionalSkipsTakeValues  ),
-    ( "testConditionalProcessesTakeValues",
-                                         testConditionalProcessesTakeValues ),
-  ]
 }

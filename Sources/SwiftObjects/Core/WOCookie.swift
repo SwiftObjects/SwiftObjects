@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 28.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Date
@@ -11,26 +11,30 @@ import struct Foundation.Date
 /**
  * Represents an HTTP cookie.
  *
- * Use the addCookie() method of WOResponse to add a setup cookie, e.g.:
- *
- *     response.addCookie(WOCookie("myCookie", "Hello World"))
+ * Use the addCookie() method of ``WOResponse`` to add a setup cookie, e.g.:
+ * ```swift
+ * response.addCookie(WOCookie("myCookie", "Hello World"))
+ * ```
  *
  * To check for cookies coming in, use cookieValueForKey() or
- * cookieValuesForKey() of WORequest, eg:
- *
- *     print("Cookie:", _rq.cookieValue(for: "myCookie"))
+ * cookieValuesForKey() of ``WORequest``, eg:
+ * ```swift
+ * print("Cookie:", _rq.cookieValue(for: "myCookie"))
+ * ```
  *
  * Remember that browsers limit the size and the number of cookies per site.
  *
  * To pass a cookie between hosts you can use the domain, eg:
- *
- *     domain=.zeezide.com
+ * ```
+ * domain=.zeezide.com
+ * ```
  *
  * will deliver the cookie to:
- *
- *     shop.zeezide.com
- *     crm.zeezide.com
- *     etc
+ * ```
+ * shop.zeezide.com
+ * crm.zeezide.com
+ * etc
+ * ```
  *
  * Note: if the path is not set, the request path will be used! This is usually
  *       not what you want.
@@ -64,8 +68,6 @@ public struct WOCookie : SmartDescription {
   /**
    * Sets the 'expires' date for the cookie, see RFC 2109. This is deprecated,
    * use setTimeOut (Max-Age) instead.
-   *
-   * @param _date - the Date when the cookie expires
    */
   public var date    : Date?
   
@@ -75,8 +77,6 @@ public struct WOCookie : SmartDescription {
    * - if the value is < 0, we do not generate a Max-Age (hence, no to)
    * - if the value is 0, this tells the browser to expire the cookie
    * - if the value is < 0, the browser will remove the cookie
-   *
-   * @param _date
    */
   public var timeout : Int?      /* in seconds (nil == do not expire) */
   
@@ -102,7 +102,7 @@ public struct WOCookie : SmartDescription {
    * Returns the HTTP response representation of the cookie value, w/o the
    * header name ("cookie").
    *
-   * @return the HTTP String representing the WOCookie
+   * - Returns: the HTTP String representing the ``WOCookie``
    */
   public var headerString : String {
     // FIXME: check whether any of this is 2018-up2date
@@ -143,30 +143,18 @@ public struct WOCookie : SmartDescription {
   public static func parse(string s: String) -> WOCookie? {
     let log = WOPrintLogger.shared
     
-    #if swift(>=5)
-      guard let vidx = s.firstIndex(of: "=") else {
-        log.warn("got invalid cookie value: '\(s)'"); return nil
-      }
-    #else
-      guard let vidx = s.index(of: "=") else {
-        log.warn("got invalid cookie value: '\(s)'"); return nil
-      }
-    #endif
+    guard let vidx = s.firstIndex(of: "=") else {
+      log.warn("got invalid cookie value: '\(s)'"); return nil
+    }
     
     let name  = String(s[s.startIndex..<vidx])
     var value = String(s[s.index(after: vidx)..<s.endIndex])
     
     // TODO: process escaping
     
-    #if swift(>=5)
-      if value.firstIndex(of: ";") == nil {
-        return WOCookie(name: name, value: value)
-      }
-    #else
-      if value.index(of: ";") == nil {
-        return WOCookie(name: name, value: value)
-      }
-    #endif
+    if value.firstIndex(of: ";") == nil {
+      return WOCookie(name: name, value: value)
+    }
     
     /* process options */
     

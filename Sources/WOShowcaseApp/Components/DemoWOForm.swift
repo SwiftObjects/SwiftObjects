@@ -3,12 +3,12 @@
 //  WOShowcaseApp
 //
 //  Created by Helge Hess on 01.06.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import SwiftObjects
 
-class DemoWOForm : WOComponent {
+@WOComponent final class DemoWOForm {
   
     let store = CowStore.shared
     var cow   : Cow = Cow()
@@ -22,20 +22,9 @@ class DemoWOForm : WOComponent {
     """
     
     var isNew : Bool {
-      #if swift(>=5)
-        return store.cows.firstIndex(where: { $0 === cow }) == nil
-      #else
-        return store.cows.index(where: { $0 === cow }) == nil
-      #endif
+      return store.cows.firstIndex(where: { $0 === cow }) == nil
     }
   
-    override func awake() {
-        super.awake()
-      
-        // Use this to expose your methods
-        expose(saveAction, as: "save")
-    }
-    
     func saveAction() -> Any? {
         // validation can be done in better ways, but it'll do here
         guard let n = cow.name, !n.isEmpty else {
@@ -58,9 +47,4 @@ class DemoWOForm : WOComponent {
         return nil
     }
 
-    // Help out Swift ...
-    override func value(forKey k: String) -> Any? {
-        if k == "isNew" { return isNew }
-        return super.value(forKey: k)
-    }
 }

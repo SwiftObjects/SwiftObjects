@@ -212,22 +212,4 @@ class WOConditionalTests: FormTestCase {
     try cond.append(to: response, in: context)
     XCTAssert(response.contentString?.isEmpty ?? true)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testConditionTrue",            testConditionTrue            ),
-    ( "testConditionFalse",           testConditionFalse           ),
-    ( "testNegateTrue",               testNegateTrue               ),
-    ( "testNegateFalse",              testNegateFalse              ),
-    ( "testValueMatchEqual",          testValueMatchEqual          ),
-    ( "testValueMatchNotEqual",       testValueMatchNotEqual       ),
-    ( "testNilHandling",              testNilHandling              ),
-    ( "testNotBinding",               testNotBinding               ),
-    ( "testTakeValuesOnlyWhenShown",  testTakeValuesOnlyWhenShown  ),
-    ( "testTakeValuesWhenShown",      testTakeValuesWhenShown      ),
-    ( "testConstantTrueCondition",    testConstantTrueCondition    ),
-    ( "testConstantFalseCondition",   testConstantFalseCondition   ),
-  ]
 }

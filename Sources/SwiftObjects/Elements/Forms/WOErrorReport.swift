@@ -8,11 +8,11 @@
 
 /**
  * This object is used to capture errors found during form processing. For
- * example if the user entered a number in a date field. The WODateFormatter
- * would raise an exception, which can then be handled by a WOErrorReport for
- * the whole page.
+ * example if the user entered a number in a date field. The ``WODateFormatter``
+ * would raise an exception, which can then be handled by a ``WOErrorReport``
+ * for the whole page.
  *
- * Error reports are managed as a stack on the WOContext.
+ * Error reports are managed as a stack on the ``WOContext``.
  */
 open class WOErrorReport {
   
@@ -37,8 +37,9 @@ open class WOErrorReport {
    * errorForName().
    * Eg the 'name' is the name used in markField().
    *
-   * @param _name - the name of the item (eg 'lastname')
-   * @return the WOErrorItems for the form element with the name, or null
+   * - Parameters:
+   *   - name:  the name of the item (eg 'lastname')
+   * - Returns: the WOErrorItems for the form element with the name, or null
    */
   open func errorsForName(_ name: String) -> [ WOErrorItem ] {
     return errors.filter { $0.name == name }
@@ -50,8 +51,10 @@ open class WOErrorReport {
    * errorsForName().
    * Eg the 'name' is the name used in markField().
    *
-   * @param _name - the name of the item (eg 'lastname')
-   * @return the first WOErrorItem for the form element with the name, or null
+   * - Parameters:
+   *   - name:  the name of the item (eg 'lastname')
+   * - Returns: the first WOErrorItem for the form element with the name, or
+   *            null
    */
   open func errorForName(_ name: String) -> WOErrorItem? {
     return errors.first(where: { $0.name == name })
@@ -78,8 +81,9 @@ open class WOErrorReport {
    * Marks a field with the given name as invalid. This only generates a new
    * erroritem if no error is registered for the field yet.
    *
-   * @param _name  - name of the field, eg 'startdate'
-   * @param _value - buggy value of the field, eg 'murks'
+   * - Parameters:
+   *   - name:  name of the field, eg 'startdate'
+   *   - value: buggy value of the field, eg 'murks'
    */
   open func markField(_ name: String, value: Any? = nil) {
     guard errorForName(name) == nil else { return }
@@ -136,13 +140,13 @@ open class WOErrorReport {
   // MARK: - Trampoline
   
   /**
-   * Used to navigate to errors using KeyValueCoding.
+   * Used to navigate to errors using ``KeyValueCoding``.
    *
    * Example which adds the `errors` class to the div when the `amount` field
    * has any:
-   *
-   *     <div .errors="$errors.on.amount">
-   *
+   * ```xml
+   * <div .errors="$errors.on.amount">
+   * ```
    */
   open var on : WOErrorReportTrampoline {
     return WOErrorReportTrampoline(self)

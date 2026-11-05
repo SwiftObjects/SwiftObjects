@@ -12,54 +12,50 @@ import struct Foundation.CharacterSet
  * Create HTML form textfields.
  *
  * Sample:
- *
- *     Firstname: WOTextField {
- *         name  = "firstname";
- *         value = firstname;
- *     }
+ * ```wod
+ * Firstname: WOTextField {
+ *     name  = "firstname";
+ *     value = firstname;
+ * }
+ * ```
  *
  * Renders:
  * ```
  *   <input type="text" name="firstname" value="Donald" />
  * ```
  *
- * Bindings (WOInput):
- * ```
- *   id             [in]  - string
- *   name           [in]  - string
- *   value          [io]  - object
- *   readValue      [in]  - object (different value for generation)
- *   writeValue     [out] - object (different value for takeValues)
- *   disabled       [in]  - boolean
- *   idname         [in]  - string   - set id and name bindings in one step</pre>
- * ```
- * Bindings (WOTextField):
- * ```
- *   readonly       [in]  - boolean
- *   size           [in]  - int
- *   trim           [in]  - boolean
- *   errorItem      [out] - WOErrorItem
- * ```
- * Bindings (WOFormatter):
- * ```
- *   calformat      [in]  - a dateformat   (returns java.util.Calendar)
- *   dateformat     [in]  - a dateformat   (returns java.util.Date)
- *   lenient        [in]  - bool, only in combination with cal/dateformat!
- *   numberformat   [in]  - a numberformat (NumberFormat.getInstance())
- *   currencyformat [in]  - a numberformat (NumberFormat.getCurrencyInstance())
- *   percentformat  [in]  - a numberformat (NumberFormat.getPercentInstance())
- *   intformat      [in]  - a numberformat (NumberFormat.getIntegerInstance())
- *   formatterClass [in]  - Class or class name of a formatter to use
- *   formatter      [in]  - java.text.Format used to format the value or the
+ * Bindings (``WOInput``):
+ * - id             [in]  - string
+ * - name           [in]  - string
+ * - value          [io]  - object
+ * - readValue      [in]  - object (different value for generation)
+ * - writeValue     [out] - object (different value for takeValues)
+ * - disabled       [in]  - boolean
+ * - idname         [in]  - string   - set id and name bindings in one step
+ *
+ * Bindings (``WOTextField``):
+ * - readonly       [in]  - boolean
+ * - size           [in]  - int
+ * - trim           [in]  - boolean
+ * - errorItem      [out] - WOErrorItem
+ *
+ * Bindings (``WOFormatter``):
+ * - calformat      [in]  - a dateformat   (returns java.util.Calendar)
+ * - dateformat     [in]  - a dateformat   (returns java.util.Date)
+ * - lenient        [in]  - bool, only in combination with cal/dateformat!
+ * - numberformat   [in]  - a numberformat (NumberFormat.getInstance())
+ * - currencyformat [in]  - a numberformat (NumberFormat.getCurrencyInstance())
+ * - percentformat  [in]  - a numberformat (NumberFormat.getPercentInstance())
+ * - intformat      [in]  - a numberformat (NumberFormat.getIntegerInstance())
+ * - formatterClass [in]  - Class or class name of a formatter to use
+ * - formatter      [in]  - java.text.Format used to format the value or the
  *                          format for the formatterClass
- * ```
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg &lt;input style="color:red;"&gt;)
- *   .key   [in]  - 'class' parameters (eg &lt;input class="selected"&gt;)
- * ```
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOTextField : WOInput {
   

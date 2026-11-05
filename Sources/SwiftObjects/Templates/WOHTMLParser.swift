@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.URL
@@ -14,12 +14,14 @@ import struct Foundation.Data
  * This parser parses "old-style" .wo templates. It does *not* process
  * the whole HTML of the file, it only searches for text sections which start
  * with `<wo:`. That way you can process "illegal" HTML code, eg:
- *
- *     <a href="<wo:MyLink/>">Hello World</a>
+ * ```xml
+ * <a href="<wo:MyLink/>">Hello World</a>
+ * ```
  *
  * The syntax is:
- *
- *     <wo:wod-name>...</wo:wod-name>
+ * ```xml
+ * <wo:wod-name>...</wo:wod-name>
+ * ```
  *
  * ### Internals
  *
@@ -35,7 +37,7 @@ import struct Foundation.Data
  * - parse the attributes
  * - parse the contents, static strings and elements,
  *   add content to a children array
- * - produce WOElement by calling
+ * - produce ``WOElement`` by calling
  *   `-dynamicElementWithName:attributes:contentElements:`
  * - parse close tag
  *
@@ -43,8 +45,8 @@ import struct Foundation.Data
  *       therefore somewhat clumsy.
  *
  * This class does not really construct the dynamic elements, this is done by
- * the `WOWrapperTemplateBuilder`. The builder acts as the `WOHTMLParserHandler`
- * for this class.
+ * the ``WOWrapperTemplateBuilder``. The builder acts as the
+ * `WOHTMLParserHandler` for this class.
  */
 open class WOHTMLParser : WOTemplateParser {
   // TODO: Error handling. Sometimes we want to throw, sometimes we don't.
@@ -73,17 +75,10 @@ open class WOHTMLParser : WOTemplateParser {
     let len = data.count
     guard len > 0 else { return [] }
     
-    #if swift(>=5)
-      return try data.withUnsafeBytes() {
-        ( ptr : UnsafeRawBufferPointer ) -> [ WOElement ] in
-        return try parse(ptr.bindMemory(to: UInt8.self), at: url)
-      }
-    #else
-      return try data.withUnsafeBytes() {
-        ( ptr : UnsafePointer<UInt8> ) -> [ WOElement ] in
-        return try parse(UnsafeBufferPointer(start: ptr, count: len), at: url)
-      }
-    #endif
+    return try data.withUnsafeBytes() {
+      ( ptr : UnsafeRawBufferPointer ) -> [ WOElement ] in
+      return try parse(ptr.bindMemory(to: UInt8.self), at: url)
+    }
   }
   
   open func parse(_ data: UnsafeBufferPointer<UInt8>, at url: URL? = nil) throws
@@ -441,12 +436,13 @@ open class WOHTMLParser : WOTemplateParser {
   
   /**
    * This method parses a set of tag key=value attributes, eg:
-   *
-   *     style = "green" size = 4 disabled
+   * ```
+   * style = "green" size = 4 disabled
+   * ```
    *
    * Values are not required to be quoted.
    *
-   * @return the parsed tag attributes as a String,String Map
+   * - Returns: the parsed tag attributes as a String,String Map
    */
   func parseTagAttributes() throws -> [ String : String ] {
     var attrs = [ String : String ]()
@@ -485,7 +481,7 @@ open class WOHTMLParser : WOTemplateParser {
    * This parses quoted and unquoted strings. Unquoted strings are terminated
    * by `>`, `=`, `/` and HTML space.
    *
-   * @return a String, or null on EOF/empty-string
+   * - Returns: a String, or null on EOF/empty-string
    */
   func parseStringValue() throws -> String? {
     guard skipSpaces() else { return nil }
@@ -540,7 +536,7 @@ open class WOHTMLParser : WOTemplateParser {
    * This returns false if the current parse position contains a tag which we
    * understand and need to process.
    *
-   * @return true if the parser should continue parsing raw text, or false
+   * - Returns: true if the parser should continue parsing raw text, or false
    */
   var shouldContinueParsingText : Bool {
     return !isHashTag && !isHashCloseTag && !isWOTag && !isWOCloseTag
@@ -549,10 +545,12 @@ open class WOHTMLParser : WOTemplateParser {
   /**
    * Checks for
    *
-   *     <wo:.> (len 6)
-   *     <#.>   (len 4)
+   * ```xml
+   * <wo:.> (len 6)
+   * <#.>   (len 4)
+   * ```
    *
-   * @return true if the parse position contains a wo: tag
+   * - Returns: true if the parse position contains a wo: tag
    */
   var isHashTag : Bool {
     guard handler != nil         else { return false }
@@ -575,10 +573,12 @@ open class WOHTMLParser : WOTemplateParser {
   /**
    * Checks for
    *
-   *     </wo:.> (len 7)
-   *     </#.>   (len 5)
+   * ```xml
+   * </wo:.> (len 7)
+   * </#.>   (len 5)
+   * ```
    *
-   * @return true if the parse position contains a wo: close tag
+   * - Returns: true if the parse position contains a wo: close tag
    */
   var isHashCloseTag : Bool {
     guard handler != nil         else { return false }

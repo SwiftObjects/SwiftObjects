@@ -3,15 +3,15 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import NIO
 import NIOHTTP1
 
-open class WONIOAdaptor {
+open class WONIOAdaptor : @unchecked Sendable {
   // TODO: you create WOApplication objects, and *those* have the adaptors.
-  // though in Go, the Servlet maintains the app object.
+  // though in GETobjects, the Servlet maintains the app object.
   
   open class Configuration {
     open var logger         : WOLogger        = WOPrintLogger(logLevel: .Log)
@@ -50,18 +50,21 @@ open class WONIOAdaptor {
   
   // MARK: - Dispatch
 
+  /**
+   * Dispatches the request to the application on a worker thread, the
+   * callback is invoked with the response on the event loop of the context.
+   */
   func dispatchRequest(_ request: WONIORequest,
                        in context: ChannelHandlerContext,
-                       whenDone cb: @escaping ( WOResponse ) -> Void)
+                       whenDone cb: @escaping @Sendable ( WOResponse ) -> Void)
   {
     let requestLoop = context.eventLoop
     let workerLoop  = workerGroup.next()
+    let application = self.application
     
     workerLoop.execute {
-      let response = self.application.dispatchRequest(request)
-      requestLoop.execute {
-        cb(response)
-      }
+      let response = application.dispatchRequest(request)
+      requestLoop.execute { cb(response) }
     }
   }
 
@@ -82,13 +85,8 @@ open class WONIOAdaptor {
       let address : SocketAddress
     
       if let host = configuration.host {
-        #if swift(>=5) // NIO 2
-          address = try SocketAddress
-            .makeAddressResolvingHost(host, port: configuration.port)
-        #else // NIO 1
-          address = try SocketAddress
-            .newAddressResolving(host: host, port: configuration.port)
-        #endif
+        address = try SocketAddress
+          .makeAddressResolvingHost(host, port: configuration.port)
       }
       else {
         var addr = sockaddr_in()
@@ -128,22 +126,12 @@ open class WONIOAdaptor {
     
       // Set the handlers that are applied to the accepted Channels
       .childChannelInitializer { channel in
-        #if swift(>=5) // NIO 2 API
-          return channel.pipeline
-            .configureHTTPServerPipeline(withErrorHandling: true)
-            .flatMap {
-              channel.pipeline
-                .addHandler(WONIOHandler(adaptor: self), name: "WONIOHandler")
-            }
-        #else // NIO 1 API
-          return channel.pipeline
-            .configureHTTPServerPipeline(withErrorHandling: true)
-            .then {
-              channel.pipeline
-                .add(name: "WONIOHandler",
-                     handler: WONIOHandler(adaptor: self))
-            }
-        #endif // NIO 1 API
+        channel.eventLoop.makeCompletedFuture {
+          let pipeline = channel.pipeline.syncOperations
+          try pipeline.configureHTTPServerPipeline(withErrorHandling: true)
+          try pipeline.addHandler(WONIOHandler(adaptor: self),
+                                  name: "WONIOHandler")
+        }
       }
     
       // Enable TCP_NODELAY and SO_REUSEADDR for the accepted Channels

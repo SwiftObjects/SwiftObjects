@@ -29,11 +29,11 @@ open class WOHrefLinkGenerator : WOLinkGenerator {
   }
   
   /**
-   * Checks whether a WOForm should call takeValuesFromRequest() on its
+   * Checks whether a ``WOForm`` should call takeValuesFromRequest() on its
    * subtemplate tree.
    *
-   * The WOHrefLinkGenerator implementation of this method returns true if the
-   * request HTTP method is "POST".
+   * The ``WOHrefLinkGenerator`` implementation of this method returns true if
+   * the request HTTP method is "POST".
    */
   override open func shouldFormTakeValues(from request: WORequest,
                                           in context: WOContext) -> Bool

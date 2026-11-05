@@ -16,20 +16,18 @@
  *   }
  * ```
  *
- * Renders:<pre>
+ * Renders:
  * ```
  *   <frame src="/App/x/LeftMenu/default">[sub-template]</frame>
  * ```
  *
  * Bindings:
- * ```
- *   name             [in] - string
- *   href             [in] - string
- *   directActionName [in] - string
- *   actionClass      [in] - string
- *   pageName         [in] - string
- *   action           [in] - action
- * ```
+ * - name             [in] - string
+ * - href             [in] - string
+ * - directActionName [in] - string
+ * - actionClass      [in] - string
+ * - pageName         [in] - string
+ * - action           [in] - action
  */
 open class WOFrame : WOHTMLDynamicElement {
   

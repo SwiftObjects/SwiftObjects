@@ -11,12 +11,12 @@ import struct Foundation.Date
 
 /**
  * The component definition contains the information required to construct
- * a WOComponent object. That is, the component class and its template.
+ * a ``WOComponent`` object. That is, the component class and its template.
  */
 public protocol WOComponentDefinition {
   
   /**
-   * Instantiate the WOComponent represented by the definition.
+   * Instantiate the ``WOComponent`` represented by the definition.
    *
    * Important: the template must be set so that the subcomponent faults can be
    * properly instantiated.
@@ -30,15 +30,16 @@ public protocol WOComponentDefinition {
   
   /**
    * Load the template using a TemplateBuilder. This is called by
-   * `definitionForComponent()` of WOResourceManager.
+   * `definitionForComponent()` of ``WOResourceManager``.
    *
    * The arguments are URLs so that we can load resources from JAR archives.
    *
-   * @param _type - select the TemplateBuilder, either 'Wrapper' or 'WOx'
-   * @param _templateURL - URL pointing to the template
-   * @param _wodURL      - URL pointing to the wod
-   * @param _rm      - context used for performing class name lookups
-   * @return true if the loading was successful, false otherwise
+   * - Parameters:
+   *   - type:            select the TemplateBuilder, either 'Wrapper' or 'WOx'
+   *   - url:             URL pointing to the template
+   *   - defURL:          URL pointing to the wod
+   *   - resourceManager: context used for performing class name lookups
+   * - Returns:           true if the loading was successful, false otherwise
    */
   func load(using type: String, at url: URL, definitionsAt defURL: URL?,
             using resourceManager: WOResourceManager) throws
@@ -47,10 +48,12 @@ public protocol WOComponentDefinition {
    * This is called by instantiateComponent() to instantiate the faults of the
    * child components.
    *
-   * @param _rm       - the resource manager used for child's resource lookups
-   * @param _template - the template which contains the child infos
-   * @param _ctx      - the context to instantiate the components in
-   * @return a Map of WOComponentReference names and their associated component
+   * - Parameters:
+   *   - template:        the template which contains the child infos
+   *   - context:         the context to instantiate the components in
+   *   - resourceManager: the resource manager used for child's resource lookups
+   * - Returns:           a Map of WOComponentReference names and their
+   *                      associated component
    */
   func instantiateChildComponents(from template: WOTemplate,
                                   in   context: WOContext,
@@ -174,7 +177,7 @@ open class WODefaultComponentDefinition : WOComponentDefinition,
     ms += " "
     ms += name
 
-    if componentClass != WOComponent.self {
+    if componentClass != WOTemplateComponent.self {
       ms += "(\(componentClass))"
     }
     

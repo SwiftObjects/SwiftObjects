@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import NIO
@@ -56,43 +56,42 @@ final class WONIOHandler : ChannelInboundHandler {
         dispatchRequest(request, in: context)
     }
   }
-  #if swift(>=5) // NIO 2 API default
-  #else // NIO 1 API wrapper
-    func channelRead(ctx context: ChannelHandlerContext, data: NIOAny) {
-      channelRead(context: context, data: data)
-    }
-  #endif
   
   func dispatchRequest(_ request: WONIORequest, in ctx: ChannelHandlerContext) {
+    // The handler and the context are bound to the event loop, the response
+    // callback is invoked on that loop, so they can be safely accessed there.
+    let loopBound = NIOLoopBound(( self, ctx ), eventLoop: ctx.eventLoop)
+    
     adaptor.dispatchRequest(request, in: ctx) { response in
-      let contentLength = response.contents?.count ?? 0
-      response.setHeader("\(contentLength)", for: "Content-Length")
-      
-      let responseHead = HTTPResponseHead(
-        version : response.httpVersion,
-        status  : HTTPResponseStatus(statusCode: response.status),
-        headers : response.headers
-      )
-
-      let wrap = self.wrapOutboundOut
-      
-      ctx.write(wrap(.head(responseHead)), promise: nil)
-      
-      if contentLength > 0, let data = response.contents {
-        var buf = ctx.channel.allocator.buffer(capacity: contentLength)
-        #if swift(>=5) // NIO 2 API
-          buf.writeBytes(data)
-        #else // NIO 1 API
-          buf.write(bytes: data)
-        #endif
-        ctx.write(wrap(.body(.byteBuffer(buf))), promise: nil)
-      }
-      
-      ctx.writeAndFlush(wrap(.end(nil)), promise: nil)
-      
-      assert(request === self.activeRequest)
-      self.activeRequest = nil
+      let ( handler, ctx ) = loopBound.value
+      handler.write(response, for: request, in: ctx)
     }
+  }
+  
+  private func write(_ response: WOResponse, for request: WONIORequest,
+                     in ctx: ChannelHandlerContext)
+  {
+    let contentLength = response.contents?.count ?? 0
+    response.setHeader("\(contentLength)", for: "Content-Length")
+    
+    let responseHead = HTTPResponseHead(
+      version : response.httpVersion,
+      status  : HTTPResponseStatus(statusCode: response.status),
+      headers : response.headers
+    )
+    
+    ctx.write(wrapOutboundOut(.head(responseHead)), promise: nil)
+    
+    if contentLength > 0, let data = response.contents {
+      var buf = ctx.channel.allocator.buffer(capacity: contentLength)
+      buf.writeBytes(data)
+      ctx.write(wrapOutboundOut(.body(.byteBuffer(buf))), promise: nil)
+    }
+    
+    ctx.writeAndFlush(wrapOutboundOut(.end(nil)), promise: nil)
+    
+    assert(request === activeRequest)
+    activeRequest = nil
   }
   
 
@@ -107,13 +106,4 @@ final class WONIOHandler : ChannelInboundHandler {
     activeRequest = nil
   }
   
-  #if swift(>=5) // NIO 2 API default
-  #else // NIO 1 shims
-    func channelInactive(ctx context: ChannelHandlerContext) {
-      channelInactive(context: context)
-    }
-    func errorCaught(ctx context: ChannelHandlerContext, error: Error) {
-      errorCaught(context: context, error: error)
-    }
-  #endif // NIO 1 shims
 }

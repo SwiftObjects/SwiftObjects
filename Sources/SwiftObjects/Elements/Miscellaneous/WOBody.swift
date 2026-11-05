@@ -23,12 +23,10 @@
  * ```
  *
  * Bindings:
- * ```
- *   filename  [in] - string
- *   framework [in] - string
- *   src       [in] - string
- *   value     [in] - byte array?
- * ```
+ * - filename  [in] - string
+ * - framework [in] - string
+ * - src       [in] - string
+ * - value     [in] - byte array?
  */
 open class WOBody : WOHTMLDynamicElement {
   

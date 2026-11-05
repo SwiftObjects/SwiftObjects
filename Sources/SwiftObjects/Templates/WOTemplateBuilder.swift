@@ -10,16 +10,16 @@ import struct Foundation.URL
 
 /**
  * Protocol for objects which take a template file and build a
- * WOElement hierarchy from that (plus component instantiation info).
+ * ``WOElement`` hierarchy from that (plus component instantiation info).
  *
- * The prominent implementation is `WOWrapperTemplateBuilder` which
- * handles various template setups (eg wrappers or straight .html Go
- * templates).
+ * The prominent implementation is ``WOWrapperTemplateBuilder`` which
+ * handles various template setups (eg wrappers or straight .html
+ * SwiftObjects templates).
  */
 public protocol WOTemplateBuilder {
   
   /**
-   * Returns a WOTemplate dynamic element representing the template as
+   * Returns a ``WOTemplate`` dynamic element representing the template as
    * specified by the _templateDate and _bindData URL (.html file and .wod
    * file).
    */

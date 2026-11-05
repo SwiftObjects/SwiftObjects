@@ -77,14 +77,5 @@ class WODParserTests: XCTestCase {
     
     XCTAssertEqual(result.count, 0)
   }
-
-  // MARK: - Linux
-  
-  static var allTests = [
-    ( "testSimpleWOD",            testSimpleWOD            ),
-    ( "testMultiWOD",             testMultiWOD             ),
-    ( "testMultiWODWithComments", testMultiWODWithComments ),
-    ( "testEmtptWithComments",    testEmtptWithComments    ),
-  ]
 }
 

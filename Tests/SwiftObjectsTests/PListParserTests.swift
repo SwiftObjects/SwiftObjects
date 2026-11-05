@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import XCTest
@@ -90,15 +90,4 @@ class PListParserTests: XCTestCase {
       XCTAssert(array[3] as? String == "hello")
     }
   }
-  
-  
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testEmptyPList",             testEmptyPList             ),
-    ( "testBasicPList",             testBasicPList             ),
-    ( "testArrayWithoutNilPList",   testArrayWithoutNilPList   ),
-    ( "testArrayWithNilErrorPList", testArrayWithNilErrorPList ),
-    ( "testArrayWithNilPList",      testArrayWithNilPList      ),
-  ]
 }

@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2020 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.Data
@@ -15,8 +15,8 @@ import struct Foundation.Data
 import NIOHTTP1 // This ties it to NIO, happy to remove this ;-)
 
 /**
- * Abstract superclass of WORequest and WOResponse. Manages HTTP headers and
- * the entity content. Plus some extras (eg cookies and userInfo).
+ * Abstract superclass of ``WORequest`` and ``WOResponse``. Manages HTTP headers
+ * and the entity content. Plus some extras (eg cookies and userInfo).
  *
  * Note:
  * Why do the write methods do not throw exceptions? Because 99% of the time
@@ -25,10 +25,18 @@ import NIOHTTP1 // This ties it to NIO, happy to remove this ;-)
  * Using exceptions would result in a major complication of the rendering code.
  *
  * Note:
- * We do not use constructors for WOMessage initialization. Use the appropriate
- * init() methods instead.
+ * We do not use constructors for ``WOMessage`` initialization. Use the
+ * appropriate init() methods instead.
+ *
+ * Note:
+ * Messages are mutable and not thread-safe, but they are handed over between
+ * threads (e.g. from the I/O thread to a worker and back). Only one thread
+ * must own a message at any given time, which is why the class is marked as
+ * `@unchecked Sendable`.
  */
-open class WOMessage : SmartDescription, KeyValueCodingType {
+open class WOMessage : SmartDescription, KeyValueCodingType,
+                       @unchecked Sendable
+{
   
   public typealias Headers = NIOHTTP1.HTTPHeaders
   public typealias Version = NIOHTTP1.HTTPVersion
@@ -121,7 +129,7 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
    * `contentEncoding` to determine the necessary charset to
    * convert the content buffer into a String.
    *
-   * @return the content of the message, or null
+   * - Returns: the content of the message, or null
    */
   open var contentString : String? {
     set {
@@ -144,18 +152,21 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
   
   /**
    * Append the start of a begin tag with the given tagname. Sample:
-   *
-   *     response.appendBeginTag("a");
+   * ```swift
+   * response.appendBeginTag("a");
+   * ```
    *
    * generates:
-   *
-   *     <a>
+   * ```xml
+   * <a>
+   * ```
    *
    * Note that it does not generate the closing bracket, this can be done by
    * invoking appendBeginTagEnd() (for container tags) or appendBeginTagClose()
    * (for empty tags).
    *
-   * @param _tagName - the name of the tag which should be generated
+   * - Parameters:
+   *   - name: the name of the tag which should be generated
    */
   open func appendBeginTag(_ name: String) throws {
     try appendContentCharacter("<")
@@ -165,19 +176,22 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
   /**
    * Append the start of a begin tag with the given tagname and optionally a
    * set of attributes. Sample:
-   *
-   *     response.appendBeginTag("a", "target", 10)
+   * ```swift
+   * response.appendBeginTag("a", "target", 10)
+   * ```
    *
    * generates:
-   *
-   *     <a target="10"
+   * ```xml
+   * <a target="10"
+   * ```
    *
    * Note that it does not generate the closing bracket, this can be done by
    * invoking appendBeginTagEnd() (for container tags) or appendBeginTagClose()
    * (for empty tags).
    *
-   * @param _tagName - the name of the tag which should be generated
-   * @param _attrs   - a varargs list of key/value pairs
+   * - Parameters:
+   *   - name:       the name of the tag which should be generated
+   *   - attributes: a varargs list of key/value pairs
    */
   open func appendBeginTag(_ name: String, _ attributes : Any?...) throws {
     try appendBeginTag(name)
@@ -206,7 +220,7 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
   /**
    * Appends the closing bracket '>' of a tag.
    *
-   * @return an Exception if an error occured, null if everything is fine
+   * - Returns: an Exception if an error occured, null if everything is fine
    */
   open func appendBeginTagEnd() throws {
     try appendContentCharacter(">")
@@ -215,8 +229,9 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
   /**
    * Be careful with this one. Unless you are sure you want to generate XML,
    * you probably should use this construct instead:
-   *
-   *     response.appendBeginTagClose(context.closeAllElements())
+   * ```swift
+   * response.appendBeginTagClose(context.closeAllElements())
+   * ```
    *
    * This method appends this string: `" />"`
    */
@@ -226,13 +241,15 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
   
   /**
    * Commonly used like:
-   *
-   *     response.appendBeginTagClose(context.closeAllElements())
+   * ```swift
+   * response.appendBeginTagClose(context.closeAllElements())
+   * ```
    *
    * This method appends this string: `" />"` if _doClose
    * is true, otherwise it adds `">"`.
    *
-   * @param _doClose - whether or not the tag should be closed
+   * - Parameters:
+   *   - doClose: whether or not the tag should be closed
    */
   open func appendBeginTagClose(_ doClose: Bool) throws {
     return doClose ? try appendContentString(" />")
@@ -249,8 +266,9 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
    * The method does not expand 'selected' to 'selected=selected', this is the
    * task of the dynamic element.
    *
-   * @param _attrName
-   * @param _attrValue
+   * - Parameters:
+   *   - name:
+   *   - value:
    */
   open func appendAttribute(_ name: String, _ value: String?) throws {
     if contents != nil {
@@ -277,13 +295,15 @@ open class WOMessage : SmartDescription, KeyValueCodingType {
   /**
    * This appends the given key/value attribute to the response.
    * Example:
-   *
-   *     response.appendAttribute("size", 12);
+   * ```swift
+   * response.appendAttribute("size", 12);
+   * ```
    *
    * Adding int-values is a bit faster, since they never need to be escaped.
    *
-   * @param _attrName - the name of the attribute to add, eg "size"
-   * @param _value    - the value of the attribute to add
+   * - Parameters:
+   *   - name:  the name of the attribute to add, eg "size"
+   *   - value: the value of the attribute to add
    */
   open func appendAttribute(_ name: String, _ value: Int) throws {
     // FIXME: perf

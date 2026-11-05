@@ -6,16 +6,17 @@
 //
 
 /**
- * A request handler which invokes actions by restoring a page from a WOContext
- * contained in a WOSession, and then using `invokeAction()` to find the
- * originating action element using its elementID.
+ * A request handler which invokes actions by restoring a page from a
+ * ``WOContext`` contained in a ``WOSession``, and then using `invokeAction()`
+ * to find the originating action element using its elementID.
  *
- * Note: `WOSession` can only hold so many contexts, so URLs will become invalid
- * over time resulting in the "you have backtracked too far" issue.
+ * Note: ``WOSession`` can only hold so many contexts, so URLs will become
+ * invalid over time resulting in the "you have backtracked too far" issue.
  *
- * The Go URL for a component action looks like this:
- *
- *     /AppName/wo/SESSION-ID/CONTEXT-ID/ELEMENT-ID
+ * The SwiftObjects URL for a component action looks like this:
+ * ```
+ * /AppName/wo/SESSION-ID/CONTEXT-ID/ELEMENT-ID
+ * ```
  *
  * This is different to SOPE (and WO?) where the context-id is stored as part
  * of the element-id.

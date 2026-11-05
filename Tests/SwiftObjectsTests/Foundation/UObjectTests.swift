@@ -238,48 +238,4 @@ class UObjectTests: XCTestCase {
 
     XCTAssertEqual(name, "String")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testBoolValueFromBoolTrue",         testBoolValueFromBoolTrue         ),
-    ( "testBoolValueFromBoolFalse",        testBoolValueFromBoolFalse        ),
-    ( "testBoolValueFromIntZero",          testBoolValueFromIntZero          ),
-    ( "testBoolValueFromIntNonZero",       testBoolValueFromIntNonZero       ),
-    ( "testBoolValueFromStringFalsy",      testBoolValueFromStringFalsy      ),
-    ( "testBoolValueFromStringTruthy",     testBoolValueFromStringTruthy     ),
-    ( "testBoolValueFromArrayEmpty",       testBoolValueFromArrayEmpty       ),
-    ( "testBoolValueFromArrayNonEmpty",    testBoolValueFromArrayNonEmpty    ),
-    ( "testBoolValueFromSetEmpty",         testBoolValueFromSetEmpty         ),
-    ( "testBoolValueFromSetNonEmpty",      testBoolValueFromSetNonEmpty      ),
-    ( "testBoolValueFromOptionalNone",     testBoolValueFromOptionalNone     ),
-    ( "testBoolValueFromOptionalSome",     testBoolValueFromOptionalSome     ),
-    ( "testBoolValueFromOptionalSomeFalsy", testBoolValueFromOptionalSomeFalsy ),
-    ( "testBoolValueFromNil",              testBoolValueFromNil              ),
-    ( "testBoolValueFromAnyObject",        testBoolValueFromAnyObject        ),
-    ( "testStringValueFromString",         testStringValueFromString         ),
-    ( "testStringValueFromBoolTrue",       testStringValueFromBoolTrue       ),
-    ( "testStringValueFromBoolFalse",      testStringValueFromBoolFalse      ),
-    ( "testStringValueFromInt",            testStringValueFromInt            ),
-    ( "testStringValueFromNil",            testStringValueFromNil            ),
-    ( "testStringValueFromOther",          testStringValueFromOther          ),
-    ( "testIntValueFromInt",               testIntValueFromInt               ),
-    ( "testIntValueFromBoolTrue",          testIntValueFromBoolTrue          ),
-    ( "testIntValueFromBoolFalse",         testIntValueFromBoolFalse         ),
-    ( "testIntValueFromStringValid",       testIntValueFromStringValid       ),
-    ( "testIntValueFromStringInvalid",     testIntValueFromStringInvalid     ),
-    ( "testIntValueFromNil",               testIntValueFromNil               ),
-    ( "testIntValueFromStringOptional",    testIntValueFromStringOptional    ),
-    ( "testEqBothNil",             testEqBothNil             ),
-    ( "testEqLeftNilRightValue",   testEqLeftNilRightValue   ),
-    ( "testEqLeftValueRightNil",   testEqLeftValueRightNil   ),
-    ( "testEqInts",                testEqInts                ),
-    ( "testEqStrings",             testEqStrings             ),
-    ( "testEqMixedTypes",          testEqMixedTypes          ),
-    ( "testEqOptionals",           testEqOptionals           ),
-    ( "testGetSimpleName",                 testGetSimpleName                 ),
-    ( "testGetSimpleNameInt",              testGetSimpleNameInt              ),
-    ( "testGetSimpleNameString",           testGetSimpleNameString           ),
-  ]
 }

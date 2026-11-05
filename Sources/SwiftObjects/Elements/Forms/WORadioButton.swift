@@ -22,7 +22,7 @@
  * <input type="radio" name="products" value="iPhone" />
  * ```
  *
- * Bindings (WOInput):
+ * Bindings (``WOInput``):
  * - id         [in]  - string
  * - name       [in]  - string
  * - value      [io]  - object
@@ -34,7 +34,7 @@
  * - selection [io] - object
  * - checked   [io] - boolean
  *
- * Bindings (WOHTMLElementAttributes):
+ * Bindings (``WOHTMLElementAttributes``):
  * - style  [in]  - 'style' parameter
  * - class  [in]  - 'class' parameter
  * - !key   [in]  - 'style' parameters (e.g. `<input style="color:red;">`)

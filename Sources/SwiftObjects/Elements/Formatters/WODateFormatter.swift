@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.TimeZone
@@ -42,7 +42,7 @@ import class  Foundation.DateFormatter
  *                                   Pacific Standard Time; PST; GMT-08:00
  * ```
  */
-open class WODateFormatter : WOFormatter {
+open class WODateFormatter : WOFormatter, @unchecked Sendable {
   
   let format    : WOAssociation
   let isLenient : WOAssociation?
@@ -63,7 +63,7 @@ open class WODateFormatter : WOFormatter {
   }
 
   open func formatter(in context: WOContext) -> Foundation.Formatter? {
-    // TODO: cache, like in Go
+    // TODO: cache, like in GETobjects
     let nf     = Foundation.DateFormatter()
     let cursor = context.cursor
     

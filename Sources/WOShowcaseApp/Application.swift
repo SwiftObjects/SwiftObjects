@@ -11,32 +11,14 @@ import jQuery
 import SemanticUI
 
 @main
-final class WOShowcaseApp : WOApplication {
+final class WOShowcaseApp : WOApplication, @unchecked Sendable {
 
   override init() {
     super.init()
     
-    contextClass = Context.self
-    sessionClass = Session.self
-    
-    let rm = WODevResourceManager(sourceType: WOShowcaseApp.self,
-                                  defaultFramework: "WOShowcaseApp")
-    rm.register(
-      Session.self,
-      Context.self,
-      DirectAction.self,
-      
-      Main.self,
-      Frame.self,
-      DynamicElementSample.self,
-      ComponentBindingInfo.self,
-      
-      DemoWOString.self,
-      DemoWOHyperlink.self,
-      DemoWORepetition.self,
-      DemoWOForm.self
-    )
-    
+    // Component, direct action, session and context classes are found by
+    // name, no registration necessary.
+    let rm = WODevResourceManager(sourceType: WOShowcaseApp.self)
     rm.expose(.init("jQuery.min.js",    jQuery.data_jquery_min_js),
               .init("semantic.min.js",  SemanticUI.data_semantic_min_js),
               .init("semantic.min.css", SemanticUI.data_semantic_min_css))

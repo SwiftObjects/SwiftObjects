@@ -10,7 +10,7 @@
  * This association resolves its given String using KVC to another String which
  * is then evaluated again via KVC. Weird, eh? ;-)
  */
-public class WODynamicKeyPathAssociation : WOAssociation, SmartDescription {
+public final class WODynamicKeyPathAssociation: WOAssociation,SmartDescription {
   
   public let keyAssociation : WOAssociation
   

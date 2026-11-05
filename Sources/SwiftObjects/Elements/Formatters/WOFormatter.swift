@@ -17,7 +17,7 @@ import class Foundation.NSString
  * THREAD: remember that Format objects are usually not thread-safe.
  *         TBD: Same in Swift Foundation?
  */
-public protocol WOFormatter {
+public protocol WOFormatter : Sendable {
   
   func formatter(in context: WOContext) -> Foundation.Formatter?
 
@@ -31,7 +31,7 @@ public enum WOFormatterFactory { // can't have statics on Swift protocols
   public typealias Bindings = [ String : WOAssociation ]
   
   /**
-   * Extracts a WOFormatter for the given associations. This checks the
+   * Extracts a ``WOFormatter`` for the given associations. This checks the
    * following bindings:
    *
    * - dateformat, lenient, locale, timeZone/tz
@@ -72,7 +72,7 @@ public enum WOFormatterFactory { // can't have statics on Swift protocols
 
 import Foundation
 
-enum WOFormatterError: Swift.Error {
+enum WOFormatterError : Swift.Error, @unchecked Sendable {
   case formatterCannotConvertFromString(Formatter)
   /// https://bugs.swift.org/browse/SR-12411
   case unsupportedFormatterBlameSwift52Foundation(Formatter)

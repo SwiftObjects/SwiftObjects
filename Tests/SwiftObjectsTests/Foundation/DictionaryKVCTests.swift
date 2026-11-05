@@ -172,24 +172,4 @@ class DictionaryKVCTests: XCTestCase {
     XCTAssertEqual(name as? String, "Frank")
     XCTAssertEqual(age as? Int, 40)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testDictionaryValueForStringKey",    testDictionaryValueForStringKey    ),
-    ( "testDictionaryValueForMissingKey",   testDictionaryValueForMissingKey   ),
-    ( "testDictionaryValueForIntKey",       testDictionaryValueForIntKey       ),
-    ( "testDictionaryValueForIntKeyInvalid", testDictionaryValueForIntKeyInvalid ),
-    ( "testDictionaryValueForIntKeyMissing", testDictionaryValueForIntKeyMissing ),
-    ( "testDictionaryOptionalValue",        testDictionaryOptionalValue        ),
-    ( "testDictionaryTakeValueForKey",      testDictionaryTakeValueForKey      ),
-    ( "testDictionaryTakeValueNewKey",      testDictionaryTakeValueNewKey      ),
-    ( "testDictionaryTakeValueDifferentTypes",
-                                          testDictionaryTakeValueDifferentTypes ),
-    ( "testDictionaryUnsupportedKeyType",   testDictionaryUnsupportedKeyType   ),
-    ( "testDictionaryCannotCoerceValue",    testDictionaryCannotCoerceValue    ),
-    ( "testDictionaryViaKeyValueCoding",    testDictionaryViaKeyValueCoding    ),
-    ( "testNestedDictionaryKeypath",        testNestedDictionaryKeypath        ),
-  ]
 }

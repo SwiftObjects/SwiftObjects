@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 13.05.18.
-//  Copyright © 2018-2021 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 public protocol WOAction {
@@ -36,39 +36,32 @@ public extension WOAction {
 }
 
 
-// MARK: - Circus to map Swift methods to Strings.
+// MARK: - Mapping Swift methods to action names.
 
-/*
- * Note: let me know if there is a better way to do this.
+/**
+ * Maps action names, strings, to Swift methods.
  *
- * FIXME: The other bug w/ this is that this should really be a one-time, type
- *        specific thing. (i.e. something static)
+ * We can't use reflection in Swift like in Java/ObjC, but we can now generate
+ * reflection info using Swift macros. For KVC and for method calls.
+ * ```swift
+ * @WODirectAction // <= this does the magic
+ * final class DirectAction {
+ *   func helloAction() -> Any? { ... }
+ * }
+ * ```
  *
- * This is what I want (leaving alone proper Reflection in Swift):
+ * There are two kinds of actions. Component actions are bound in templates
+ * (e.g. `<wo:form action="$save">`) and invoked by the component action request
+ * handler based on the element-id path.
+ * Direct actions are invoked by name, e.g. in the URL `/Mehr.app/wa/Main/hi`,
+ * i.e. they are directly exposed to the client.
  *
- *     init(context: WOContext) {
- *       expose(defaultAction, as: "default")
- *     }
- *
- * An issue is that using `self.abc` returns a bound function (captures self).
- *
- * An ugly option is this:
- *
- *     init(context: WOContext) {
- *       expose({ [weak self] in self?.defaultAction(), as: "default")
- *     }
- *
- * But this is not really what we'd do in WO, but more like a route.
- *
- * So for now this does:
- *
- *     init(context: WOContext) {
- *       expose(DirectAction.defaultAction, as: "default")
- *     }
- *
- * Well, actually we can break cycles in `sleep` or after performing an action,
- * they have definite life times.
- * But this means component-actions should be registered in awake.
+ * Methods are either marked as actions (made callable) using the `@WOAction`
+ * macro, like `@WOAction func hi() { ... }`, or by having an `Action` suffix,
+ * like `func hiAction() {}`.
+ * If the method ends in "Action" they are available as direct actions (exposed
+ * by name). If not, they become component actions.
+ * E.g. `@WOAction func hi() {}` wouldn't be available as `/wa/Main/hi`.
  */
 public protocol WOActionMapper : AnyObject {
   
@@ -76,51 +69,121 @@ public protocol WOActionMapper : AnyObject {
   typealias WOActionCallback = () throws -> Any?
 
   /**
-   * Explicitly expose an action method to the Web.
+   * Manually expose an action closure to the Web.
    *
-   * Example DirectAction:
+   * Prefer the overloads taking an unbound method reference, like
+   * `expose(Self.sayHello, as: "hello")`, those do not capture `self`. A
+   * closure passed here which captures `self` creates a retain cycle, as the
+   * closure is stored in the object. Use `[weak self]` in that case.
    *
-   *     init(context: WOContext) {
-   *         super.init(context: context)
-   *         expose(defaultAction, as: "default")
-   *         expose(sayHello,      as: "hello")
-   *     }
-   *
-   * Component:
-   *
-   *     override func awake() {
-   *         super.awake()
-   *         expose(defaultAction, as: "default")
-   *     }
+   * - Parameters:
+   *   - callback: The closure invoking the action
+   *   - name:     Name of the action.
+   *   - direct:   Whether the action can be invoked by the client using a
+   *               direct action URL, defaults to false
    */
-  func expose(_ cb: @escaping WOActionCallback, as name: String)
+  func expose(_ callback: @escaping WOActionCallback, as name: String,
+              direct: Bool)
   
+  /**
+   * Returns the callback for the action with the given name, or nil if there
+   * is no such action. Finds *all* actions by name, direct or not.
+   */
   func lookupActionNamed(_ name: String) -> WOActionCallback?
   
-  var exposedActions : [ String : WOActionCallback ] { get set }
-    // Note: this usually creates a cycle!
+  /**
+   * Returns the callback for the direct action with the given name, or nil
+   * if the action does not exist or cannot be invoked using a direct action
+   * URL.
+   */
+  func lookupDirectActionNamed(_ name: String) -> WOActionCallback?
+  
+  /// The actions exposed manually, by name.
+  var exposedActions : [ String : WOExposedAction ] { get set }
+}
+
+/**
+ * An action exposed manually using ``WOActionMapper/expose(_:as:direct:)``.
+ * Carries whether the action is a direct action, i.e. whether the client can
+ * invoke it by name.
+ *
+ * The action is stored as a closure taking the object to invoke it on, so
+ * that it doesn't need to capture the object. Otherwise the object would
+ * retain itself through its `exposedActions`.
+ */
+public struct WOExposedAction {
+  
+  /// Whether the action can be invoked using a direct action URL.
+  public let isDirect : Bool
+  
+  /// Invokes the action on the given object.
+  public let invoke   : (AnyObject) throws -> Any?
+  
+  public init(isDirect: Bool, invoke: @escaping (AnyObject) throws -> Any?) {
+    self.isDirect = isDirect
+    self.invoke   = invoke
+  }
 }
 
 public extension WOActionMapper { // default imp
 
-  func expose(_ cb: @escaping WOActionCallback, as name: String) {
-    exposedActions[name] = cb
+  /**
+   * Exposes an unbound method as an action.
+   * ```swift
+   * func awake() {
+   *   expose(Self.sayHello, as: "hello")              // component action
+   *   expose(Self.showAll,  as: "all", direct: true)  // /wa/Main/all
+   * }
+   * ```
+   *
+   * - Parameters:
+   *   - method: an unbound method reference, like `Self.sayHello`
+   *   - name:   the name of the action
+   *   - direct: whether the action can be invoked by the client using a
+   *             direct action URL, defaults to false
+   */
+  func expose(_ method: @escaping ( Self ) -> () throws -> Any?,
+              as name: String, direct: Bool = false)
+  {
+    exposedActions[name] = WOExposedAction(isDirect: direct) { object in
+      guard let target = object as? Self else {
+        assertionFailure("invoking action \(name) on wrong object")
+        return nil
+      }
+      return try method(target)()
+    }
+  }
+  
+  /**
+   * Exposes an unbound method as an action.
+   * ```swift
+   * func awake() {
+   *   expose(Self.sayHello, as: "hello")              // component action
+   *   expose(Self.showAll,  as: "all", direct: true)  // /wa/Main/all
+   * }
+   * ```
+   *
+   * - Parameters:
+   *   - method: an unbound method reference, like `Self.sayHello`
+   *   - name:   the name of the action
+   *   - direct: whether the action can be invoked by the client using a
+   *             direct action URL, defaults to false
+   */
+  func expose(_ method: @escaping ( Self ) -> () throws -> Void,
+              as name: String, direct: Bool = false)
+  {
+    expose({ (target: Self) in { try method(target)(); return nil } },
+           as: name, direct: direct)
+  }
+  
+  func expose(_ cb: @escaping WOActionCallback, as name: String,
+              direct: Bool = false)
+  {
+    exposedActions[name] = WOExposedAction(isDirect: direct) { _ in try cb() }
   }
   
   func lookupActionNamed(_ name: String) -> WOActionCallback? {
-    guard let method = exposedActions[name] else { return nil }
-    return method
-  }
-}
-
-public extension WOActionMapper { // helper to support non-throwing actions
-
-  /// An action that takes no own parameters, and returns a result.
-  func expose(_ cb: @escaping () -> Any?, as name: String) {
-    // I guess `rethrows` can do this too? No idea :-)
-    func makeThrowing() throws -> Any? {
-      return cb()
-    }
-    expose(makeThrowing, as: name)
+    guard let action = exposedActions[name] else { return nil }
+    return { try action.invoke(self) }
   }
 }

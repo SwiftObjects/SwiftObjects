@@ -38,19 +38,69 @@ extension String : RuntimeCoercion {
 
 extension Int : RuntimeCoercion {
   
+  /**
+   * Coerces to an `Int`. `nil` and the empty string (empty form fields) map
+   * to 0, non-numeric strings and unsupported types throw.
+   */
   static func coerce(runtimeValue v: Any?) throws -> Int {
     if      let s = v as? Int              { return s }
     else if let s = v as? Optional<Int>    { return s ?? 0 }
-    else if let s = v as? String           { return Int(s) ?? 0 }
-    else if let s = v as? Optional<String> {
-      if let s = s { return Int(s) ?? 0 }
-      else         { return 0 }
-    }
+    else if let s = v as? String           { return try parse(s) }
+    else if let s = v as? Optional<String> { return try s.map(parse) ?? 0 }
     else if let s = v as? Bool             { return s ? 1 : 0 }
     else if let s = v as? Optional<Bool>   { return (s ?? false) ? 1 : 0 }
-    else { return 0 } // TBD: throw?
+    else if let s = v as? Double           { return Int(s) }
+    else if let s = v as? Float            { return Int(s) }
+    else {
+      throw CoercionError.invalidType(got: type(of: v as Any),
+                                      expected: Int.self)
+    }
   }
   
+  private static func parse(_ s: String) throws -> Int {
+    if s.isEmpty { return 0 }
+    guard let i = Int(s) else {
+      throw CoercionError.invalidType(got: String.self, expected: Int.self)
+    }
+    return i
+  }
+}
+
+extension Double : RuntimeCoercion {
+  
+  /**
+   * Coerces to a `Double`. `nil` and the empty string (empty form fields)
+   * map to 0, non-numeric strings and unsupported types throw.
+   */
+  static func coerce(runtimeValue v: Any?) throws -> Double {
+    if      let s = v as? Double            { return s }
+    else if let s = v as? Optional<Double>  { return s ?? 0 }
+    else if let s = v as? Float             { return Double(s) }
+    else if let s = v as? Int               { return Double(s) }
+    else if let s = v as? String            { return try parse(s) }
+    else if let s = v as? Optional<String>  { return try s.map(parse) ?? 0 }
+    else if let s = v as? Bool              { return s ? 1 : 0 }
+    else {
+      throw CoercionError.invalidType(got: type(of: v as Any),
+                                      expected: Double.self)
+    }
+  }
+  
+  private static func parse(_ s: String) throws -> Double {
+    if s.isEmpty { return 0 }
+    guard let d = Double(s) else {
+      throw CoercionError.invalidType(got: String.self, expected: Double.self)
+    }
+    return d
+  }
+}
+
+extension Float : RuntimeCoercion {
+  
+  static func coerce(runtimeValue v: Any?) throws -> Float {
+    if let s = v as? Float { return s }
+    return Float(try Double.coerce(runtimeValue: v))
+  }
 }
 
 extension Bool : RuntimeCoercion {
@@ -79,6 +129,13 @@ extension Optional : RuntimeCoercion {
       
       case is Optional<Bool>.Type:
         return (UObject.boolValue(v) as Bool?) as! Optional<Wrapped>
+      
+      case is Optional<Double>.Type:
+        return coerceToOptionalDouble(value: v) as! Optional<Wrapped>
+      
+      case is Optional<Float>.Type:
+        return coerceToOptionalDouble(value: v).map(Float.init)
+               as! Optional<Wrapped>
       
       default:
         throw CoercionError.invalidType(got: Swift.type(of: v), expected: self)
@@ -114,6 +171,18 @@ extension Optional : RuntimeCoercion {
       return s ? 1 : 0
     }
     return nil // TBD: throw?
+  }
+  
+  /// Like ``coerceToOptionalInt``, unparsable strings yield nil.
+  static func coerceToOptionalDouble(value: Any?) -> Double? {
+    if let s = value as? Double           { return s }
+    if let s = value as? Optional<Double> { return s }
+    if let s = value as? Float            { return Double(s) }
+    if let s = value as? Int              { return Double(s) }
+    if let s = value as? String           { return Double(s) }
+    if let s = value as? Optional<String> { return s.flatMap(Double.init) }
+    if let s = value as? Bool             { return s ? 1 : 0 }
+    return nil
   }
 
 }

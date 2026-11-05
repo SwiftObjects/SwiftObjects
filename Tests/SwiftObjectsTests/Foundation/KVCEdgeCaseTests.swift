@@ -286,7 +286,7 @@ class KVCEdgeCaseTests: XCTestCase {
   func testSharedSingletonPropertyAccess() {
     // Simulates the CowStore.shared scenario
     final class SharedStore {
-      static let shared = SharedStore()
+      nonisolated(unsafe) static let shared = SharedStore()
       let urlPrefix = "https://example.com/"
       let availableImages = ["a.jpg", "b.jpg", "c.jpg"]
       var mutableList = ["x", "y", "z"]
@@ -385,30 +385,4 @@ class KVCEdgeCaseTests: XCTestCase {
     // Note: Our implementation may not support setting nil, so just verify
     // no crash occurred
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testDoubleBoxedAnyDoesNotCrash",         testDoubleBoxedAnyDoesNotCrash ),
-    ( "testKeyPathThroughAnyDoesNotCrash",      testKeyPathThroughAnyDoesNotCrash ),
-    ( "testArrayOfAnyDoesNotCrash",             testArrayOfAnyDoesNotCrash ),
-    ( "testExistentialTypeReturnsNil",          testExistentialTypeReturnsNil ),
-    ( "testProtocolExistentialDoesNotCrash",    testProtocolExistentialDoesNotCrash ),
-    ( "testWeakReferenceReturnsNilNotCrash",    testWeakReferenceReturnsNilNotCrash ),
-    ( "testWeakReferenceWithValueDoesNotCrash", testWeakReferenceWithValueDoesNotCrash ),
-    ( "testNilObjectReturnsNil",                testNilObjectReturnsNil ),
-    ( "testEmptyKeyPathDoesNotCrash",           testEmptyKeyPathDoesNotCrash ),
-    ( "testKeyPathWithNilIntermediateReturnsNil",
-                                         testKeyPathWithNilIntermediateReturnsNil ),
-    ( "testOptionalPropertyNilValue",           testOptionalPropertyNilValue ),
-    ( "testOptionalPropertyWithValue",          testOptionalPropertyWithValue ),
-    ( "testTypeInfoForBasicTypes",              testTypeInfoForBasicTypes ),
-    ( "testTypeInfoForTuple",                   testTypeInfoForTuple ),
-    ( "testTypeInfoForClosure",                 testTypeInfoForClosure ),
-    ( "testPopupSelectionScenario",             testPopupSelectionScenario ),
-    ( "testSharedSingletonPropertyAccess",      testSharedSingletonPropertyAccess ),
-    ( "testArrayPropertyIteration",             testArrayPropertyIteration ),
-    ( "testTakeValueViaKeypath",                testTakeValueViaKeypath ),
-  ]
 }

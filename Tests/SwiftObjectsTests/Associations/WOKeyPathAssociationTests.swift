@@ -185,25 +185,4 @@ class WOKeyPathAssociationTests: XCTestCase {
 
     XCTAssertEqual(assoc.keyPath, "someKey")
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testSimpleKeyPath",            testSimpleKeyPath            ),
-    ( "testNestedKeyPath",            testNestedKeyPath            ),
-    ( "testDeepNestedKeyPath",        testDeepNestedKeyPath        ),
-    ( "testSetValue",                 testSetValue                 ),
-    ( "testSetNestedValue",           testSetNestedValue           ),
-    ( "testIsValueConstant",          testIsValueConstant          ),
-    ( "testIsValueSettable",          testIsValueSettable          ),
-    ( "testKeyPathProperty",          testKeyPathProperty          ),
-    ( "testPathComponents",           testPathComponents           ),
-    ( "testNilComponent",             testNilComponent             ),
-    ( "testSimpleKeyValue",           testSimpleKeyValue           ),
-    ( "testSimpleKeySetValue",        testSimpleKeySetValue        ),
-    ( "testKeyAssociationIsNotConstant", testKeyAssociationIsNotConstant ),
-    ( "testKeyAssociationIsSettable", testKeyAssociationIsSettable ),
-    ( "testKeyAssociationKeyPath",    testKeyAssociationKeyPath    ),
-  ]
 }

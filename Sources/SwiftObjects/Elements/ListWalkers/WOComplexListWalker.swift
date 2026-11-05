@@ -7,27 +7,26 @@
 //
 
 /**
- * Concrete subclass of WOListWalker, which can process all possible bindings.
+ * Concrete subclass of ``WOListWalker``, which can process all possible
+ * bindings.
  *
  * Do not instantiate directly, use the WOListWalker.newListWalker() factory
  * function.
  *
  * Bindings:
- * ```
- *   list       [in]  - WOListWalkable
- *   count      [in]  - int
- *   item       [out] - object
- *   index      [out] - int
- *   index1     [out] - int (like index, but starts at 1, not 0)
- *   startIndex [in]  - int
- *   identifier [in]  - string (TODO: currently unescaped)
- *   sublist    [in]  - WOListWalkable
- *   isEven     [out] - boolean
- *   isFirst    [out] - boolean
- *   isLast     [out] - boolean
- *   filter     [in]  - EOQualifier/String
- *   sort       [in]  - EOSortOrdering/EOSortOrdering[]/Comparator/String/bool
- * ```
+ * - list       [in]  - ``WOListWalkable``
+ * - count      [in]  - int
+ * - item       [out] - object
+ * - index      [out] - int
+ * - index1     [out] - int (like index, but starts at 1, not 0)
+ * - startIndex [in]  - int
+ * - identifier [in]  - string (TODO: currently unescaped)
+ * - sublist    [in]  - ``WOListWalkable``
+ * - isEven     [out] - boolean
+ * - isFirst    [out] - boolean
+ * - isLast     [out] - boolean
+ * - filter     [in]  - EOQualifier/String
+ * - sort       [in]  - EOSortOrdering/EOSortOrdering[]/Comparator/String/bool
  */
 public struct WOComplexListWalker : WOListWalker, SmartDescription {
   
@@ -64,7 +63,7 @@ public struct WOComplexListWalker : WOListWalker, SmartDescription {
   /**
    * Determines the List to walk from the bindings and then calls walkList()
    * with that list.
-   * This is the primary entry method called by WODynamicElement objects.
+   * This is the primary entry method called by ``WODynamicElement`` objects.
    *
    * It first checks the 'list' binding and if this is missing falls back to the
    * 'count' binding.
@@ -128,7 +127,7 @@ public struct WOComplexListWalker : WOListWalker, SmartDescription {
       else             { context.appendElementIDComponent(startIdx)}
     }
     
-    // TODO: Go has another version of this
+    // TODO: GETobjects has another version of this
     let goUntil = (aCount > (startIdx + goCount)) ? startIdx + goCount : aCount
     
     /* repeat */
@@ -210,7 +209,7 @@ public struct WOComplexListWalker : WOListWalker, SmartDescription {
       else             { context.appendElementIDComponent(startIdx)}
     }
     
-    // TODO: Go has another version of this
+    // TODO: GETobjects has another version of this
     let goUntil = (aCount > (startIdx + goCount)) ? startIdx + goCount : aCount
     
     /* repeat */

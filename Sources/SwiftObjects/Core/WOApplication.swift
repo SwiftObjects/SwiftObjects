@@ -13,24 +13,31 @@ import class  Foundation.UserDefaults
 import Synchronization
 
 /**
- * This is the main entry class for Go web applications. You usually
- * start writing a Go app by subclassing this class. It then provides all
- * the setup of the Go infrastructure (creation of session and resource
+ * This is the main entry class for SwiftObjects web applications. You usually
+ * start writing a SwiftObjects app by subclassing this class. It then
+ * provides all the setup of the SwiftObjects infrastructure (creation of
+ * session and resource
  * managers, handling of initial requests, etc etc)
  *
  * The default name for the subclass is 'Application', alongside 'Context'
- * for a WOContext subclass and 'Session' for the app specific WOSession
+ * for a ``WOContext`` subclass and 'Session' for the app specific ``WOSession``
  * subclass.
  *
  * A typical thing one might want to setup in an Application subclass is a
  * connection to the database.
  *
- * When you host within Jetty, this is a typical main() function for a Go based
- * web application:
+ * A typical application hosts itself in a ``WONIOAdaptor``, which runs the
+ * Swift-NIO HTTP server:
+ * ```swift
+ * @main
+ * final class MyApp : WOApplication, @unchecked Sendable {
  *
- *     public static void main(String[] args) {
- *         new WOJettyRunner(PackBack.class, args).run();
- *     }
+ *   static func main() {
+ *     let server = WONIOAdaptor(application: MyApp())
+ *     server.listenAndWait()
+ *   }
+ * }
+ * ```
  *
  * - FIXME: document it way more.
  * - FIXME: document how it works in a Servlet environment
@@ -42,8 +49,9 @@ import Synchronization
  *
  * #### QuerySession
  *
- * In addition to Context and Session subclasses, Go has the concept of a
- * 'QuerySession'. The baseclass is WOQuerySession and an application can
+ * In addition to Context and Session subclasses, SwiftObjects has the concept
+ * of a
+ * 'QuerySession'. The baseclass is ``WOQuerySession`` and an application can
  * subclass this.
  * FIXME: document more
  *
@@ -56,14 +64,15 @@ import Synchronization
  *
  * #### pageWithName()
  *
- * In Go this supports component specific resource managers, not just the
- * global one. The WOApplication pageWithName takes this into account, it
+ * In SwiftObjects this supports component specific resource managers, not
+ * just the
+ * global one. The ``WOApplication`` pageWithName takes this into account, it
  * is NOT the fallback root lookup (and thus can be used in all contexts).
- * It first checks the active WOComponent for the resource manager.
+ * It first checks the active ``WOComponent`` for the resource manager.
  */
 open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
                            GoObjectRendererFactory, KeyValueCodingType,
-                           SmartDescription
+                           SmartDescription, @unchecked Sendable
 {
   
   public let log : WOLogger = WOPrintLogger(logLevel: .Log)
@@ -135,9 +144,9 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   /**
    * This method registers the default request handlers, that is:
    *
-   * - WODirectActionRequestHandler ('wa' and 'x')
-   * - WOResourceRequestHandler ('wr', 'WebServerResources', 'Resources')
-   * - WOComponentRequestHandler ('wo')
+   * - ``WODirectActionRequestHandler`` ('wa' and 'x')
+   * - ``WOResourceRequestHandler`` ('wr', 'WebServerResources', 'Resources')
+   * - ``WOComponentRequestHandler`` ('wo')
    */
   func registerInitialRequestHandlers() {
     let da = WODirectActionRequestHandler(application: self)
@@ -159,7 +168,7 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   
   /**
    * This method is called by handleRequest() when the application starts to
-   * process a given request. Since it has no WOContext parameter its rather
+   * process a given request. Since it has no ``WOContext`` parameter its rather
    * useless :-)
    */
   open func awake() {
@@ -235,14 +244,16 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   // MARK: - Request Handlers
   
   /**
-   * Returns the WORequestHandler which is responsible for the given request.
-   * This retrieves the request handler key from the request. If there is none,
-   * or if the key maps to nothing the `defaultRequestHandler()` is
-   * used.
-   * Otherwise the WORequestHandler stored for the key will be returned.
+   * Returns the ``WORequestHandler`` which is responsible for the given
+   * request. This retrieves the request handler key from the request. If there
+   * is none, or if the key maps to nothing the `defaultRequestHandler()` is
+   * used. Otherwise the ``WORequestHandler`` stored for the key will be
+   * returned.
    *
-   * @param _rq - the WORequest to be handled
-   * @return a WORequestHandler object responsible for processing the request
+   * - Parameters:
+   *   - request: the ``WORequest`` to be handled
+   * - Returns:   a ``WORequestHandler`` object responsible for processing the
+   *              request
    */
   open func requestHandler(for request: WORequest) -> WORequestHandler? {
     if request.uri == "/favicon.ico" {
@@ -347,12 +358,13 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
    *     a result.
    * - then, the products are checked for appropriate renderers, by
    *     invoking the rendererForObjectInContext() of the product manager.
-   * - and finally the GoDefaultRenderer will get used (if it can process
+   * - and finally the ``GoDefaultRenderer`` will get used (if it can process
    *     the object)
    *
-   * @param _o   - the object which shall be rendered
-   * @param _ctx - the context in which the rendering should happen
-   * @return a renderer object (a GoObjectRenderer)
+   * - Parameters:
+   *   - object:  the object which shall be rendered
+   *   - context: the context in which the rendering should happen
+   * - Returns:   a renderer object (a ``GoObjectRenderer``)
    */
   open func rendererForObject(_ object: Any?, in context: WOContext)
             -> GoObjectRenderer?
@@ -370,16 +382,17 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   
   /**
    * Renders the given object in the given context. It does so by looking up
-   * a 'renderer' object (a GoObjectRenderer) using
+   * a 'renderer' object (a ``GoObjectRenderer``) using
    * rendererForObjectInContext() and then calling renderObjectInContext()
    * on it.
    *
-   * In the default configuration this will usually use the GoDefaultRenderer
-   * which can deal with quite a few setups.
+   * In the default configuration this will usually use the
+   * ``GoDefaultRenderer`` which can deal with quite a few setups.
    *
-   * @param _result - the object to be rendered
-   * @param _ctx    - the context in which the rendering should happen
-   * @return a WOResponse containing the rendered results
+   * - Parameters:
+   *   - object:  the object to be rendered
+   *   - context: the context in which the rendering should happen
+   * - Returns:   a ``WOResponse`` containing the rendered results
    */
   open func renderObject(_ object: Any?,
                          in context: WOContext) throws -> WOResponse?
@@ -408,14 +421,15 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   }
   
   /**
-   * This method is called by the GoDefaultRenderer if its asked to render a
-   * WOApplication object. This usually means that the root-URL of the
+   * This method is called by the ``GoDefaultRenderer`` if its asked to render a
+   * ``WOApplication`` object. This usually means that the root-URL of the
    * application was accessed.
    * The default implementation will return a redirect to the `wa/Main/default`
    * GoPath.
    *
-   * @param _ctx - the WOContext the request happened in
-   * @return a WOResponse to be used for the application object
+   * - Parameters:
+   *   - context: the ``WOContext`` the request happened in
+   * - Returns:   a ``WOResponse`` to be used for the application object
    */
   open func redirectToApplicationEntry(in context: WOContext) -> WOResponse? {
     let drh = defaultRequestHandler
@@ -462,8 +476,8 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
    * the relevant objects fill themselves with the state of the request before
    * the action is invoked.
    *
-   * The default method calls the takeValuesFromRequest() of the WOSession, if
-   * one is active. Otherwise it enters the contexts' page and calls
+   * The default method calls the takeValuesFromRequest() of the ``WOSession``,
+   * if one is active. Otherwise it enters the contexts' page and calls
    * takeValuesFromRequest() on it.
    */
   open func takeValues(from request: WORequest, in context: WOContext) throws {
@@ -482,7 +496,7 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
    * phase the relevant objects got their form values pushed in and the action
    * is ready to be performed.
    *
-   * The default method calls the invokeAction() of the WOSession, if
+   * The default method calls the invokeAction() of the ``WOSession``, if
    * one is active. Otherwise it enters the contexts' page and calls
    * invokeAction() on it.
    */
@@ -503,12 +517,13 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   }
   
   /**
-   * Render the page stored in the WOContext. This works by calling
-   * appendToResponse() on the WOSession, if there is one. If there is none,
+   * Render the page stored in the ``WOContext``. This works by calling
+   * appendToResponse() on the ``WOSession``, if there is one. If there is none,
    * the page set in the context will get invoked directly.
    *
-   * @param _response - the response
-   * @param _ctx      - the context
+   * - Parameters:
+   *   - response: the response
+   *   - context:  the context
    */
   open func append(to response: WOResponse, in context: WOContext) throws {
     if context.hasSession {
@@ -525,10 +540,9 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   // MARK: - Sessions
   
   /**
-   * Uses the configured WOSessionStore to unarchive a WOSession for the current
-   * request(/context).
-   * All code should use this method instead of directly dealing with the
-   * session store.
+   * Uses the configured ``WOSessionStore`` to unarchive a ``WOSession`` for the
+   * current request(/context). All code should use this method instead of
+   * directly dealing with the session store.
    *
    * Note: this method also checks out the session from the store to avoid
    *       concurrent modifications!
@@ -558,13 +572,14 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   }
   
   /**
-   * This is called by WORequest or our handleRequest() in case a session needs
-   * to be created. It calls createSessionForRequest() to instantiate the clean
-   * session object. It then registers the session in the context and performs
-   * wake up (calls awakeWithContext()).
+   * This is called by ``WORequest`` or our handleRequest() in case a session
+   * needs to be created. It calls createSessionForRequest() to instantiate the
+   * clean session object. It then registers the session in the context and
+   * performs wake up (calls awakeWithContext()).
    *
-   * @param _ctx the context in which the session shall be active initially.
-   * @return a fresh session
+   * - Parameters:
+   *   - context: the context in which the session shall be active initially.
+   * - Returns:   a fresh session
    */
   open func initializeSession(in context: WOContext) -> WOSession? {
     guard let session = createSession(for: context.request) else { return nil }
@@ -578,11 +593,12 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
    * Called by initializeSession to create a new session for the given request.
    *
    * This method is a hook for subclasses which want to change the class of
-   * the WOSession object based on the request. If they just want to change the
-   * static class, they can change the 'sessionClass' ivar.
+   * the ``WOSession`` object based on the request. If they just want to change
+   * the static class, they can change the 'sessionClass' ivar.
    *
-   * @param _rq  the request which is associated with the new session.
-   * @return a new, not-yet-awake session
+   * - Parameters:
+   *   - request: the request which is associated with the new session.
+   * - Returns:   a new, not-yet-awake session
    */
   open func createSession(for request: WORequest) -> WOSession? {
     return (sessionClass ?? WOSession.self).init()
@@ -590,7 +606,7 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   
   
   /**
-   * This method gets called by WOContext if its asked to restore a query
+   * This method gets called by ``WOContext`` if its asked to restore a query
    * session. If you want to store complex objects in your session, you might
    * want to override this.
    */
@@ -602,21 +618,22 @@ open class WOApplication : WOLifecycle, WOResponder, WORequestDispatcher,
   // MARK: - Page Handling
   
   /**
-   * Primary method for user code to generate new WOComponent objects. This is
-   * also called by WOComponent.pageWithName().
+   * Primary method for user code to generate new ``WOComponent`` objects. This
+   * is also called by WOComponent.pageWithName().
    *
-   * The method first locates a WOResourceManager by asking the active
-   * component, and if this has none, it uses the WOResourceManager set in the
-   * application.
-   * It then asks the WOResourceManager to instantiate the page. Afterwards it
-   * awakes the component in the given WOContext.
+   * The method first locates a ``WOResourceManager`` by asking the active
+   * component, and if this has none, it uses the ``WOResourceManager`` set in
+   * the application. It then asks the ``WOResourceManager`` to instantiate the
+   * page. Afterwards it awakes the component in the given ``WOContext``.
    *
-   * Again: do not trigger the WOResourceManager directly, always use this
+   * Again: do not trigger the ``WOResourceManager`` directly, always use this
    * method (or WOComponent.pageWithName()) to acquire WOComponents.
    *
-   * @param _pageName - the name of the WOComponent to instantiate
-   * @param _ctx      - the context for the component
-   * @return the WOComponent or null if the WOResourceManager found none
+   * - Parameters:
+   *   - name:    the name of the ``WOComponent`` to instantiate
+   *   - context: the context for the component
+   * - Returns:   the ``WOComponent`` or null if the ``WOResourceManager`` found
+   *              none
    */
   open func pageWithName(_ name: String, in context: WOContext) -> WOComponent?
   {

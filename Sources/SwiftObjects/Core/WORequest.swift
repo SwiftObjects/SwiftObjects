@@ -10,7 +10,7 @@ import struct Foundation.CharacterSet
 import struct Foundation.URLComponents
 import NIOHTTP1
 
-open class WORequest : WOMessage {
+open class WORequest : WOMessage, @unchecked Sendable {
   
   public static let SessionIDKey  = "wosid"
   public static let FragmentIDKey = "wofid"
@@ -49,17 +49,18 @@ open class WORequest : WOMessage {
   /**
    * Returns the request-handler key associated with the request. This is
    * usually the second part of the URL, eg:
-   *
-   *     /HellWorld/wa/MyPage/doIt
+   * ```
+   * /HellWorld/wa/MyPage/doIt
+   * ```
    *
    * The request-handler key is 'wa' (and is mapped to the
-   * WODirectActionRequestHandler in WOApplication).
+   * ``WODirectActionRequestHandler`` in ``WOApplication``).
    *
    * Note: this method is considered 'almost' deprecated. Lookups are now
    * usually done "GoStyle" (lookupName on the WOApp will be used to discover
-   * the WORequestHandler).
+   * the ``WORequestHandler``).
    *
-   * @return the request handler key part of the URL, eg 'wo' or 'wa'
+   * - Returns: the request handler key part of the URL, eg 'wo' or 'wa'
    */
   open var requestHandlerKey  : String?
   
@@ -67,7 +68,7 @@ open class WORequest : WOMessage {
    * This is the part of the URL which follows the requestHandlerKey(), see
    * the respective method for details.
    *
-   * @return the request handler path part of the URL, eg 'MyPage/doIt'
+   * - Returns: the request handler path part of the URL, eg 'MyPage/doIt'
    */
   open var requestHandlerPath : String?
   
@@ -251,12 +252,13 @@ open class WORequest : WOMessage {
    * special 'nil' value (can be used to explicitly reset a session-id).
    *
    * Example:
-   *
-   *     /MyApp/wa/MyPage/doIt?wosid=3884726736474
+   * ```
+   * /MyApp/wa/MyPage/doIt?wosid=3884726736474
+   * ```
    *
    * This will return '3884726736474' as the session-id.
    *
-   * @return the session-id or null if none could be found
+   * - Returns: the session-id or null if none could be found
    */
   open var sessionID : String? {
     var v : String? = stringFormValue(for: WORequest.SessionIDKey)
@@ -287,12 +289,13 @@ open class WORequest : WOMessage {
    * call this method in usercode.
    *
    * Example:
-   *
-   *     /MyApp/wa/MyPage/doIt?wofid=tasklist
+   * ```
+   * /MyApp/wa/MyPage/doIt?wofid=tasklist
+   * ```
    *
    * This will return 'tasklist' as the fragment-id.
    *
-   * @return the fragmentID or null if none could be found
+   * - Returns: the fragmentID or null if none could be found
    */
   open var fragmentID : String? {
     guard var s = stringFormValue(for: WORequest.FragmentIDKey) else {

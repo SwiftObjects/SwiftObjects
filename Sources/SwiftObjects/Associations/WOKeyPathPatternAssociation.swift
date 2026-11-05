@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 11.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
@@ -14,13 +14,12 @@
  * at the current component.
  *
  * Example:
- *
- *     <wo:get varpat:value=
- *        "Batch %(dg.currentBatchIndex)i of %(dg.batchCount)i" />
- *
+ * ```xml
+ * <wo:get varpat:value="Batch %(dg.currentBatchIndex)i of %(dg.batchCount)i" />
+ * ```
  */
-public class WOKeyPathPatternAssociation : WOAssociation, SmartDescription {
-  
+public final class WOKeyPathPatternAssociation: WOAssociation,SmartDescription {
+
   public let pattern : String
   
   public init(_ pattern: String) {

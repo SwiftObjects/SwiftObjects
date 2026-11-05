@@ -16,18 +16,19 @@ public protocol KeyValueCodingType {
 
 }
 
-public protocol MutableKeyValueCodingType : AnyObject {
-  // MutableKeyValueCodingType only really makes sense for classes, right?
-  // Well, it could return 'self' with the updated struct?
-  
-  func takeValue(_ value : Any?, forKey k: String) throws
-  func handleTakeValue(_ value: Any?, forUnboundKey k: String) throws
-  func takeValuesForKeys(_ values : [ String : Any? ]) throws
+/**
+ * Protocol for types that support mutable KVC.
+ *
+ * Both classes and structs can conform, classes implement the requirements
+ * without the `mutating` keyword. Note that a struct conformer can only be
+ * mutated through the `inout` variants of the ``KeyValueCoding`` functions,
+ * the `Any?` based variants throw ``KeyValueCoding/Error`` for value types.
+ */
+public protocol MutableKeyValueCodingType {
 
-}
-public protocol KeyValueCodingTargetValue : AnyObject {
-  // Again, only makes sense for classes? But we'd like to have structs.
-  func setValue(_ value: Any?) throws
+  mutating func takeValue(_ value: Any?, forKey k: String) throws
+  mutating func handleTakeValue(_ value: Any?, forUnboundKey k: String) throws
+  mutating func takeValuesForKeys(_ values: [ String : Any? ]) throws
 }
 
 public extension KeyValueCodingType {
@@ -74,23 +75,54 @@ public extension MutableKeyValueCodingType {
 
   /**
    * Standard implementation using typeInfo for direct property access.
-   * Returns true if property was found and set, false otherwise.
-   * Custom implementations can call this after handling their special cases.
+   * Returns true if the property was found and set, false if there is no
+   * stored property with that name. Throws if the value can't be coerced to
+   * the type of the property. Custom implementations can call this after
+   * handling their special cases.
    */
   @discardableResult
-  func defaultTakeValueForKey(_ value: Any?, forKey k: String) -> Bool {
+  mutating func defaultTakeValueForKey(_ value: Any?, forKey k: String) throws
+                -> Bool
+  {
+    let ti = typeInfo(of: self)
+    guard ti.kind == .class || ti.kind == .struct,
+          let prop = ti.property(named: k)
+    else { return false }
+    try prop.set(value, forKey: k, on: &self)
+    return true
+  }
+
+  mutating func handleTakeValue(_ value: Any?, forUnboundKey k: String) throws {
+    throw KeyValueCoding.Error.CannotTakeValueForKey(k)
+  }
+
+  mutating func takeValuesForKeys(_ values: [ String : Any? ]) throws {
+    for ( key, value ) in values {
+      try takeValue(value, forKey: key)
+    }
+  }
+}
+
+/// Non-mutating overloads for classes (reference types).
+public extension MutableKeyValueCodingType where Self: AnyObject {
+
+  @discardableResult
+  func defaultTakeValueForKey(_ value: Any?, forKey k: String) throws -> Bool {
     let ti = typeInfo(of: self)
     guard ti.kind == .class, let prop = ti.property(named: k) else {
       return false
     }
-    var me = self
-    prop.setValue(value, on: &me)
+    try prop.set(value, forKey: k, onClass: self)
     return true
   }
 
-  func takeValuesForKeys(_ values : [ String : Any? ]) throws {
+  func handleTakeValue(_ value: Any?, forUnboundKey k: String) throws {
+    throw KeyValueCoding.Error.CannotTakeValueForKey(k)
+  }
+
+  func takeValuesForKeys(_ values: [ String : Any? ]) throws {
     for ( key, value ) in values {
-      try takeValue(value, forKey: key)
+      try KeyValueCoding.takeValue(value, forKey: key, inObject: self)
     }
   }
 }
@@ -100,12 +132,19 @@ public extension MutableKeyValueCodingType {
 
 public struct KeyValueCoding {
   
-  public enum Error : Swift.Error {
+  public enum Error : Swift.Error, @unchecked Sendable {
     case UnsupportedDictionaryKeyType(Any.Type)
     case CannotCoerceValueForKey(Any.Type, Any?, String)
     case CannotCoerceValue(Any.Type, Any?)
     case EmptyKeyPath
     case CannotTakeValueForKey(String)
+    
+    /**
+     * Thrown when a value type (struct) is passed to one of the `Any?` based
+     * `takeValue` functions. Those would only modify a copy, use the `inout`
+     * variants for value types.
+     */
+    case CannotTakeValueOnValueType(Any.Type, String)
   }
 
   // MARK: - KeyPath Operations
@@ -122,13 +161,25 @@ public struct KeyValueCoding {
   {
     guard !p.isEmpty else { throw Error.EmptyKeyPath }
     guard let o = o  else { return } // no-op
-    
+
     if p.count == 1 { return try takeValue(v, forKey: p[0], inObject: o) }
-    guard let last = p.last else { fatalError("Key path was empty") }
-    
-    let target = value(forKeyPath: p.dropLast(), inObject: o)
-    guard let t = target else { return } // no-op
-    try takeValue(v, forKey: last, inObject: t)
+
+    let firstKey      = p[0]
+    let remainingPath = Array(p.dropFirst())
+
+    guard var intermediate = value(forKey: firstKey, inObject: o) else {
+      return
+    }
+
+    // Classes have reference semantics, just recurse.
+    if typeInfo(of: intermediate).kind == .class {
+      try takeValue(v, forKeyPath: remainingPath, inObject: intermediate)
+      return
+    }
+
+    // Value types are modified in the box and then bubbled back up.
+    try takeValue(v, forKeyPath: remainingPath, inBoxed: &intermediate)
+    try takeValue(intermediate, forKey: firstKey, inObject: o)
   }
 
   public static func value(forKeyPath p: String, inObject o: Any?) -> Any? {
@@ -147,39 +198,170 @@ public struct KeyValueCoding {
 
   // MARK: - Single Key Operations
 
+  /**
+   * Sets a value for a key on an object. The object must be a class
+   * instance, value types can't be modified through this function, use the
+   * `inout` variant for those.
+   */
   public static func takeValue(_ v: Any?, forKey k: String,
                                inObject o: Any?) throws
   {
-    if let kvc = o as? MutableKeyValueCodingType {
+    guard let o = o else { return } // no-op
+    
+    let ti = typeInfo(of: o)
+    guard ti.kind == .class else {
+      throw Error.CannotTakeValueOnValueType(Swift.type(of: o), k)
+    }
+    
+    if var kvc = o as? MutableKeyValueCodingType {
       try kvc.takeValue(v, forKey: k)
+      return
     }
-    else if let target = value(forKey: k, inObject: o)
-                         as? KeyValueCodingTargetValue
-    {
-      try target.setValue(v)
-    }
-    else if let o = o {
-      // Use SwiftRuntime for direct property access
-      let ti = typeInfo(of: o)
-      guard ti.kind == .class || ti.kind == .struct,
-            let prop = ti.property(named: k)
-      else {
-        throw Error.CannotTakeValueForKey(k)
-      }
 
-      // For classes, we can set directly
-      if ti.kind == .class {
-        if let value = v {
-          prop.setOnClass(value: coerce(value, to: prop.type), object: o)
-        }
-        else {
-          prop.setOnClass(value: v as Any, object: o)
-        }
-      }
-      else {
-        throw Error.CannotTakeValueForKey(k)
-      }
+    guard let prop = ti.property(named: k) else {
+      throw Error.CannotTakeValueForKey(k)
     }
+    try prop.set(v, forKey: k, onClass: o as AnyObject)
+  }
+
+  // MARK: - Mutable Struct Operations (inout)
+
+  /**
+   * Set a value for a single key on a struct (or class) using `inout`.
+   * This allows mutation of value types through KVC.
+   *
+   * `T` can also be an optional (e.g. `Point?` or `Any?`), in which case the
+   * wrapped value is modified and rewrapped. A `nil` optional is a no-op.
+   */
+  public static func takeValue<T>(_ v: Any?, forKey k: String,
+                                  inObject o: inout T) throws
+  {
+    let ti = typeInfo(of: T.self)
+    
+    // Unwrap optionals, modify the wrapped value and rewrap it.
+    if ti.kind == .optional {
+      guard let optional = o as? OptionalUnwrap,
+            var boxed = optional.unwrap()
+      else { return } // no-op, like the `Any?` variant
+      try takeValue(v, forKey: k, inBoxed: &boxed)
+      guard let result = boxed as? T else {
+        throw Error.CannotCoerceValueForKey(T.self, boxed, k)
+      }
+      o = result
+      return
+    }
+    
+    // `T` is `Any` or some protocol, work on the dynamic type.
+    if ti.kind == .existential {
+      var boxed : Any = o
+      try takeValue(v, forKey: k, inBoxed: &boxed)
+      guard let result = boxed as? T else {
+        throw Error.CannotCoerceValueForKey(T.self, boxed, k)
+      }
+      o = result
+      return
+    }
+    
+    if var kvc = o as? MutableKeyValueCodingType {
+      try kvc.takeValue(v, forKey: k)
+      if let result = kvc as? T { o = result }
+      return
+    }
+
+    guard ti.kind == .struct || ti.kind == .class,
+          let prop = ti.property(named: k)
+    else {
+      throw Error.CannotTakeValueForKey(k)
+    }
+    try prop.set(v, forKey: k, on: &o)
+  }
+
+  /**
+   * Set a value for a keypath on a struct using `inout`.
+   * This implements bubbling: intermediate values are retrieved, modified,
+   * and then set back on the parent.
+   */
+  public static func takeValue<T>(_ v: Any?, forKeyPath p: String,
+                                  inObject o: inout T) throws
+  {
+    let path = p.split(separator: ".").map(String.init)
+    try takeValue(v, forKeyPath: path, inObject: &o)
+  }
+
+  /**
+   * Set a value for a keypath (as array) on a struct using `inout`.
+   */
+  public static func takeValue<T>(_ v: Any?, forKeyPath p: [ String ],
+                                  inObject o: inout T) throws
+  {
+    guard !p.isEmpty else { throw Error.EmptyKeyPath }
+
+    if p.count == 1 {
+      try takeValue(v, forKey: p[0], inObject: &o)
+      return
+    }
+
+    let firstKey      = p[0]
+    let remainingPath = Array(p.dropFirst())
+
+    guard var intermediate = value(forKey: firstKey, inObject: o) else {
+      return
+    }
+    try takeValue(v, forKeyPath: remainingPath, inBoxed: &intermediate)
+    try takeValue(intermediate, forKey: firstKey, inObject: &o)
+  }
+
+  // MARK: - Boxed Values
+
+  /**
+   * Sets a value for a keypath on a value boxed in an `Any`, writing the
+   * modified value back into the box. Classes are modified in place.
+   */
+  private static func takeValue(_ v: Any?, forKeyPath path: [ String ],
+                                inBoxed o: inout Any) throws
+  {
+    guard let key = path.first else { throw Error.EmptyKeyPath }
+    
+    if typeInfo(of: o).kind == .class {
+      try takeValue(v, forKeyPath: path, inObject: o)
+      return
+    }
+    
+    let remainingPath = Array(path.dropFirst())
+    if remainingPath.isEmpty {
+      try takeValue(v, forKey: key, inBoxed: &o)
+      return
+    }
+
+    // Nested path into a value type: fetch the intermediate value, modify
+    // it, and bubble it back up.
+    guard var intermediate = value(forKey: key, inObject: o) else { return }
+    try takeValue(v, forKeyPath: remainingPath, inBoxed: &intermediate)
+    try takeValue(intermediate, forKey: key, inBoxed: &o)
+  }
+
+  /**
+   * Sets a value for a single key on a value boxed in an `Any`, writing the
+   * modified value back into the box. Classes are modified in place.
+   */
+  private static func takeValue(_ v: Any?, forKey k: String,
+                                inBoxed o: inout Any) throws
+  {
+    if var kvc = o as? MutableKeyValueCodingType {
+      try kvc.takeValue(v, forKey: k)
+      o = kvc
+      return
+    }
+
+    let ti = typeInfo(of: o)
+    guard ti.kind == .class || ti.kind == .struct,
+          let prop = ti.property(named: k)
+    else {
+      throw Error.CannotTakeValueForKey(k)
+    }
+    
+    if ti.kind == .class { try prop.set(v, forKey: k, onClass: o as AnyObject) }
+    else                 { try prop.set(v, forKey: k, onBoxed: &o) }
   }
 
   public static func value(forKey k: String, inObject o: Any?) -> Any? {
@@ -254,24 +436,73 @@ public struct KeyValueCoding {
 
   // MARK: - Type Coercion
 
-  private static func coerce(_ value: Any, to type: Any.Type) -> Any {
-    if Swift.type(of: value) == type { return value }
+  /**
+   * Coerces the given value to the type of a property, e.g. a form value
+   * string to an `Int`. This is used by the accessors generated by the
+   * ``WOComponent()`` and ``WODirectAction()`` macros.
+   *
+   * - Parameters:
+   *   - value: the value to coerce, e.g. a `String`
+   *   - k:     the key the value is assigned to, for error reporting
+   * - Returns: the coerced value
+   * - Throws:  ``Error/CannotCoerceValueForKey(_:_:_:)`` if the value cannot
+   *            be converted
+   */
+  public static func coerce<T>(_ value: Any?, forKey k: String) throws -> T {
+    if let coercion = T.self as? RuntimeCoercion.Type {
+      let coerced : Any
+      do {
+        coerced = try coercion.coerce(runtimeValue: value)
+      }
+      catch {
+        throw Error.CannotCoerceValueForKey(T.self, value, k)
+      }
+      guard let result = coerced as? T else {
+        throw Error.CannotCoerceValueForKey(T.self, value, k)
+      }
+      return result
+    }
+    
+    guard let value = value else {
+      // nil is only valid for optional types
+      if let optional = T.self as? ExpressibleByNilLiteral.Type,
+         let none = optional.init(nilLiteral: ()) as? T
+      {
+        return none
+      }
+      throw Error.CannotCoerceValueForKey(T.self, nil, k)
+    }
+    guard let result = value as? T else {
+      throw Error.CannotCoerceValueForKey(T.self, value, k)
+    }
+    return result
+  }
 
-    // Basic coercions
-    if type == String.self || type == Optional<String>.self {
-      if let s = value as? String { return s }
-      return String(describing: value)
+  /**
+   * Coerces a value to the type of a property. Types conforming to
+   * `RuntimeCoercion` (String, Int, Double, Float, Bool and their optionals)
+   * are converted, e.g. form strings to numbers. Other values are passed
+   * through unchanged, the property accessor then checks whether the value
+   * actually matches the property type.
+   *
+   * - Parameters:
+   *   - value: The value to coerce, nil for `nil`.
+   *   - type:  The type of the property.
+   *   - k:     The key being set, for error reporting.
+   * - Throws: `CannotCoerceValueForKey` if the value can't be converted.
+   * - Returns: The coerced value, nil is returned as an `Any` holding nil.
+   */
+  fileprivate static func coerce(_ value: Any?, to type: Any.Type,
+                                 forKey k: String) throws -> Any
+  {
+    if let value = value, Swift.type(of: value) == type { return value }
+    guard let ct = type as? RuntimeCoercion.Type else { return value as Any }
+    do {
+      return try ct.coerce(runtimeValue: value)
     }
-    if type == Int.self || type == Optional<Int>.self {
-      if let i = value as? Int { return i }
-      if let s = value as? String { return Int(s) ?? 0 }
-      return 0
+    catch {
+      throw Error.CannotCoerceValueForKey(type, value, k)
     }
-    if type == Bool.self || type == Optional<Bool>.self {
-      return UObject.boolValue(value)
-    }
-
-    return value
   }
 }
 
@@ -328,39 +559,10 @@ extension Array : KeyValueCodingType {
 }
 
 
-// MARK: - Box
-
-open class KeyValueCodingBox<T> : KeyValueCodingTargetValue {
-  
-  public final var value : T
-
-  public init(_ value : T) {
-    self.value = value
-  }
-  
-  public func setValue(_ value: Any?) throws {
-    // TODO: more type coercion
-    if let v = value as? T {
-      self.value = v
-    }
-    else {
-      throw KeyValueCoding.Error.CannotCoerceValue(T.self, value)
-    }
-  }
-}
-
 public extension KeyValueCodingType {
   func handleQueryWithUnboundKey(_ key: String) -> Any? {
     return nil
   }
-}
-
-public extension MutableKeyValueCodingType {
-  
-  func handleTakeValue(_ value: Any?, forUnboundKey k: String) throws {
-    throw KeyValueCoding.Error.CannotTakeValueForKey(k)
-  }
-
 }
 
 
@@ -369,7 +571,7 @@ public extension MutableKeyValueCodingType {
 
 /**
  * Cached metadata for a Swift type including its properties.
- * Private to this file - external code should use KeyValueCoding API.
+ * Private to this file - external code should use ``KeyValueCoding`` API.
  */
 fileprivate struct TypeInfo {
 
@@ -420,50 +622,77 @@ fileprivate struct TypeInfo {
         return unwrapOptional(rawValue)
       }
       else {
-        // For structs: value is inline in the existential container (≤24 bytes)
-        // or heap-boxed (>24 bytes). Use withUnsafeBytes for inline access.
-        return withUnsafeBytes(of: object) { buffer in
-          guard let baseAddress = buffer.baseAddress else { return nil }
-          let rawValue = accessor.get(from: baseAddress.advanced(by: offset))
-          return unwrapOptional(rawValue)
-        }
+        // For structs: the value is either inline in the existential
+        // container or heap-boxed, `withValueBytes` opens the existential to
+        // get at the actual value either way.
+        return withValueBytes(of: object) { base in
+          unwrapOptional(accessor.get(from: base.advanced(by: offset)))
+        } ?? nil
       }
     }
 
-    func setOnClass(value: Any?, object: Any) {
+    /**
+     * Sets the property on a class instance. The value is coerced to the
+     * property type, a `CannotCoerceValueForKey` error is thrown if that is
+     * not possible.
+     */
+    func set(_ value: Any?, forKey k: String, onClass object: AnyObject)
+           throws
+    {
       // Skip weak references - they have special storage we can't write
-      guard isStrong else { return }
-
-      let kind = Kind.of(Swift.type(of: object))
-      guard kind == .class else { return }
-
-      // Use Unmanaged to correctly extract class pointer from Any.
-      let anyObj = object as AnyObject
-      let instancePtr = Unmanaged.passUnretained(anyObj).toOpaque()
-      accessor.set(
-        value: value as Any,
-        to: UnsafeMutableRawPointer(instancePtr).advanced(by: offset)
-      )
+      guard isStrong, Kind.of(Swift.type(of: object)) == .class else {
+        throw KeyValueCoding.Error.CannotTakeValueForKey(k)
+      }
+      
+      let coerced = try KeyValueCoding.coerce(value, to: type, forKey: k)
+      let instancePtr = Unmanaged.passUnretained(object).toOpaque()
+      let ok = accessor.set(value: coerced,
+                            to: UnsafeMutableRawPointer(instancePtr)
+                                  .advanced(by: offset))
+      guard ok else {
+        throw KeyValueCoding.Error.CannotCoerceValueForKey(type, value, k)
+      }
     }
 
-    func set<T>(value: Any?, on object: inout T) {
-      // Skip weak references - they have special storage we can't write
-      guard isStrong else { return }
-
+    /**
+     * Sets the property on a struct (or class) passed `inout`. The value is
+     * coerced to the property type, a `CannotCoerceValueForKey` error is
+     * thrown if that is not possible.
+     */
+    func set<T>(_ value: Any?, forKey k: String, on object: inout T) throws {
       let kind = Kind.of(T.self)
-      guard kind == .class || kind == .struct else { return }
+      if kind == .class {
+        return try set(value, forKey: k, onClass: object as AnyObject)
+      }
+      guard kind == .struct, isStrong else {
+        throw KeyValueCoding.Error.CannotTakeValueForKey(k)
+      }
+      
+      let coerced = try KeyValueCoding.coerce(value, to: type, forKey: k)
+      let ok = withUnsafeMutablePointer(to: &object) { ptr in
+        accessor.set(value: coerced,
+                     to: UnsafeMutableRawPointer(ptr).advanced(by: offset))
+      }
+      guard ok else {
+        throw KeyValueCoding.Error.CannotCoerceValueForKey(type, value, k)
+      }
+    }
 
-      withUnsafeMutablePointer(to: &object) { ptr in
-        if kind == .class {
-          ptr.withMemoryRebound(to: UnsafeMutableRawPointer.self, capacity: 1) {
-            accessor.set(value: value as Any,
-                         to: $0.pointee.advanced(by: offset))
-          }
-        }
-        else {
-          accessor.set(value: value as Any,
-                       to: UnsafeMutableRawPointer(ptr).advanced(by: offset))
-        }
+    /**
+     * Sets the property on a struct boxed in an `Any`, the modified struct
+     * is written back into the box.
+     */
+    func set(_ value: Any?, forKey k: String, onBoxed any: inout Any) throws {
+      guard Kind.of(Swift.type(of: any)) == .struct, isStrong else {
+        throw KeyValueCoding.Error.CannotTakeValueForKey(k)
+      }
+      
+      let coerced = try KeyValueCoding.coerce(value, to: type, forKey: k)
+      let ok = withMutableValueBytes(of: &any) { base in
+        accessor.set(value: coerced, to: base.advanced(by: offset))
+      } ?? false
+      guard ok else {
+        throw KeyValueCoding.Error.CannotCoerceValueForKey(type, value, k)
       }
     }
 
@@ -524,31 +753,44 @@ fileprivate struct TypeInfo {
   }
 }
 
-fileprivate extension TypeInfo.Property {
+// MARK: - Existential Access
 
-  /**
-   * Set value with type coercion.
-   */
-  func setValue<TObject>(_ value: Any?, on object: inout TObject) {
-    if let value = value {
-      if Swift.type(of: value) == self.type {
-        set(value: value, on: &object)
-      }
-      else if let coercedValue = coerce(value: value, to: self.type) {
-        set(value: coercedValue, on: &object)
-      }
-    }
-    else {
-      set(value: value as Any, on: &object)
-    }
+/**
+ * Runs `body` with a pointer to the bytes of the value stored in `any`.
+ *
+ * The value may be stored inline in the existential container or in a heap
+ * box, so the bytes of the `Any` itself can't be used. This opens the
+ * existential to get a properly typed copy of the value and passes a pointer
+ * to that.
+ */
+fileprivate func withValueBytes<R>(of any: Any,
+                                   _ body: (UnsafeRawPointer) -> R) -> R?
+{
+  func open<T>(_: T.Type) -> R? {
+    guard let value = any as? T else { return nil }
+    return withUnsafeBytes(of: value) { $0.baseAddress.map(body) }
   }
+  return _openExistential(type(of: any), do: open)
+}
 
-  private func coerce(value: Any, to type: Any.Type) -> Any? {
-    if let ct = type as? RuntimeCoercion.Type {
-      return try? ct.coerce(runtimeValue: value)
+/**
+ * Runs `body` with a mutable pointer to a typed copy of the value stored in
+ * `any`, and writes the copy back into `any` afterwards. See
+ * ``withValueBytes(of:_:)``.
+ */
+fileprivate func withMutableValueBytes<R>(of any: inout Any,
+                                          _ body: (UnsafeMutableRawPointer)
+                                                  -> R) -> R?
+{
+  func open<T>(_: T.Type) -> R? {
+    guard var value = any as? T else { return nil }
+    let result = withUnsafeMutableBytes(of: &value) {
+      $0.baseAddress.map(body)
     }
-    return nil
+    any = value
+    return result
   }
+  return _openExistential(type(of: any), do: open)
 }
 
 
@@ -562,10 +804,11 @@ extension Accessor {
     pointer.assumingMemoryBound(to: Self.self).pointee
   }
 
-  static func set(value: Any, to pointer: UnsafeMutableRawPointer) {
-    if let value = value as? Self {
-      pointer.assumingMemoryBound(to: Self.self).pointee = value
-    }
+  /// Returns false if the value does not match the property type.
+  static func set(value: Any, to pointer: UnsafeMutableRawPointer) -> Bool {
+    guard let value = value as? Self else { return false }
+    pointer.assumingMemoryBound(to: Self.self).pointee = value
+    return true
   }
 }
 
@@ -611,7 +854,7 @@ private let typeInfoCache = Mutex<[ ObjectIdentifier : TypeInfo ]>([:])
 
 /**
  * Get cached TypeInfo for a type.
- * Private to this file - external code should use KeyValueCoding API.
+ * Private to this file - external code should use ``KeyValueCoding`` API.
  */
 fileprivate func typeInfo(of type: Any.Type) -> TypeInfo {
   let key = ObjectIdentifier(type)
@@ -625,7 +868,7 @@ fileprivate func typeInfo(of type: Any.Type) -> TypeInfo {
 
 /**
  * Get cached TypeInfo for a value's type.
- * Private to this file - external code should use KeyValueCoding API.
+ * Private to this file - external code should use ``KeyValueCoding`` API.
  */
 fileprivate func typeInfo<T>(of value: T) -> TypeInfo {
   typeInfo(of: Swift.type(of: value as Any))

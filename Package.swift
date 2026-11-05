@@ -1,4 +1,4 @@
-// swift-tools-version:6.2
+// swift-tools-version:6.3
 //
 //  Package.swift
 //  SwiftObjects
@@ -7,9 +7,17 @@
 //  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 import PackageDescription
+import CompilerPluginSupport
 import Foundation
 
 let fm = FileManager.default
+
+let showcaseResources : [ Resource ] =
+  [ .copy("favicon.ico") ]
+  + fm.filesWithExtension("html", at: targetURL("WOShowcaseApp"))
+      .map { Resource.copy($0) }
+  + fm.filesWithExtension("wod",  at: targetURL("WOShowcaseApp"))
+      .map { Resource.copy($0) }
 
 let package = Package(
   name: "SwiftObjects",
@@ -23,6 +31,8 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/apple/swift-nio.git",
              from: "2.92.1"),
+    .package(url: "https://github.com/swiftlang/swift-syntax.git",
+             from: "600.0.0"),
 
     // just for the showcase
     .package(url: "https://github.com/SwiftWebResources/SemanticUI-Swift.git",
@@ -32,19 +42,30 @@ let package = Package(
   ],
   
   targets: [
+    .macro(name: "SwiftObjectsMacros",
+           dependencies: [
+             .product(name: "SwiftSyntaxMacros",   package: "swift-syntax"),
+             .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+           ]),
+    
     .target(name: "SwiftObjects",
             dependencies: [
+              "SwiftObjectsMacros",
               .product(name: "NIO",                 package: "swift-nio"),
               .product(name: "NIOHTTP1",            package: "swift-nio"),
               .product(name: "NIOFoundationCompat", package: "swift-nio"),
             ],
             exclude:
-              fm.filesWithExtension("api", at: targetURL("SwiftObjects")),
-            swiftSettings: [ .swiftLanguageMode(.v5) ]),
+              fm.filesWithExtension("api", at: targetURL("SwiftObjects"))),
     
     .testTarget(name: "SwiftObjectsTests",
-                dependencies: [ "SwiftObjects" ],
-                swiftSettings: [ .swiftLanguageMode(.v5) ]),
+                dependencies: [ "SwiftObjects" ]),
+    .testTarget(name: "SwiftObjectsMacrosTests",
+                dependencies: [
+                  "SwiftObjectsMacros",
+                  .product(name: "SwiftSyntaxMacrosTestSupport",
+                           package: "swift-syntax"),
+                ]),
     
     .executableTarget(name: "WOShowcaseApp",
                       dependencies: [
@@ -53,15 +74,7 @@ let package = Package(
                                  package: "SemanticUI-Swift"),
                         .product(name: "jQuery", package: "jQuery-Swift")
                       ],
-                      resources: [
-                        .copy("favicon.ico")
-                      ]
-                      + fm.filesWithExtension("html",
-                                              at: targetURL("WOShowcaseApp"))
-                          .map { .copy($0) }
-                      + fm.filesWithExtension("wod",
-                                              at: targetURL("WOShowcaseApp"))
-                          .map { .copy($0) })
+                      resources: showcaseResources)
   ]
 )
 

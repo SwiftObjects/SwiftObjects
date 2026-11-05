@@ -7,8 +7,8 @@
 //
 
 /**
- * This is the callback interface provided by the WODParser class.
- * The most prominent implementation is WOWrapperTemplateBuilder.
+ * This is the callback interface provided by the ``WODParser`` class.
+ * The most prominent implementation is ``WOWrapperTemplateBuilder``.
  */
 public protocol WODParserHandler : AnyObject {
   
@@ -16,11 +16,13 @@ public protocol WODParserHandler : AnyObject {
   typealias Data     = UnsafeBufferPointer<UInt8>
 
   /**
-   * Called by the WODParser if it starts parsing a given string.
+   * Called by the ``WODParser`` if it starts parsing a given string.
    *
-   * @param _p    - the parser instance
-   * @param _data - the data which shall be parsed
-   * @return true if the parsing should be done, false to abort
+   * - Parameters:
+   *   - parser:                   the parser instance
+   *   - willParseDeclarationData: the data which shall be parsed
+   * - Returns:                    true if the parsing should be done, false to
+   *                               abort
    */
   func parser(_ parser: WODParser, willParseDeclarationData: Data) -> Bool
   
@@ -32,51 +34,55 @@ public protocol WODParserHandler : AnyObject {
               error: Swift.Error?)
   
   /**
-   * This is called by the WODParser to create an association for a constant
+   * This is called by the ``WODParser`` to create an association for a constant
    * value.
    *
    * The value can be a String, a Number, a property list object, or some
    * other basic stuff ;-)
    *
-   * @param _p     - a reference to the WOD parser
-   * @param _value - the value which has been parsed
-   * @return a WOAssociation (most likely a WOValueAssocation)
+   * - Parameters:
+   *   - parser: a reference to the WOD parser
+   *   - value:  the value which has been parsed
+   * - Returns:  a ``WOAssociation`` (most likely a WOValueAssocation)
    */
   func parser(_ parser: WODParser, associationFor value: Any?) -> WOAssociation?
   
   /**
-   * This is called by the WODParser to create an association for a dynamic
+   * This is called by the ``WODParser`` to create an association for a dynamic
    * value (a keypath binding).
    *
    * The value is the string containing the keypath.
    *
-   * @param _p  - a reference to the WOD parser
-   * @param _kp - the String containing the keypath (eg person.lastname)
-   * @return a WOAssociation (most likely a WOKeyPathAssocation)
+   * - Parameters:
+   *   - parser: a reference to the WOD parser
+   *   - path:   the String containing the keypath (eg person.lastname)
+   * - Returns:  a ``WOAssociation`` (most likely a WOKeyPathAssocation)
    */
   func parser(_ parser: WODParser, associationForKeyPath path: String) throws
        -> WOAssociation
 
   /**
-   * Called by the WODParser once it has parsed the data of a WOD entry
+   * Called by the ``WODParser`` once it has parsed the data of a WOD entry
    * like:
-   *
-   *     Frame: MyFrame {
-   *         title = "Welcome to Hola";
-   *     }
+   * ```wod
+   * Frame: MyFrame {
+   *     title = "Welcome to Hola";
+   * }
+   * ```
    *
    * The parser stores the result of this method in a Map under the _cname
    * (`Frame`). This Map is queried after the .wod has been
    * parsed. The parser does not care about the type of the object being
    * returned, it just stores it.
    *
-   * WOWrapperTemplateBuilder returns a WODParser.Entry object.
+   * ``WOWrapperTemplateBuilder`` returns a WODParser.Entry object.
    *
-   * @param _p       - the parser
-   * @param _cname   - the name of the element (`Frame`)
-   * @param _entry   - the Map containing the bindings (String-WOAssociation)
-   * @param _clsname - the name of the component (`MyFrame`)
-   * @return an object representing the WOD entry
+   * - Parameters:
+   *   - parser:    the parser
+   *   - name:      the name of the element (`Frame`)
+   *   - className: the name of the component (`MyFrame`)
+   *   - bindings:  the Map containing the bindings (String-``WOAssociation``)
+   * - Returns:     an object representing the WOD entry
    */
   func parser(_ parser: WODParser, definitionForComponentNamed name: String,
               className: String, bindings: Bindings) -> WODParser.Entry?

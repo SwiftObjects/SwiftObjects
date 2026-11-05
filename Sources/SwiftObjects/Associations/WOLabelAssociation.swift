@@ -3,18 +3,17 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 /**
- * String value syntax:
- *
- *     "next"       - lookup key 'next' in table 'nil'   with default 'next'
- *     "table/next" - lookup key 'next' in table 'table' with default 'next'
- *
  * This association performs a string lookup in the component's
- * WOResourceManager (or the app's manager if the component has none). It uses
- * the context's languages for the key lookup.
+ * ``WOResourceManager`` (or the app's manager if the component has none). It
+ * uses the context's languages for the key lookup.
+ *
+ * String value syntax:
+ * - "next"       - lookup key 'next' in table 'nil'   with default 'next'
+ * - "table/next" - lookup key 'next' in table 'table' with default 'next'
  *
  * Note that this also supports keypaths by prefixing the values with an
  * "$", eg: "$currentDay" will first evaluate "currentDay" in the component
@@ -22,7 +21,9 @@
  * We consider that a bit hackish, but given that it is often required in
  * practice, a pragmatic implementation.
  */
-open class WOLabelAssocation : WOAssociation, SmartDescription {
+open class WOLabelAssocation: WOAssociation, SmartDescription,
+                              @unchecked Sendable
+{
   
   let key          : String
   let table        : String?
@@ -39,11 +40,7 @@ open class WOLabelAssocation : WOAssociation, SmartDescription {
   
   public convenience init(key: String) {
     // TODO: parse `$` keypath markers
-    #if swift(>=5)
-      let sepIdx = key.firstIndex(of: "/")
-    #else
-      let sepIdx = key.index(of: "/")
-    #endif
+    let sepIdx = key.firstIndex(of: "/")
     if let idx = sepIdx {
       let table  = String(key[key.startIndex..<idx])
       let newKey = String(key[key.index(after: idx)..<key.endIndex])

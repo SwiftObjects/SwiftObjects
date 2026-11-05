@@ -110,11 +110,12 @@ open class WOLinkGenerator : WOElement, SmartDescription {
    * This method extract query parameter bindings from a given set of
    * associations. Those bindings start with a question mark (?) followed by
    * the name of the query parameter, eg:
-   *
-   *     MyLink: WOHyperlink {
-   *         directActionName = "doIt";
-   *         ?id = 15;
-   *     }
+   * ```wod
+   * MyLink: WOHyperlink {
+   *     directActionName = "doIt";
+   *     ?id = 15;
+   * }
+   * ```
    */
   static func extractQueryParameters(_ prefix: String,
                                      _ associations: inout Bindings)
@@ -139,10 +140,11 @@ open class WOLinkGenerator : WOElement, SmartDescription {
   
   /**
    * This is the primary entry point which is called by the respective link
-   * element (eg WOHyperlink) to generate the URL which should be generated.
+   * element (eg ``WOHyperlink``) to generate the URL which should be generated.
    *
-   * @param _ctx - the WOContext to generate the link for
-   * @return a String containing the URL represented by this object
+   * - Parameters:
+   *   - context: the ``WOContext`` to generate the link for
+   * - Returns:   a String containing the URL represented by this object
    */
   open func fullHref(in context: WOContext) -> String? {
     /* RFC 3986: scheme ":" hier-part [ "?" query ] [ "#" fragment ] */

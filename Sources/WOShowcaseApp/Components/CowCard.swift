@@ -7,16 +7,10 @@
 
 import SwiftObjects
 
-final class CowCard : WOComponent {
+@WOComponent final class CowCard {
   
   var onClick : String?
   var cow     : Cow?
-  
-  override func awake() {
-    super.awake()
-    
-    expose(clickAction, as: "click")
-  }
   
   func clickAction() -> Any? {
     guard let action = onClick else { return nil }

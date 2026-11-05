@@ -3,7 +3,7 @@
 //  SwiftObjects
 //
 //  Created by Helge Hess on 19.05.18.
-//  Copyright © 2018-2019 ZeeZide. All rights reserved.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import struct Foundation.URL
@@ -15,51 +15,48 @@ import struct Foundation.Data
  * a .wod file.
  *
  * ### Supported binding prefixes
- * ```
- *   const   - WOValueAssociation
- *   go(/jo) - GoPathAssociation
- *   label   - WOLabelAssociation
- *   ognl    - WOOgnlAssociation
- *   plist   - parse value as plist, then create a WOValueAssociation
- *   q       - WOQualifierAssociation (evaluate the given qualifier)
- *   regex   - WORegExAssociation
- *   rsrc    - WOResourceURLAssociation (lookup URL for a given resource name)
- *   var     - WOKeyPathAssociation
- *   varpat  - WOKeyPathPatternAssociation
- * ```
+ * - const   - ``WOValueAssociation``
+ * - go(/jo) - GoPathAssociation
+ * - label   - WOLabelAssociation
+ * - ognl    - WOOgnlAssociation
+ * - plist   - parse value as plist, then create a ``WOValueAssociation``
+ * - q       - WOQualifierAssociation (evaluate the given qualifier)
+ * - regex   - WORegExAssociation
+ * - rsrc    - ``WOResourceURLAssociation`` (lookup URL for a given
+ *             resource name)
+ * - var     - ``WOKeyPathAssociation``
+ * - varpat  - ``WOKeyPathPatternAssociation``
  *
  * ### Shortcuts
- * ```
- *   <wo:a>         - WOHyperlink
- *   <wo:for>       - WORepetition
- *   <wo:get>       - WOString
- *   <wo:if>        - WOConditional
- *   <wo:put>       - WOCopyValue
- *   <wo:submit>    - WOSubmitButton
- *   <wo:table-for> - WOTableRepetition
- * ```
+ * - `<wo:a>`         - ``WOHyperlink``
+ * - `<wo:for>`       - ``WORepetition``
+ * - `<wo:get>`       - ``WOString``
+ * - `<wo:if>`        - ``WOConditional``
+ * - `<wo:put>`       - WOCopyValue
+ * - `<wo:submit>`    - ``WOSubmitButton``
+ * - `<wo:table-for>` - WOTableRepetition
+ *
  * .. and more. See WOShortNameAliases.plist file.
  *
  * ### Element Wrapper Attributes
- * ```
- *   <wo:tag ... if="condition">    - WOConditional
- *   <wo:tag ... ifnot="condition"> - WOConditional
- *   <wo:tag ... foreach="list">    - WORepetition
- * ```
+ * - `<wo:tag ... if="condition">`    - ``WOConditional``
+ * - `<wo:tag ... ifnot="condition">` - ``WOConditional``
+ * - `<wo:tag ... foreach="list">`    - ``WORepetition``
  *
- * ### WOHTMLParser vs WOWrapperTemplateBuilder
+ * ### ``WOHTMLParser`` vs ``WOWrapperTemplateBuilder``
  *
- * The WOHTMLParser just parses the HTML and asks the WOWrapperTemplateBuilder
- * to build the actual WOElements.
+ * The ``WOHTMLParser`` just parses the HTML and asks the
+ * ``WOWrapperTemplateBuilder`` to build the actual WOElements.
  *
  * THREAD: this class is not threadsafe and uses ivars for temporary storage.
  *
- * TODO: WOWrapperTemplateBuilder is not a good name for this class because it
+ * TODO: ``WOWrapperTemplateBuilder`` is not a good name for this class because
+ * it
  *       has nothing to do with wrappers. The actual resolution of the wrapper
- *       is done in the WOResourceManager / WOComponentDefinition.
+ *       is done in the ``WOResourceManager`` / ``WOComponentDefinition``.
  *       This class receives the already-looked-up URLs for the .wod and .html
  *       templates.
- *       Possibly we could also move this class into the WOTemplateBuilder?
+ *       Possibly we could also move this class into the ``WOTemplateBuilder``?
  */
 open class WOWrapperTemplateBuilder : WOTemplateBuilder,
                                       WODParserHandler, WOTemplateParserHandler
@@ -116,41 +113,40 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
    * It scans the key for a colon (`:`). If it does not find one,
    * it creates a value-association, if not, it calls the
    *   `WOAssociation.associationForPrefix()`
-   * to determine an appropriate WOAssociation for the prefix.
+   * to determine an appropriate ``WOAssociation`` for the prefix.
    *
    * Example:
-   *
-   *     {
-   *         var:list = "persons";
-   *         var:item = "person";
-   *         count = 5;
-   *     }
+   * ```plist
+   * {
+   *     var:list = "persons";
+   *     var:item = "person";
+   *     count = 5;
+   * }
+   * ```
    *
    * is mapped to:
-   *
-   *     {
-   *         list  = [WOKeyPathAssociation keypath="persons"];
-   *         item  = [WOKeyPathAssociation keypath="person"];
-   *         count = [WOValueAssociation value=5];
-   *     }
+   * ```plist
+   * {
+   *     list  = [WOKeyPathAssociation keypath="persons"];
+   *     item  = [WOKeyPathAssociation keypath="person"];
+   *     count = [WOValueAssociation value=5];
+   * }
+   * ```
    *
    * We also support Project Wonder style value prefixes (~ and $). Those are
    * only processed if the attribute has NO prefix. Eg if you want to have a
    * regular, constant value, you can use the `const:` prefix.
    *
-   * @param _attrs - a `Dictionary<String, String>` as parsed from HTML
-   * @return a `Dictionary<String, WOAssociation>`
+   * - Parameters:
+   *   - attributes: a `Dictionary<String, String>` as parsed from HTML
+   * - Returns:      a `Dictionary<String, WOAssociation>`
    */
   func buildBindings(for attributes: [ String : String ]) throws -> Bindings {
     var bindings = Bindings()
     bindings.reserveCapacity(attributes.count)
 
     for ( k, value ) in attributes {
-      #if swift(>=5)
-        let sepIdx = k.firstIndex(of: ":")
-      #else
-        let sepIdx = k.index(of: ":")
-      #endif
+      let sepIdx = k.firstIndex(of: ":")
       if let pm = sepIdx {
         let prefix = String(k[k.startIndex..<pm])
         let newKey = String(k[k.index(after: pm)..<k.endIndex])
@@ -188,13 +184,13 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
   }
   
   /**
-   * This method constructs a WODynamicElement for the given name. It will first
-   * check for an entry with the name in the wod mapping table and otherwise
-   * attempt to lookup the name as a class. If that also fails some fallbacks
-   * kick in, that is element name aliases (<wo:if>) and automatic generic
-   * elements (<wo:li>).
+   * This method constructs a ``WODynamicElement`` for the given name. It will
+   * first check for an entry with the name in the wod mapping table and
+   * otherwise attempt to lookup the name as a class. If that also fails some
+   * fallbacks kick in, that is element name aliases (<wo:if>) and automatic
+   * generic elements (<wo:li>).
    *
-   * If the name represents a component, a WOChildComponentReference object
+   * If the name represents a component, a ``WOChildComponentReference`` object
    * will get constructed (not the component itself, components are allocated
    * on demand).
    */
@@ -249,7 +245,9 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
         /* Could not resolve tagname as a WODynamicElement class, check for
          * aliases and dynamic HTML tags, like
          *
-         *     <wo:li var:style="current" var:+style="isCurrent" />
+         * ```xml
+         * <wo:li var:style="current" var:+style="isCurrent" />
+         * ```
          *
          * Note: we only check for dynamic element classes! The _name could
          *       still be the name of a WOComponent class!
@@ -316,13 +314,15 @@ open class WOWrapperTemplateBuilder : WOTemplateBuilder,
   }
   
   /**
-   * Add `WOConditional` and `WORepetition` support to all elements, eg:
+   * Add ``WOConditional`` and ``WORepetition`` support to all elements, eg:
+   * ```xml
+   * <wo:get var:value="label" if="label.isNotEmpty" />
+   * ```
    *
-   *     <wo:get var:value="label" if="label.isNotEmpty" />
-   *
-   * @param _element - the element to hack
-   * @param _assocs  - the associations
-   * @return a hacked element (or the original, if no hack was necessary)
+   * - Parameters:
+   *   - original: the element to hack
+   *   - bindings: the associations
+   * - Returns:    a hacked element (or the original, if no hack was necessary)
    */
   func hackNewElement(_ original: WODynamicElement,
                       with bindings: inout Bindings) throws

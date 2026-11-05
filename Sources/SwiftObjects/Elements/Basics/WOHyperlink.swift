@@ -7,47 +7,44 @@
 
 /**
  * Sample:
- *
- *     Link: WOHyperlink {
- *         directActionName = "postComment";
- *         actionClass      = "CommentPage";
- *         ?comment         = "blub";
- *     }
+ * ```wod
+ * Link: WOHyperlink {
+ *     directActionName = "postComment";
+ *     actionClass      = "CommentPage";
+ *     ?comment         = "blub";
+ * }
+ * ```
  *
  * Renders:
- *
- *     <a href="/servlet/app/wa/CommentPage/postComment?comment=blub">
- *       [sub-template]
- *     </a>
- *
- * Bindings (WOLinkGenerator):
+ * ```xml
+ * <a href="/servlet/app/wa/CommentPage/postComment?comment=blub">
+ *   [sub-template]
+ * </a>
  * ```
- *   href                 [in] - string
- *   action               [in] - action
- *   pageName             [in] - string
- *   directActionName     [in] - string
- *   actionClass          [in] - string
- *   fragmentIdentifier   [in] - string
- *   queryDictionary      [in] - Dictionary<String,String>
+ *
+ * Bindings (``WOLinkGenerator``):
+ * - href                 [in] - string
+ * - action               [in] - action
+ * - pageName             [in] - string
+ * - directActionName     [in] - string
+ * - actionClass          [in] - string
+ * - fragmentIdentifier   [in] - string
+ * - queryDictionary      [in] - `Dictionary<String,String>`
  *   - all bindings starting with a ? are stored as query parameters.
- *   - support for !style and .class attributes (WOHTMLElementAttributes)
- * ```
- * Regular bindings:
- * ```
- *   id                   [in] - string
- *   string / value       [in] - string
- *   target               [in] - string
- *   disabled             [in] - boolean (only render content, not the anker)
- *   disableOnMissingLink [in] - boolean
- * ```
+ *   - support for !style and .class attributes (``WOHTMLElementAttributes``)
  *
- * Bindings (WOHTMLElementAttributes):
- * ```
- *   style  [in]  - 'style' parameter
- *   class  [in]  - 'class' parameter
- *   !key   [in]  - 'style' parameters (eg <input style="color:red;">)
- *   .key   [in]  - 'class' parameters (eg <input class="selected">)
- * ```
+ * Regular bindings:
+ * - id                   [in] - string
+ * - string / value       [in] - string
+ * - target               [in] - string
+ * - disabled             [in] - boolean (only render content, not the anker)
+ * - disableOnMissingLink [in] - boolean
+ *
+ * Bindings (``WOHTMLElementAttributes``):
+ * - style  [in]  - 'style' parameter
+ * - class  [in]  - 'class' parameter
+ * - !key   [in]  - 'style' parameters (eg `<input style="color:red;">`)
+ * - .key   [in]  - 'class' parameters (eg `<input class="selected">`)
  */
 open class WOHyperlink : WOHTMLDynamicElement {
   

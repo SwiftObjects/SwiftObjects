@@ -240,22 +240,4 @@ class WORepetitionTests: FormTestCase {
     // This verifies the walker executed for all items
     XCTAssertEqual(testComponent.currentIndex, 2)
   }
-
-
-  // MARK: - Linux
-
-  static var allTests = [
-    ( "testEmptyList",              testEmptyList              ),
-    ( "testSingleItemList",         testSingleItemList         ),
-    ( "testMultipleItems",          testMultipleItems          ),
-    ( "testItemBinding",            testItemBinding            ),
-    ( "testIndexBinding",           testIndexBinding           ),
-    ( "testIndex1Binding",          testIndex1Binding          ),
-    ( "testSeparator",              testSeparator              ),
-    ( "testIsEvenBinding",          testIsEvenBinding          ),
-    ( "testIsFirstBinding",         testIsFirstBinding         ),
-    ( "testIsLastBinding",          testIsLastBinding          ),
-    ( "testElementNameWrapper",     testElementNameWrapper     ),
-    ( "testTakeValuesIteratesItems", testTakeValuesIteratesItems ),
-  ]
 }

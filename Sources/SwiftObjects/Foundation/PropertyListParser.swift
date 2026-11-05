@@ -10,10 +10,11 @@ import struct Foundation.Data
 /**
  * This class implements a parser for the old-style property list format. You
  * would not usually invoke it directly, but rather use the
- * {@link NSPropertyListSerialization} utility function class, eg:
- *
- *     let person = NSPropertyListSerialization.dictionaryForString
- *       ("{ lastname = Duck; firstname = Donald; }");
+ * `NSPropertyListSerialization` utility function class, eg:
+ * ```swift
+ * let person = NSPropertyListSerialization.dictionaryForString
+ *   ("{ lastname = Duck; firstname = Donald; }");
+ * ```
  *
  * ### Property Values
  *
@@ -63,17 +64,10 @@ open class PropertyListParser {
     let len = data.count
     guard len > 0 else { return nil }
     
-    #if swift(>=5)
-      return try data.withUnsafeBytes {
-        ( ptr : UnsafeRawBufferPointer ) -> Any? in
-        try parse(ptr.bindMemory(to: UInt8.self))
-      }
-    #else
-      return try data.withUnsafeBytes() {
-        ( ptr : UnsafePointer<UInt8> ) -> Any? in
-        try parse(UnsafeBufferPointer(start: ptr, count: len))
-      }
-    #endif
+    return try data.withUnsafeBytes {
+      ( ptr : UnsafeRawBufferPointer ) -> Any? in
+      try parse(ptr.bindMemory(to: UInt8.self))
+    }
   }
   
   open func parse(_ data: UnsafeBufferPointer<UInt8>) throws -> Any? {
@@ -144,11 +138,7 @@ open class PropertyListParser {
       case tokens.openArray:
         let array : Array<Any?>? = parseArray()
         if allowNilValues { return array }
-        #if swift(>=4.1)
-          return array?.compactMap { $0 }
-        #else
-          return array.flatMap { $0 }
-        #endif
+        return array?.compactMap { $0 }
       
       case tokens.openData:      return parseData()
       case C.n0...C.n9, C.minus: return parseDigit()
@@ -229,19 +219,21 @@ open class PropertyListParser {
   /**
    * This is called by _parseProperty if the property could not be identified
    * as a primitive value (eg a Number or quoted String). Example:
-   *
-   *     person.address.street
+   * ```
+   * person.address.street
+   * ```
    *
    * But *NOT*:
-   *
-   *     "person.address.street"
+   * ```
+   * "person.address.street"
+   * ```
    *
    * The method parses a set of identifiers (using _parseIdentifier()) which
    * is separated by a dot.
    *
    * Its also called by the WOD parsers _parseAssociationProperty() method.
    *
-   * @return the parsed String, eg "person.address.street"
+   * - Returns: the parsed String, eg "person.address.street"
    */
   func parseKeyPath() -> String? {
     guard skipComments() else {
@@ -331,11 +323,11 @@ open class PropertyListParser {
   
   /**
    * Parses a quoted string, eg:
-   *
-   *     "Hello World"
-   *     'Hello World'
-   *     "Hello \"World\""
-   *
+   * ```
+   * "Hello World"
+   * 'Hello World'
+   * "Hello \"World\""
+   * ```
    */
   func parseQuotedString() -> String? {
     guard skipComments() else {
@@ -686,7 +678,7 @@ open class PropertyListParser {
     }
   }
 
-  public enum PropertyListParseError : Swift.Error {
+  public enum PropertyListParseError : Swift.Error, @unchecked Sendable {
     case commentNotClosed                 (Int)
     case expectedIdentifier               (Int)
     case expectedKeyPathIdentifier        (Int)

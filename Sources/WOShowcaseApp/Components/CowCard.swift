@@ -3,6 +3,7 @@
 //  WOShowcaseApp
 //
 //  Created by Helge Hess on 01.06.18.
+//  Copyright © 2018-2026 ZeeZide. All rights reserved.
 //
 
 import SwiftObjects

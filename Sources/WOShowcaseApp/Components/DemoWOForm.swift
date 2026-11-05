@@ -21,9 +21,7 @@ import SwiftObjects
     var error : String?
     """
     
-    var isNew : Bool {
-      return store.cows.firstIndex(where: { $0 === cow }) == nil
-    }
+    var isNew : Bool { store.cows.firstIndex(where: { $0 === cow }) == nil }
   
     func saveAction() -> Any? {
         // validation can be done in better ways, but it'll do here
@@ -46,5 +44,4 @@ import SwiftObjects
         // stay on page when we edited an existing cow
         return nil
     }
-
 }
